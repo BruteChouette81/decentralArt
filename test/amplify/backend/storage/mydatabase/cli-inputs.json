@@ -1,0 +1,14 @@
+{
+  "resourceName": "mydatabase",
+  "tableName": "mydatabase",
+  "partitionKey": {
+    "fieldName": "users",
+    "fieldType": "string"
+  },
+  "sortKey": {
+    "fieldName": "bg",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}

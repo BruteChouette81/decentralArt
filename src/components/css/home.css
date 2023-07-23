@@ -1,0 +1,54 @@
+.main {
+    color: black;
+    background-image: url(../logo/art2.png);
+    background-repeat: no-repeat;
+    background-size: 60%, 100%;
+    background-position-x: 100%;
+    background-position-y: 3% ;
+   
+}
+
+.icon-2 {
+    float: left;
+    padding-right: 10px;
+}
+
+.icon-2 img {
+    height: 30px;
+}
+
+.compatible {
+    padding: 40px;
+    background-image: linear-gradient(black, rgba(27, 27, 28, 0.800));
+    margin-top: 50px;
+    border-style: solid;
+}
+
+#metaimg {
+    height: 200px;
+    border-radius: 100%;
+}
+
+#uniimg {
+    height: 200px;
+}
+
+
+@media screen and (max-width:700px) {
+    .main {
+        color: black;
+        background-image: url(../logo/art2.png);
+        background-repeat: no-repeat;
+        background-size: 100%, 100%;
+        background-position-x: 100%;
+        background-position-y: 5% ;
+    }
+    #metaimg {
+        height: 100px;
+        border-radius: 100%;
+    }
+    
+    #uniimg {
+        height: 100px;
+    }
+}

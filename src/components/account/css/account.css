@@ -1,0 +1,45 @@
+.connection {
+    color: white;
+    text-align: center;
+    
+    background-color: black;
+    padding: 30px;
+    margin-top: 120px;
+    margin-bottom: 20%;
+    margin-left: 5%;
+    margin-right: 5%;
+    border-radius: 12px;
+}
+
+.connection button {
+    display: inline-block; 
+    text-align: center;
+    font-size: larger;
+    padding: 5px;
+    padding-top: 10px;
+    width: 200px;
+}
+
+.icon {
+    float: left;
+    padding-right: 20px;
+}
+
+.icon img {
+    height: 40px;
+}
+
+@media screen and (max-width:900px) {
+    .connection {
+        color: white;
+        text-align: center;
+        
+        background-color: black;
+        padding: 30px;
+        margin-top: 120px;
+        margin-bottom: 70%;
+        margin-left: 5%;
+        margin-right: 5%;
+        border-radius: 12px;
+    }
+}

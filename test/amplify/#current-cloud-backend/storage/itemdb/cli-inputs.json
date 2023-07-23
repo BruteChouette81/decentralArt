@@ -1,0 +1,10 @@
+{
+  "resourceName": "itemdb",
+  "tableName": "itemdb",
+  "partitionKey": {
+    "fieldName": "address",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}

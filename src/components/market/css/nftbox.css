@@ -1,0 +1,29 @@
+.nftbox {
+    margin: 20px;
+    padding: 10px;
+    width: 350px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.573), rgba(45, 45, 51, 0.573));
+    border-style: solid;
+    color: black;
+    border-radius: 15px;
+    float: left;
+}
+
+.receipt {
+    margin: 20px;
+    padding: 10px;
+    height: 650px;
+    width: 500px;
+    float: left;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.573), rgba(45, 45, 51, 0.573));
+    border-style: solid;
+    color: black;
+    border-radius: 15px;
+}
+
+#itemimg {
+    width: 300px;
+    height: 300px;
+    border-radius: 12px;
+    border-style: solid;
+}

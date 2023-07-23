@@ -1,0 +1,34 @@
+.market {
+
+    color:black;
+}
+.account {
+    padding: 40px;
+}
+
+#profilepic {
+    height: 50px;
+    width: 50px;
+    border-radius: 100%;
+    border-style: solid;
+    color:rgb(53, 56, 57);
+    float: left;
+    vertical-align: middle;
+    background-color: white;
+}
+
+#account {
+    padding-left: 70px;
+}
+
+#connected {
+    margin-left: 80px;
+}
+
+.premium {
+    float: right;
+    border-radius: 12px;
+    border-style: groove;
+    background-color:darkblue;
+    padding: 20px;
+}

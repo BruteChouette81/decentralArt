@@ -1,0 +1,10 @@
+{
+  "resourceName": "pricedata",
+  "tableName": "pricedata",
+  "partitionKey": {
+    "fieldName": "id",
+    "fieldType": "number"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}

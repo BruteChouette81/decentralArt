@@ -1,0 +1,74 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-artsim-dev-144802-authRole",
+      "UnauthRoleArn": "arn:aws:iam::547209680205:role/amplify-artsim-dev-144802-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::547209680205:role/amplify-artsim-dev-144802-authRole",
+      "Region": "ca-central-1",
+      "DeploymentBucketName": "amplify-artsim-dev-144802-deployment",
+      "UnauthRoleName": "amplify-artsim-dev-144802-unauthRole",
+      "StackName": "amplify-artsim-dev-144802",
+      "StackId": "arn:aws:cloudformation:ca-central-1:547209680205:stack/amplify-artsim-dev-144802/f3027460-272d-11ee-9e7f-02b5bcc396aa",
+      "AmplifyAppId": "d3i4p0nxw8ipum"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d3i4p0nxw8ipum",
+          "type": "manual"
+        }
+      },
+      "function": {
+        "mylambda": {
+          "deploymentBucketName": "amplify-artsim-dev-144802-deployment",
+          "s3Key": "amplify-builds/mylambda-3261445147367a587656-build.zip"
+        },
+        "cronjob": {
+          "deploymentBucketName": "amplify-artsim-dev-144802-deployment",
+          "s3Key": "amplify-builds/cronjob-6437412b657675764847-build.zip"
+        },
+        "mylambdax": {
+          "deploymentBucketName": "amplify-artsim-dev-144802-deployment",
+          "s3Key": "amplify-builds/mylambdax-51397862766558383946-build.zip"
+        }
+      },
+      "auth": {
+        "artsim77ebd74b": {
+          "userPoolId": "ca-central-1_PpgocuiOa",
+          "userPoolName": "client3651e7fb_userpool_3651e7fb-dev",
+          "webClientId": "3e5qk8i1f53cp415ou2h26lpn9",
+          "nativeClientId": "4ju389uiaouptsfoqjpc5kgu80",
+          "identityPoolId": "ca-central-1:85ca7a33-46b1-4827-ae75-694463376952",
+          "identityPoolName": "client3651e7fb_identitypool_3651e7fb__dev",
+          "allowUnauthenticatedIdentities": true,
+          "authRoleArn": "arn:aws:iam::547209680205:role/amplify-client-dev-205313-authRole",
+          "authRoleName": "amplify-client-dev-205313-authRole",
+          "unauthRoleArn": "arn:aws:iam::547209680205:role/amplify-client-dev-205313-unauthRole",
+          "unauthRoleName": "amplify-client-dev-205313-unauthRole"
+        }
+      },
+      "storage": {
+        "artsim72d112bf": {
+          "bucketName": "clientbc6cabec04d84d318144798d9000b9b3205313-dev",
+          "region": "ca-central-1"
+        },
+        "itemdbdev": {
+          "tableName": "itemdb-dev",
+          "region": "ca-central-1",
+          "arn": "arn:aws:dynamodb:ca-central-1:547209680205:table/itemdb-dev",
+          "streamArn": "arn:aws:dynamodb:ca-central-1:547209680205:table/itemdb-dev/stream/2022-09-21T21:56:33.692",
+          "partitionKeyName": "address",
+          "partitionKeyType": "S"
+        },
+        "pricedata2dev": {
+          "tableName": "pricedata2-dev",
+          "region": "ca-central-1",
+          "arn": "arn:aws:dynamodb:ca-central-1:547209680205:table/pricedata2-dev",
+          "streamArn": "arn:aws:dynamodb:ca-central-1:547209680205:table/pricedata2-dev/stream/2022-07-29T01:55:38.725",
+          "partitionKeyName": "users",
+          "partitionKeyType": "S"
+        }
+      }
+    }
+  }
+}

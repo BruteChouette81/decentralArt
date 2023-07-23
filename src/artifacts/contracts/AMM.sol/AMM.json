@@ -1,0 +1,515 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "contract credit",
+				"name": "_addrCredit",
+				"type": "address"
+			},
+			{
+				"internalType": "contract IERC20",
+				"name": "_addrTether",
+				"type": "address"
+			},
+			{
+				"internalType": "contract IUniswapV3Pool",
+				"name": "_addrPool",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_feePercent",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "Staked",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "recipient",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "Unstake",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "credits",
+		"outputs": [
+			{
+				"internalType": "contract credit",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_amountToken2",
+				"type": "uint256"
+			}
+		],
+		"name": "getEquivalentToken1Estimate",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "reqToken1",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_amountToken1",
+				"type": "uint256"
+			}
+		],
+		"name": "getEquivalentToken2Estimate",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "reqToken2",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getMyHoldings",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "amountToken1",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amountToken2",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "myShare",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getPoolDetails",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_amountToken1",
+				"type": "uint256"
+			}
+		],
+		"name": "getSwapToken1Estimate",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "amountToken2",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_amountToken2",
+				"type": "uint256"
+			}
+		],
+		"name": "getSwapToken1EstimateGivenToken2",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "amountToken1",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_amountToken2",
+				"type": "uint256"
+			}
+		],
+		"name": "getSwapToken2Estimate",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "amountToken1",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_amountToken1",
+				"type": "uint256"
+			}
+		],
+		"name": "getSwapToken2EstimateGivenToken1",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "amountToken2",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_share",
+				"type": "uint256"
+			}
+		],
+		"name": "getWithdrawEstimate",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "amountToken1",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amountToken2",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_amountToken2",
+				"type": "uint256"
+			}
+		],
+		"name": "paySeller",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "pool",
+		"outputs": [
+			{
+				"internalType": "contract IUniswapV3Pool",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_amountToken1",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amountToken2",
+				"type": "uint256"
+			}
+		],
+		"name": "provide",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "share",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_amountToken1",
+				"type": "uint256"
+			}
+		],
+		"name": "retrieveCredit",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_amountToken1",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint128",
+				"name": "liquidity",
+				"type": "uint128"
+			},
+			{
+				"internalType": "uint160",
+				"name": "sqrtPriceLimitX96",
+				"type": "uint160"
+			}
+		],
+		"name": "retrieveSeller",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "confirmation",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_amountToken2",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint128",
+				"name": "liquidity",
+				"type": "uint128"
+			},
+			{
+				"internalType": "uint160",
+				"name": "sqrtPriceLimitX96",
+				"type": "uint160"
+			}
+		],
+		"name": "stakeToken2",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "amount1",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount2",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_amountToken1",
+				"type": "uint256"
+			}
+		],
+		"name": "swapCredits",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "amountToken2",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_amountToken2",
+				"type": "uint256"
+			}
+		],
+		"name": "swapTether",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "amountToken1",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "tether",
+		"outputs": [
+			{
+				"internalType": "contract IERC20",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "totalShares",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "totalToken1",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "totalToken2",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_share",
+				"type": "uint256"
+			}
+		],
+		"name": "withdraw",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "amountToken1",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amountToken2",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+]

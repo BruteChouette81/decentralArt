@@ -1,0 +1,25 @@
+.payItem {
+    margin: 20px;
+    padding: 10px;
+    height: 700px;
+    width: 600px;
+    float: left;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.573), rgba(45, 45, 51, 0.573));
+    border-style: solid;
+    color: black;
+    border-radius: 15px;
+}
+
+.paymentcard{
+    border-style: solid;
+    border-radius: 15px;
+    padding: 10px;
+    background-color: black;
+    margin-bottom: 20px;
+}
+
+.separator {
+    height: 50px;
+    width: 400px;
+    background-color: silver;
+}

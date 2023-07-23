@@ -1,0 +1,13 @@
+a {
+    color: blue;
+}
+
+a:hover {
+    color:white;
+}
+
+.marco {
+    height: 20px;
+    width: auto;
+    padding-left: 30px;
+}

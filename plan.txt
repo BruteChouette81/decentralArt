@@ -1,0 +1,144 @@
+
+
+Create a new B2B example for artist to use the Imperial Technologies
+
+Goal: get a functionning and running application of the Imperial Technologies
+
+
+Plan: 
+
+    F2C: 
+    - make the payment work (switch to transak) DONE ✔️
+    - calculate the partner fee: https://support.transak.com/en/articles/7845942-how-does-transak-calculate-prices-and-fees
+    - be sure to well calculate total before any transaction
+    - connect to credit AMM everywhere it is needed
+    - reduce gas fees ==> switch to binance or see on eth mainnet DONE ✔️
+    - clean the code (remove unnessecary stuff)
+    
+    Account: 
+    
+    - make it work for both meta and Imperial  DONE ✔️
+    - change all wallets to work on main chain and creation of nfts 
+    - password system work ==> did for meta DONE ✔️
+    - add eth and usd support ==> new payment method
+    - clean the code (remove unnessecary stuff)
+
+    Market place:
+    - work out designs 
+    - clean the code (remove unnessecary stuff)
+    - modify the market reader to be allowed to see owner created NFTs DONE ✔️
+    - meta in market for buying DONE ✔️
+
+    
+    Controls:
+    - creating process DONE ✔️
+    - update the validation system DONE ✔️ and creation (new function) to cost less fees 
+    - be sure the validation and getClient functions works DONE ✔️ ==> need to change in dds for secret key to unlock Did so only the seller can get access to the id DONE ✔️ 
+    - listing process working ==> just update to transac + Get an estimate of all fees before listing to see the profit DONE ✔️
+    - work on a better looking ui for creating with crypto
+    - get the .wait and notifying at every step DONE ✔️ 
+    - update dds code and add new did DONE ✔️ 
+    - refund process working DONE ✔️ (calculate the fee when buying)
+    - no need to add transak support for owner account since he will already have ethereum DONE ✔️
+    - get the new tags for painting
+    - clean the code (remove unnessecary stuff)
+
+    -EVENT getter working 
+   
+
+    did: 
+     - add date of birth to did
+     - remove old did
+     - add bucket for transfer of identity with unlock key in transaction  DONE ✔️
+     - fix first time use bug DONE ✔️
+
+New DiD:  DONE ✔️
+    - goal: store information without it costing crazy DONE ✔️
+    - first: encrypt all information and store them as object in localstorage DONE ✔️
+    - once unlock, use the private key to decrypt the Did so only the wallet that created the Did can unlock it DONE ✔️
+    - update dId everywhere it need DONE ✔️
+
+Seller Setup:  
+
+    - program each supported withdraw option  DONE ✔️
+    - program the get_deposit_address  DONE ✔️
+    - link account (api)  DONE ✔️
+    - ui to link before stating selling  DONE ✔️
+   
+
+new amm: 
+- contract: 0xB18A97e590F1d0C1e0B9A3c3803557aa230FD21c DONE ✔️
+- new credits: 0x856b5ddDf0eCFf5368895e085d65179AA2Fcc4d9
+
+
+step 1/3: get listing(easy) DONE ✔️ + validation(long since remove fees) DONE ✔️/refund (remove fees)/proof of sending(test) DONE ✔️ + get Did bucket working DONE ✔️
+step 2/3: get F2C running everywhere DONE ✔️ + AMM DONE ✔️ + test:
+                                                                - push two new contract and test the getting of credits for basic pool, then stake
+
+ + clean server code (moralis update for working with balance, binance, analysis etc) and add balance  + setup password for metamask DONE ✔️ + add way to refund in $ ==> change the ramp-off provider to something allowing cad$
+step 3/3: clean and polish all the code and test
+
+
+Official plan: 
+
+    account: 
+
+    - BALANCE: make the currency selection affect the balance getting DONE ✔️
+
+    - event getter for tracking code working DONE ✔️
+
+    - when buying gas in any transactions: change usd price to CAD (get real price)
+
+    - reject list process (remove a lot of erc1155 stuff ) => only real item
+
+
+    market:
+    -only real items
+
+    -read special metadata DONE ✔️
+
+    -url to access specific items DONE ✔️ + did DONE ✔️ + generate in console.jsx DONE ✔️
+
+    seller:
+    - calculate the partner fee: https://support.transak.com/en/articles/7845942-how-does-transak-calculate-prices-and-fees  DONE ✔️
+    - calculation fee dashboard ==> decide who pays what ==> who much time of staking is necessary  DONE ✔️
+
+    - get the new tags for painting DONE ✔️ + massive posting (not a priority) DONE ✔️ => UI ==> add to list, them button appear to add more and multiMint
+
+    tags ==> in metadata ==> read in RealList ==> wrote to database(optionnal) DONE ✔️ ==> test
+
+    - ui to retrieve ==> what is staked and what can be retrieve ==> only metamask for seller (not imperial for now)
+    - add more methods (moonpay, banxa)
+    - tutorial 
+    - connect recipient as wallet deposit address ==> modify contract ==> add layerswap support for on and off ramp ==> https://docs.layerswap.io/user-docs/your-first-swap/off-ramp/send-assets-from-loopring
+
+    test:
+    - wallets on main chain (choose) choose over eth(v2), arbitrum L2, bnb chain
+    - clean the code (remove unnessecary stuff) => remove old did + all new address working + replace everything by /100,000 for decimals
+
+    - verify refund + test 
+
+    -retrieval method : stake and go work 
+    -buying process (with crypto) ==> create a custom stable coin to test tether
+    -buying crypto
+
+    sort//git repo
+    make tests 
+    make text 
+    renew imperialdao.net
+    launch
+
+
+
+user ===> F2C(transak, usdc) ===> amm (stores usdc) =====>> DDS (wait for POS)      |
+                                                                                    |
+                                                                                    |
+                                                        NFT transfers to user <-----------------> seller validate and get $credits
+                                                                |                                                   |
+                                                                |                                                   |
+                                                                |                                                   |
+            not validate: get $credits + refund using AMM  <---------> event getter                    STAKE FOR PERIOD OF TIME (13%)
+                        |                                                                                           |
+                        |                                                                                           ----> AMM retrieveMoney => retrieve using their SellerMoney pluggin
+                        | 
+            add a CEX pluggin for retrieve funds or F2C(Banxa)

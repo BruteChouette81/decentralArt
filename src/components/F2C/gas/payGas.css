@@ -1,0 +1,18 @@
+.payGas {
+    background-color: rgb(45, 45, 45);
+    border-radius: 15px;
+    text-align: start;
+    padding-top: 15px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+    color: white;
+}
+
+.paymentcard{
+    border-style: solid;
+    border-radius: 15px;
+    padding: 10px;
+    background-color: black;
+    margin-bottom: 20px;
+}

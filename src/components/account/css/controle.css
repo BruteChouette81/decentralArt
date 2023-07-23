@@ -1,0 +1,170 @@
+.notoken {
+    margin-top: 20px;
+    padding: 100px;
+    text-align: center;
+}
+
+.friends {
+    background-color: rgb(45, 45, 45);
+    border-radius: 15px;
+    text-align: start;
+    padding-top: 15px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+    color: white;
+}
+
+.pay {
+    background-color: rgb(45, 45, 45);
+    border-radius: 15px;
+    text-align: start;
+    padding-top: 15px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+    color: white;
+}
+
+.create {
+    background-color: rgb(45, 45, 45);
+    border-radius: 15px;
+    text-align: start;
+    padding-top: 15px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+    color: white;
+}
+
+.pos {
+    background-color: rgb(45, 45, 45);
+    border-radius: 15px;
+    text-align: start;
+    padding-top: 15px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+    color: white;
+}
+
+.submitPos {
+    background-color: rgb(21, 21, 21);
+    border-radius: 15px;
+    text-align: start;
+    padding-top: 15px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+    color: white;
+}
+
+.payGas {
+    background-color: rgb(45, 45, 45);
+    border-radius: 15px;
+    text-align: start;
+    padding-top: 15px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+    color: white;
+}
+
+.paymentcard{
+    border-style: solid;
+    border-radius: 15px;
+    text-align: start;
+    height: 300px;
+    width: 500px;
+    color: silver;
+    background-color: black;
+    margin-bottom: 20px;
+}
+
+.did {
+    background-color: rgb(45, 45, 45);
+    border-radius: 15px;
+    text-align: start;
+    padding-top: 15px;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 50px;
+    color: white;
+}
+
+.paymentinfo {
+    padding-left: 30px;
+}
+.separator {
+    height: 50px;
+    width: 400px;
+    background-color: silver;
+}
+
+#cardnum {
+    color: rgb(121, 147, 142);
+}
+
+.friendList {
+    border-style: solid;
+    border-radius: 15px;
+    padding: 10px;
+    background-color: black;
+}
+
+.ynftcard {
+    margin: 20px;
+    padding: 10px;
+    width: 250px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.573), rgba(45, 45, 51, 0.573));
+    border-style: solid;
+    color: white;
+    border-radius: 15px;
+    float: left;
+}
+
+.ordercard {
+    margin: 20px;
+    padding: 10px;
+    width: 250px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.573), rgba(45, 45, 51, 0.573));
+    border-style: solid;
+    color: white;
+    border-radius: 15px;
+}
+
+.listing {
+    margin: 20px;
+    padding: 10px;
+    height: 1200px;
+    width: 500px;
+    float: left;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.573), rgba(45, 45, 51, 0.573));
+    border-style: solid;
+    color: white;
+    border-radius: 15px;
+}
+
+#friendimg {
+    height: 20px;
+    width: 20px;
+    float: left;
+    vertical-align: middle;
+}
+
+#cardimg {
+    width: 200px;
+    height: 200px;
+    border-radius: 12px;
+    border-style: solid;
+}
+
+.Staking-Program {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.573), rgba(45, 45, 51, 0.573));
+    border-style: solid;
+    color: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    text-align: left;
+}

@@ -1,0 +1,46 @@
+.endofpage {
+    border-radius: 12px;
+    font-size: large;
+    margin-top: 200px;
+    padding-top: 80px;
+    padding-bottom: 150px;
+    padding-left: 20%;
+    color: black;
+    background-color: white;
+    text-align: start;
+    align-items: center;
+}
+a:hover {
+    color: rgb(73, 73, 255);
+}
+.siteinfo {
+    float: left;
+    text-align: start;
+    margin-left: 100px;
+    padding-right: 100px;
+}
+
+@media screen and (max-width:700px) {
+    .endofpage {
+        border-radius: 12px;
+        font-size: large;
+        margin-top: 100px;
+        padding-top: 20px;
+        padding-bottom: 50px;
+        padding-left: 4%;
+        color: black;
+        background-color: white;
+        text-align: start;
+        align-items: center;
+    }
+    .siteinfo {
+        float: left;
+        text-align: start;
+        margin-left: 10px;
+        padding-right: 10px;
+    }
+
+
+}
+
+/* background-image: linear-gradient(black, rgb(54, 59, 65)); */ 

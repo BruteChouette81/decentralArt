@@ -1,0 +1,17 @@
+{
+  "resourceName": "uploaddata",
+  "policyUUID": "3b7fd825",
+  "bucketName": "clientbc6cabec04d84d318144798d9000b9b3",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "groupAccess": {}
+}

@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "paths": {
+    "/livePrice": {
+      "name": "/livePrice",
+      "lambdaFunction": "mylambdax",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/uploadFile": {
+      "name": "/uploadFile",
+      "lambdaFunction": "mylambdax",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/historicalPrice": {
+      "name": "/historicalPrice",
+      "lambdaFunction": "mylambdax",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/liveMoney": {
+      "name": "/liveMoney",
+      "lambdaFunction": "mylambdax",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/timeInvest": {
+      "name": "/timeInvest",
+      "lambdaFunction": "mylambdax",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/connection": {
+      "name": "/connection",
+      "lambdaFunction": "mylambdax",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/listItem": {
+      "name": "/listItem",
+      "lambdaFunction": "mylambdax",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/getItems": {
+      "name": "/getItems",
+      "lambdaFunction": "mylambdax",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/updateScore": {
+      "name": "/updateScore",
+      "lambdaFunction": "mylambdax",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/requestFriend": {
+      "name": "/requestFriend",
+      "lambdaFunction": "mylambdax",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/acceptFriend": {
+      "name": "/acceptFriend",
+      "lambdaFunction": "mylambdax",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/manageFriend": {
+      "name": "/manageFriend",
+      "lambdaFunction": "mylambdax",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/metadata": {
+      "name": "/metadata",
+      "lambdaFunction": "mylambdax",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/nftbyaddress": {
+      "name": "/nftbyaddress",
+      "lambdaFunction": "mylambdax",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/getproofdata": {
+      "name": "/getproofdata",
+      "lambdaFunction": "mylambdax",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}
