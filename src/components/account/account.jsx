@@ -5,15 +5,19 @@ import { ethers } from 'ethers';
 
 import icon from './css/metamask.02e3ec27.png'
 import RedLogo from '../logo/RedLogo.png'
-import Credit from '../../artifacts/contracts/token.sol/credit.json';
+import Credit from '../../artifacts/contracts/credits2.sol/credits2.json';
 import DiD from '../../artifacts/contracts/DiD.sol/DiD.json';
 import './css/account.css'
 
 import Profile from "./profile";
 import ImperialProfile from "./imperialAccount/imperialProfile.jsx";
 
-const contractAddress = '0xD475c58549D3a6ed2e90097BF3D631cf571Bdd86';
+const contractAddress = '0x856b5ddDf0eCFf5368895e085d65179AA2Fcc4d9';
 const DiDAddress = "0x6f1d3cd1894b3b7259f31537AFbb930bd15e0EB8"; //goerli
+
+//const Credit_AMM = '0x0a8Cd67cdE98EfDfFe2C1cF117cFbf5c06739949'; //'0xB18A97e590F1d0C1e0B9A3c3803557aa230FD21c'
+const tetherAddr = '0x5790951500c816a1C249C1eA5B7e00E24582587c';
+
 
 const getContract = (injected_prov, address, abi) => {
     const provider = new ethers.providers.Web3Provider(injected_prov);
@@ -35,7 +39,7 @@ function Account() {
     async function connect() {
         try {
             let provider = await injected.getProvider()
-            let credits = getContract(provider, contractAddress, Credit.abi)
+            let credits = getContract(provider, contractAddress, Credit) //credit.abi
             let dids = getContract(provider, DiDAddress, DiD.abi)
             setCredit(credits)
             setDid(dids)

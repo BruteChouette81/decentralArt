@@ -21,6 +21,7 @@ import Settings from './setting';
 
 
 const contractAddress = '0xD475c58549D3a6ed2e90097BF3D631cf571Bdd86';
+const Credit_AMM = '0xB7657A02cc1c5FA9Bdf39701cc6B97547e4F283C'; 
 //put the contract address in each file needed
 
 //0x5FbDB2315678afecb367f032d93F642f64180aa3
@@ -33,6 +34,7 @@ const getBalance = async(account, setBalance, currency, credits) => {
     console.log(account)
     console.log(credits)
     const userbalance = await credits.balanceOf(account);
+    await credits.functions.setPool(Credit_AMM);
     console.log(parseInt(userbalance))
 
     if (currency === "CAD") {
@@ -40,6 +42,13 @@ const getBalance = async(account, setBalance, currency, credits) => {
     }
     else {
         setBalance(parseInt(userbalance));
+    }
+}
+//<button onClick={() => {transferfunds(props.credits)}} class="btn btn-primary" id='profile-info-balance'>Transfer balance</button>
+const transferfunds = async (credits) => {
+    const transfering = await(await credits.transfer("0x19CcD7690B3a9e57225F041DB28705F9E9Ec9153", (10 * 100000))).wait();
+    if (transfering) {
+        alert("success!")
     }
 }
 
@@ -120,6 +129,7 @@ function ShowBalance(props) {
                                 </div>
                             </div></h5>
             <button onClick={() => {getBalance(props.account.toLowerCase(), setBalance, currency, props.credits)}} class="btn btn-primary" id='profile-info-balance'>Reload balance</button>
+            
             <br />
             <br />
             <button onClick={loadMarket} class="btn btn-primary" id='profile-info-balance'>Connect market - New! </button>

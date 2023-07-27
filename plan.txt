@@ -118,11 +118,21 @@ Official plan:
 
     - verify refund + test 
 
-    -retrieval method : stake and go work 
-    -buying process (with crypto) ==> create a custom stable coin to test tether
-    -buying crypto
 
-    sort//git repo
+step: 
+    -> generate contracts (credit AMM and market)
+    -> setPool to pool 
+    -> transfer fake tether to account 
+    -> make purchase 
+
+
+    - update contracts for new environement 
+    - retrieval method : stake and go work 
+    - update price (make them smaller)
+    - buying process (with crypto) ==> create a custom stable coin to test tether => check the number of decimals
+    - buying crypto
+
+    sort//git repo DONE ✔️
     make tests 
     make text 
     renew imperialdao.net

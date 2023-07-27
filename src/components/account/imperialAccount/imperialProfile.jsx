@@ -7,6 +7,7 @@ import default_profile from "../profile_pics/default_profile.png"
 import Credit from '../../../artifacts/contracts/token.sol/credit.json';
 import DiD from '../../../artifacts/contracts/DiD.sol/DiD.json';
 import AMMABI from '../../../artifacts/contracts/AMM.sol/AMM.json'
+import AMM2ABI from '../../../artifacts/contracts/AM2.sol/AMM2.json'
 
 import "../css/profile.css"
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -15,10 +16,11 @@ import 'bootstrap/dist/js/bootstrap.min.js'
 import DisplayActions from '../controle';
 import Settings from '../setting';
 
-const contractAddress = '0xD475c58549D3a6ed2e90097BF3D631cf571Bdd86';
+const contractAddress = '0x856b5ddDf0eCFf5368895e085d65179AA2Fcc4d9';
 const DiDAddress = "0x6f1d3cd1894b3b7259f31537AFbb930bd15e0EB8"; //goerli
 
-const Credit_AMM = '0xB18A97e590F1d0C1e0B9A3c3803557aa230FD21c'
+const Credit_AMM = '0xB7657A02cc1c5FA9Bdf39701cc6B97547e4F283C'; //'0xB18A97e590F1d0C1e0B9A3c3803557aa230FD21c'
+const tetherAddr = '0x5790951500c816a1C249C1eA5B7e00E24582587c';
 
 const getContract = (signer, abi, address) => {
     // get the end user
@@ -30,6 +32,7 @@ const getContract = (signer, abi, address) => {
 
 const getBalance = async(account, setBalance, currency, credits) => {
     const userbalance = await (await credits).functions.balanceOf(account)
+
     if (currency === "CAD") {
         setBalance(parseInt(userbalance) * 1.36);
     }
@@ -140,7 +143,7 @@ function ShowBalance(props) {
                                 </div>
                             </div>
             </h5>
-            <button onClick={() => {getBalance(props.account, setBalance, currency, props.credits)}} class="btn btn-primary" id='profile-info-balance'>Reload balance</button>
+            <button onClick={() => {getBalance(props.account, setBalance, currency, props.tether)}} class="btn btn-primary" id='profile-info-balance'>Reload balance</button>
             <br />
             <br />
             <button onClick={loadMarket} class="btn btn-primary" id='profile-info-balance'>Connect market - New! </button>
@@ -167,6 +170,7 @@ function ShowDescription(props) {
 
 function ImperialProfile() {
     const [credit, setCredit] = useState()
+    const [tether, setTether] = useState()
     const [did, setDid] = useState()
     const [amm, setAmm] = useState()
     //const [address, setAddress] = useState()
@@ -276,6 +280,9 @@ function ImperialProfile() {
             let userwallet = new ethers.Wallet(response.privatekey, provider)
             //let userwallet = new ethers.Wallet.fromEncryptedJson(response.privatekey, password)
             let contract = getContract(userwallet, Credit.abi, contractAddress)
+            let tether = getContract(userwallet, Credit.abi, tetherAddr)
+            setTether(tether)
+
             setSigner(userwallet)
             //getBalance(account, setBalance, setMoney, contract); only connected to mainnet
             setCredit(contract)
@@ -343,7 +350,7 @@ function ImperialProfile() {
                     <ShowAccount account={signer?.address} level={level} />
                     <ShowUsername name={name}/>
                     <ShowDescription description={description} />
-                    <ShowBalance account={signer?.address} credits={credit} />
+                    <ShowBalance account={signer?.address} credits={credit} tether={tether} />
                 </div>
                 <br />
                 <DisplayActions balance={balance} livePrice={money} request={request} friendList={friendList} signer={signer} account={signer?.address} pay={pay}  did={did} realPurchase={realPurchase} level={level} amm={amm}/>

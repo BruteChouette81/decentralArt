@@ -60,7 +60,7 @@ function PayItems(props) {
             cryptoCurrencyCode: 'USDC',
             network: 'arbitrum',
             walletAddress: props.account.toString(),
-            fiatAmount: 100, //+ props.fees (props.total/10000 * 1.36)
+            fiatAmount: 100, //+ props.fees (props.total/100000 * 1.36)
             userData: {
                 first_name: res.first_name,
                 last_name: res.last_name,
@@ -122,7 +122,7 @@ function PayItems(props) {
                 <br />
                 
                 <h6>Currency selecting: <strong>{window.localStorage.getItem("currency")}</strong></h6>
-                <h5>Total {window.localStorage.getItem("currency")} price: {window.localStorage.getItem("currency") === "CAD" ? (props.total/10000 * 1.36) : (props.total/10000)} </h5>
+                <h5>Total {window.localStorage.getItem("currency")} price: {window.localStorage.getItem("currency") === "CAD" ? (props.total/100000 * 1.36) : (props.total/100000)} </h5>
 
                 <button onClick={checkout} class="btn btn-primary">Authorize Transaction</button> <button onClick={props.cancel} class="btn btn-danger">Cancel</button>
             </div>)}

@@ -245,7 +245,7 @@ const listDDS = async (tokenid, price, account, name, description, image, tag, n
                 //add pending screem
                 
                 //create a new item with a sell order
-                await(await DDS.listItem(nft.address, parseInt(tokenid), parseInt(price * 10000), parseInt(numDays))).wait()
+                await(await DDS.listItem(nft.address, parseInt(tokenid), parseInt(price * 100000), parseInt(numDays))).wait()
                 const marketCountIndex = await DDS.itemCount()
                 var data = {
                     body: {
@@ -1998,7 +1998,7 @@ function DisplayActions(props) {
                 'X-API-Key': web3ApiKey
               }
             };
-            let address = '0x19CcD7690B3a9e57225F041DB28705F9E9Ec9153'
+            let address = '0x4c62fc52d5ad4c8273feb97684ba612288ee9507'
             let nftlist = []
             
             fetch('https://deep-index.moralis.io/api/v2/'+ address + '/nft?chain=goerli&format=decimal&media_items=false', options) //chain to arbitrum

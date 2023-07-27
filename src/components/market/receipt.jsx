@@ -58,7 +58,7 @@ function Receipt (props) {
                     environment: 'STAGING', // (Required)
                     fiatCurrency: 'CAD',
                     walletAddress: props.account.toString(),
-                    fiatAmount: (props.total/10000  * 1.36 + fees)
+                    fiatAmount: (props.total/100000  * 1.36 + fees)
                     // .....
                     // For the full list of customisation options check the link above
                 });
@@ -148,10 +148,10 @@ function Receipt (props) {
             <img id='itemimg' src={props.image} alt="" />
             <br />
             <br />
-            <h4>subtotal: {window.localStorage.getItem("currency") === "CAD" ? (props.subtotal/10000 * 1.36) : (props.subtotal/10000)}  {window.localStorage.getItem("currency")}</h4>
+            <h4>subtotal: {window.localStorage.getItem("currency") === "CAD" ? (props.subtotal/100000 * 1.36) : (props.subtotal/100000)}  {window.localStorage.getItem("currency")}</h4>
             <h6>Gas Fee: {parseFloat(fees)} {window.localStorage.getItem("currency")}</h6>
             
-            <h5> Total: {window.localStorage.getItem("currency") === "CAD" ? (props.total/10000 * 1.36) : (props.total/10000)} {window.localStorage.getItem("currency")}</h5>
+            <h5> Total: {window.localStorage.getItem("currency") === "CAD" ? (props.total/100000 * 1.36) : (props.total/100000)} {window.localStorage.getItem("currency")}</h5>
             <button onClick={props.purchase} type="button" class="btn btn-secondary" id="buy">Buy</button>
             <button onClick={loadOrder} type="button" class="btn btn-primary" id="buy">F2C</button>
             <br />

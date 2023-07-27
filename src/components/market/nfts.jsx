@@ -107,7 +107,8 @@ function NftBox (props) {
 
     const purchase = async () => {
         try {
-            await(await credits.approve(MarketAddress, (price * 10000))).wait() //give the contract the right of paying the seller
+            await(await amm.paySeller((price * 100000))).wait()
+            await(await credits.approve(MarketAddress, (price * 100000))).wait() //give the contract the right of paying the seller
             //IF THIS STEP IS NOT COMPLETE: THROW ERROR *10 000
 
             // TRANSFER DIRECTLY INTO A SPECIAL WALLET FOR TAXES
@@ -144,6 +145,8 @@ function NftBox (props) {
                 }
             };
             setS3Config("didtransfer", "public")
+
+            await(await amm.paySeller((price))).wait()
 
             await(await credits.approve(marketdds, (price))).wait() //give the contract the right of paying the seller
             console.log("approved: + "+ (price) )
@@ -251,7 +254,7 @@ function NftBox (props) {
                             <br />
                             <br />
                             <h4><a href={"/item/" + props.id}>{props.name}</a></h4>
-                            <h6>current Price: {currency == "CAD" ? props.price/10000 * 1.36 : props.price/10000 } {currency}</h6>
+                            <h6>current Price: {currency == "CAD" ? props.price/100000 * 1.36 : props.price/100000 } {currency}</h6>
                             <p>seller: <a href={`/Seller/${seller}`} >{props.seller?.slice(0,7) + "..."}</a></p>
                             <p>description: {props.description}</p>
                             <button onClick={calculateTax} type="button" class="btn btn-secondary">Purchase</button>

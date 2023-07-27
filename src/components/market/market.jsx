@@ -13,7 +13,8 @@ import erc721ABI from '../../artifacts/contracts/nft.sol/nft.json'
 import Credit from '../../artifacts/contracts/token.sol/credit.json';
 import DiD from '../../artifacts/contracts/DiD.sol/DiD.json';
 import DDSABI from '../../artifacts/contracts/DDS.sol/DDS.json'
-import AMMABI from '../../artifacts/contracts/AMM.sol/AMM.json'
+import AMMABI from '../../artifacts/contracts/AM2.sol/AMM2.json'
+
 
 import NftBox from './nfts';
 import PayGasList from '../F2C/gas/payGasList';
@@ -24,7 +25,7 @@ const CreditsAddress = "0xD475c58549D3a6ed2e90097BF3D631cf571Bdd86" //goerli tes
 const NftAddress = '0x3d275ed3B0B42a7A3fCAA33458C34C0b5dA8Cc3A'; // goerli new test contract
 const DiDAddress = "0x6f1d3cd1894b3b7259f31537AFbb930bd15e0EB8" //goerli test contract 
 
-const Credit_AMM = '0xB18A97e590F1d0C1e0B9A3c3803557aa230FD21c' //working with: 0x856b5ddDf0eCFf5368895e085d65179AA2Fcc4d9 credits contract
+const Credit_AMM = '0xB7657A02cc1c5FA9Bdf39701cc6B97547e4F283C' //working with: 0x856b5ddDf0eCFf5368895e085d65179AA2Fcc4d9 credits contract
 
 // two categories: bid and fix price. 
 // each => one database
