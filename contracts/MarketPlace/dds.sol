@@ -6,7 +6,67 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "../myCrypto/token.sol";
 import "./Rnft.sol";
 
-contract DDS {
+contract Ownable { 
+  // Variable that maintains 
+  // owner address
+  address private _owner;
+  
+  // Sets the original owner of 
+  // contract when it is deployed
+  constructor()
+  {
+    _owner = msg.sender;
+  }
+  
+  // Publicly exposes who is the
+  // owner of this contract
+  function owner() public view returns(address) 
+  {
+    return _owner;
+  }
+  
+  // onlyOwner modifier that validates only 
+  // if caller of function is contract owner, 
+  // otherwise not
+  modifier onlyOwner() 
+  {
+    require(isOwner(),
+    "Function accessible only by the owner !!");
+    _;
+  }
+  
+  // function for owners to verify their ownership. 
+  // Returns true for owners otherwise false
+  function isOwner() public view returns(bool) 
+  {
+    return msg.sender == _owner;
+  }
+}
+
+contract PoolOwnable is Ownable {
+    address private _pool;
+  
+  // Sets the original owner of 
+  // contract when it is deployed
+
+  modifier onlyPool() 
+  {
+    require(isPool(),
+    "Function accessible only by the owner !!");
+    _;
+  }
+
+  function isPool() public view returns(bool) 
+  {
+    return msg.sender == _pool;
+  }
+
+    function setPool(address pool) public onlyOwner {
+        _pool = pool;
+    }
+}
+
+contract DDS is PoolOwnable {
     uint public itemCount; 
     credit public credits; //mainnet program: 0x6CFADe18df81Cd9C41950FBDAcc53047EdB2e565 //0xD475c58549D3a6ed2e90097BF3D631cf571Bdd86
     RealItem public realItems; // goerli: 0xbC1Fe9f6B298cCCd108604a0Cf140B2d277f624a
@@ -23,10 +83,6 @@ contract DDS {
         uint startingBlock;
     }
 
-    struct Information {
-        uint256 key;
-        uint256 id;
-    }
 
 
 
@@ -35,7 +91,7 @@ contract DDS {
     // seller -> [1: itemId, 2: itemId ...]
     mapping(address => mapping(uint256 => uint256)) public purchased;
     //itemId -> infos
-    mapping(uint => Information) internal infos;
+    mapping(uint => string) internal infos;
 
     
 
@@ -134,10 +190,15 @@ contract DDS {
         return purchased[_seller][_id];
     }
 
-    function getClientInfos(uint _itemId, uint _orderId) public view returns (uint key, uint id){
+    function getClientInfos(uint _itemId, uint _orderId) public view returns (string memory _info){
         require(purchased[msg.sender][_orderId] == _itemId, "Need to be the seller of the item in order to get their DID");
-        Information storage info = infos[_itemId];
-        return (info.key, info.id);
+        string memory info = infos[_itemId];
+        return info;
+    }
+    function getClientInfosPool(uint _itemId) public onlyPool view returns (string memory _info){
+        //require(purchased[msg.sender][_orderId] == _itemId, "Need to be the seller of the item in order to get their DID");
+        string memory info = infos[_itemId];
+        return info;
     }
 
     //make another function to confirm with a cron job API that poll an api
@@ -178,7 +239,7 @@ contract DDS {
     
 
 
-    function purchaseItem(uint _itemId, uint256 _numItem, uint256 _key, uint256 _id) external  {
+    function purchaseItem(uint _itemId, uint256 _numItem, string memory _key) external  {
         Item storage item = items[_itemId];
         require(_itemId > 0 && _itemId <= itemCount, "item doesn't exist");
         //require(msg.value >= _totalPrice, "not enough ether to cover item price and market fee");
@@ -186,10 +247,7 @@ contract DDS {
         require(credits.allowance(msg.sender, address(this)) == item.price, "Need to approove!");
         // transfer credits to the contract and add the seller to the approval list
         purchased[address(item.seller)][_numItem + 1] = _itemId;
-        infos[_itemId] = Information(
-            _key, 
-            _id
-        );
+        infos[_itemId] = _key;
 
         //credits stay in contract until payed
         credits.transferFrom(msg.sender, address(this), item.price); //approve the contract
@@ -212,3 +270,4 @@ contract DDS {
     }
 
 }
+

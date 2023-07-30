@@ -49,6 +49,11 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "paypalHandler": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "api": {
@@ -59,6 +64,14 @@
         {
           "category": "function",
           "resourceName": "mylambdax",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "paypalHandler",
           "attributes": [
             "Name",
             "Arn"

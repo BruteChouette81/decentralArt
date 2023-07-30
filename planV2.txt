@@ -1,0 +1,46 @@
+plan to partially remove crypto using protocol (convention code)
+
+NAME: Centralized payment ledger 
+
+DESCRIPTION: portocol or convention to allow fiat payment to be as decentralized as crypto payment.
+
+
+architecture: 
+
+1. user ==> transfer fiat to payment processing oracle with key (keccak DID first 10 chars )
+2. payment processing oracle ==> transfer $credits to user (lock fiat in account) ==> gas fees
+3. transfer $credits to market (lock them in market)
+4. transfer $credits to seller once approoved 
+5. exchange $credits to oracle (stake or go)
+6. if stake: setup a centralized retrieval method
+7. stake USDC and gather rewards  
+
+(4.) if not approved in time: transfer $credits to buyer and exchange them for fiat
+
+oracle: own ETH account that authenticate in the Only pool 
+
+**important: apply changes to decentralized payment system to keep everything together
+
+**important: gas fee: make the oracle pay for it, but charge seller with it (penality on $credits next time they want to retrieve cash) -> make cash on penalities
+
+**important: proof of decentralization: creation of new account + never changing address
+
+**didtransfer: seller _address/ buyer _address .txt 
+
+new contracts :
+-credits: 0xc183177E3207788ea9342255C8Fcb218763d46e2
+-Rnft same:0xbC1Fe9f6B298cCCd108604a0Cf140B2d277f624a
+-dds: 0xcAd1B86F5022A138053577ae03Ab773Ee770ec21
+
+oracle PK: 0x4f45888c729970b39108025be0ef0dc0b9d3e7ac7b9e2b66b02add124750ec5e
+
+
+PAYPAL:
+
+client Id: AbONA1Q9rbHJLPe5ZGWwssIF8z06zRc6y1qU2LsPp0lXaZYjqaCjSTXuC7sAdFW2E_AZCUOuJvnZDhaZ
+secret: EIKRUllYOi1Y3h13zdpAWCT-dNICCrvI71X9V_7tgFKpP2hFaQSIKuj3OK--vGSpiO2IRB0s9_99E0Pe
+
+email: sb-bk47ua26361299@business.example.com
+pass: Yx&{St9D
+
+

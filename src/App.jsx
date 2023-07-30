@@ -17,6 +17,8 @@ import Market from './components/market/market'
 
 import Item from './components/market/item'
 
+//contracts 
+
 
 //Amplify
 import { Amplify, Auth, Storage} from 'aws-amplify'; //import { Amplify, Auth, Storage } from 'aws-amplify'; - see manual config using auth and storage

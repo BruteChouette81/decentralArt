@@ -295,6 +295,10 @@ function ImperialProfile() {
 
            
         })
+
+        API.get('serverv2', "/getOracleAddr").then((response) => {
+            console.log(response);
+        })
     
     }
 

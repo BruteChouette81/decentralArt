@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 
 import {ethers} from 'ethers'
 
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+
 import transakSDK from '@transak/transak-sdk';
 
 import placeOrder from "../F2C/testapi";
@@ -13,6 +15,7 @@ import injected from "../account/connector.js"
 import ReactLoading from "react-loading";
 
 import DDSABI from '../../artifacts/contracts/DDS.sol/DDS.json'
+import { API } from "aws-amplify";
 const DDSGasContract = '0x14b92ddc0e26C0Cf0E7b17Fe742361B8cd1D95e1'
 
 const connectContract = (address, abi, injected_prov) => { //for metamask
@@ -154,6 +157,33 @@ function Receipt (props) {
             <h5> Total: {window.localStorage.getItem("currency") === "CAD" ? (props.total/100000 * 1.36) : (props.total/100000)} {window.localStorage.getItem("currency")}</h5>
             <button onClick={props.purchase} type="button" class="btn btn-secondary" id="buy">Buy</button>
             <button onClick={loadOrder} type="button" class="btn btn-primary" id="buy">F2C</button>
+            <br /><br />
+            <PayPalScriptProvider options={{ clientId: "AbONA1Q9rbHJLPe5ZGWwssIF8z06zRc6y1qU2LsPp0lXaZYjqaCjSTXuC7sAdFW2E_AZCUOuJvnZDhaZ", currency: "CAD" }}>
+                <PayPalButtons
+                    createOrder={async () => {
+                        let dataoptions = {
+                            body: {
+                                amount: (props.subtotal/100000 * 1.36)
+                            }
+                        }
+                        return API.post('serverv2', "/create-paypal-order", dataoptions).then((order) => order.id);
+                    }}
+                    onApprove={async (data) => {
+                        let dataoptions = {
+                            body: {
+                                orderID: data.orderID
+                            }
+                        }
+                        return API.post('serverv2', "/capture-paypal-order", dataoptions).then((orderData) => {
+                            console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                            const transaction = orderData.purchase_units[0].payments.captures[0];
+                            alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+
+                        });
+                    }}
+                />
+            </PayPalScriptProvider>
+            
             <br />
             <br />
             <button onClick={props.cancel} type="button" class="btn btn-danger">Cancel</button></div> )} </div>) : (<PayItems pk={props.pk} total={props.total} fees={fees} account={props.account} purchase={props.purchase} amm={props.amm} cancel={props.cancel}/>)}

@@ -105,6 +105,34 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/create-paypal-order": {
+      "name": "/create-paypal-order",
+      "lambdaFunction": "paypalHandler",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/capture-paypal-order": {
+      "name": "/capture-paypal-order",
+      "lambdaFunction": "paypalHandler",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/getOracleAddr": {
+      "name": "/getOracleAddr",
+      "lambdaFunction": "paypalHandler",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/get-payed": {
+      "name": "/get-payed",
+      "lambdaFunction": "paypalHandler",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }
