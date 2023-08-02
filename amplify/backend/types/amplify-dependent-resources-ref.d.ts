@@ -1,4 +1,14 @@
 export type AmplifyDependentResourcesAttributes = {
+    "storage": {
+        "cpl": {
+            "Name": "string",
+            "Arn": "string",
+            "StreamArn": "string",
+            "PartitionKeyName": "string",
+            "PartitionKeyType": "string",
+            "Region": "string"
+        }
+    },
     "function": {
         "mylambdax": {
             "Name": "string",

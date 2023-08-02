@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@arbitrum/sdk": "^3.1.6",
     "@moralisweb3/common-evm-utils": "^2.22.3",
     "@paypal/react-paypal-js": "^8.1.0",
     "@testing-library/jest-dom": "^5.16.4",

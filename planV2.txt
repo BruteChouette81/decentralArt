@@ -23,6 +23,19 @@ oracle: own ETH account that authenticate in the Only pool
 
 **important: gas fee: make the oracle pay for it, but charge seller with it (penality on $credits next time they want to retrieve cash) -> make cash on penalities
 
+list of applicable fees: 
+-> mint nft using oracle to contract 0.5 ==> 0.0000626268 0.15$ 0.0000810796 0.15$ 0.0000626244 0.15$
+-> mint token 0.5 ==> 0.0000683518 or 0.15 $ high price 
+-> allowance 0.5 ==> 0.0000713429 or 0.15 $ high price 
+-> transfer 0.5 ==> 0.0001127293 or 0.25 $ high price 
+-> (refund--> eliminate gas use CPL)
+-> proove 0.5 ==>0.0000855221 or 0.20 $ high price 
+-> burn 0.5 ==> 0.0000683518 or 0.15 $ high price 
+
+total: 1,5$ we chage 3$
+
+max amount 3$ --> be return minus penalities
+
 **important: proof of decentralization: creation of new account + never changing address
 
 **didtransfer: seller _address/ buyer _address .txt 
@@ -32,7 +45,7 @@ new contracts :
 -Rnft same:0xbC1Fe9f6B298cCCd108604a0Cf140B2d277f624a
 -dds: 0xcAd1B86F5022A138053577ae03Ab773Ee770ec21
 
-oracle PK: 0x4f45888c729970b39108025be0ef0dc0b9d3e7ac7b9e2b66b02add124750ec5e
+oracle PK: 0xbc2ba2203c4cc302fcfb2df6358d01f6a15bd0d363bb1cabd17aef51921d501b
 
 
 PAYPAL:
@@ -44,3 +57,41 @@ email: sb-bk47ua26361299@business.example.com
 pass: Yx&{St9D
 
 
+STAKING/DEFI: 
+
+- choose a defi service or pay after a certain point
+- terms can be arguable (time of invest)
+- all crypto is collected our side using centralized exchange 
+- after transfering to dollars: automarize a connected other paypal account to transfer funds to user
+
+URLs:
+
+    Exchanges:
+        karken docs: https://docs.kraken.com/rest/#tag/User-Trading/operation/addOrder
+        kraken withdraw: https://kraken.zendesk.com/hc/en-us/articles/360000423043-Cash-withdrawal-options-fees-minimums-and-processing-times-
+        crypto.com docs: https://exchange-docs.crypto.com/exchange/v1/rest-ws/index.html#private-get-deposit-address
+        bitbuy docs: https://bitbuy.ca/bitbuy-api
+
+    Staking / DeFi:
+        liquidity - uniswap: https://info.uniswap.org/#/arbitrum/pools/0xc31e54c7a869b9fcbecc14363cf510d1c41fa443 // docs: https://github.com/Uniswap/v3-core/blob/main/contracts/interfaces/pool/IUniswapV3PoolActions.sol
+        lend (centralized): https://www.bybit.com/en-US/earn/savings/
+        lend (decentralized): https://www.youhodler.com/loyalty
+        lend (centralized/more legit): https://crypto.com/ca/earn
+        usdc docs for staking: https://www.circle.com/en/
+        high reward lending: https://stakingcrypto.info/en/lending/usd-coin
+
+    won't need:
+        moonpay (won't need): https://docs.moonpay.com/moonpay/implementation-guide/off-ramp#confirm-supported-regions-currencies-and-bank-account-types
+        banxa docs (won't need): https://docs.banxa.com/docs/partner-dashboard-configurations
+
+    ecom: https://www.edesk.com/fr/blog/ecommerce-website-cost/
+
+list of tests: 
+    - did (meta and imperial) --> change pk to password
+    - did transfer
+    - paypal buying  DONE ✔️ --> frontend 
+    - crypto buying (disabled)
+    - retrieving money
+    - gas CALCULATING !!! tracking / penalities 
+    - feed the oracle eth (2-3$ per items ) --> build a eth automatic buyer system -> for staking 
+    - 

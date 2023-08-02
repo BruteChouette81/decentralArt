@@ -171,7 +171,10 @@ function Receipt (props) {
                     onApprove={async (data) => {
                         let dataoptions = {
                             body: {
-                                orderID: data.orderID
+                                orderID: data.orderID,
+                                address: props.account, 
+                                amount: (props.subtotal/100000 * 1.36),
+                                buying: true
                             }
                         }
                         return API.post('serverv2', "/capture-paypal-order", dataoptions).then((orderData) => {
@@ -179,6 +182,7 @@ function Receipt (props) {
                             const transaction = orderData.purchase_units[0].payments.captures[0];
                             alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
 
+                            props.purchase()
                         });
                     }}
                 />

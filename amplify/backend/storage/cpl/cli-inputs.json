@@ -1,0 +1,10 @@
+{
+  "resourceName": "cpl",
+  "tableName": "cpl-database",
+  "partitionKey": {
+    "fieldName": "id",
+    "fieldType": "number"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}

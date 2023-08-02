@@ -167,6 +167,38 @@ contract DDS is PoolOwnable {
         );
     }
 
+    function mintList(address account, string memory uri, uint _price, uint _numDays) public onlyPool() {
+       
+        require(_price > 0, "Price must be greater than zero");
+        // increment itemCount
+        itemCount ++;
+
+        // mint nft
+        
+        uint id = realItems.safeMint(account, uri);
+        // add new item to items mapping
+        items[itemCount] = Item (
+            itemCount,
+            _nft,
+            _tokenId,
+            _price,
+            address(account),
+            false,
+            false,
+            _numDays * 5760,
+            0
+        );
+        // emit Offered event
+        emit Offered(
+            itemCount,
+            address(_nft),
+            _tokenId,
+            _price,
+            msg.sender
+        );
+    }
+    }
+
     function deleteItem(uint _itemId) public {
         Item storage item = items[_itemId];
         require(_itemId > 0 && _itemId <= itemCount, "item doesn't exist");

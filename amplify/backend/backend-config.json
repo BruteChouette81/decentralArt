@@ -126,6 +126,10 @@
       "serviceType": "imported",
       "providerPlugin": "awscloudformation",
       "dependsOn": []
+    },
+    "cpl": {
+      "service": "DynamoDB",
+      "providerPlugin": "awscloudformation"
     }
   },
   "auth": {

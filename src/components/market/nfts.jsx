@@ -146,7 +146,7 @@ function NftBox (props) {
             };
             setS3Config("didtransfer", "public")
 
-            await(await amm.paySeller((price))).wait()
+            //await(await amm.paySeller((price))).wait()
 
             await(await credits.approve(marketdds, (price))).wait() //give the contract the right of paying the seller
             console.log("approved: + "+ (price) )
@@ -158,7 +158,7 @@ function NftBox (props) {
 
             API.put('serverv2', url, config).then((response) => {
                 console.log(response)
-                Storage.put(`${account.toLowerCase()}.txt`, window.localStorage.getItem("did")).then((results) => { // add ".png"
+                Storage.put(`${seller.toLowerCase()}/${account.toLowerCase()}.txt`, window.localStorage.getItem("did")).then((results) => { // add ".png"
                     console.log(results)
                     setBuyloading(false)
                 });

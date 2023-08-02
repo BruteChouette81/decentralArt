@@ -4,10 +4,11 @@ import { API, Storage } from 'aws-amplify';
 
 import default_profile from "../profile_pics/default_profile.png"
 
-import Credit from '../../../artifacts/contracts/token.sol/credit.json';
+import Credit from '../../../artifacts/contracts/credits2.sol/credits2.json';
 import DiD from '../../../artifacts/contracts/DiD.sol/DiD.json';
 import AMMABI from '../../../artifacts/contracts/AMM.sol/AMM.json'
-import AMM2ABI from '../../../artifacts/contracts/AM2.sol/AMM2.json'
+import DDSABI from '../../../artifacts/contracts/DDS.sol/DDS.json'
+import realabi from '../../../artifacts/contracts/Real.sol/Real.json'
 
 import "../css/profile.css"
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -16,11 +17,12 @@ import 'bootstrap/dist/js/bootstrap.min.js'
 import DisplayActions from '../controle';
 import Settings from '../setting';
 
-const contractAddress = '0x856b5ddDf0eCFf5368895e085d65179AA2Fcc4d9';
+const contractAddress = '0xc183177E3207788ea9342255C8Fcb218763d46e2';
 const DiDAddress = "0x6f1d3cd1894b3b7259f31537AFbb930bd15e0EB8"; //goerli
 
-const Credit_AMM = '0xB7657A02cc1c5FA9Bdf39701cc6B97547e4F283C'; //'0xB18A97e590F1d0C1e0B9A3c3803557aa230FD21c'
-const tetherAddr = '0x5790951500c816a1C249C1eA5B7e00E24582587c';
+const Credit_AMM = '0xcAd1B86F5022A138053577ae03Ab773Ee770ec21'; //'0xB18A97e590F1d0C1e0B9A3c3803557aa230FD21c'
+const DDSADDr = '0xcAd1B86F5022A138053577ae03Ab773Ee770ec21';
+const ImperialRealAddress = '0xbC1Fe9f6B298cCCd108604a0Cf140B2d277f624a'
 
 const getContract = (signer, abi, address) => {
     // get the end user
@@ -31,7 +33,7 @@ const getContract = (signer, abi, address) => {
 }
 
 const getBalance = async(account, setBalance, currency, credits) => {
-    const userbalance = await (await credits).functions.balanceOf(account)
+    const userbalance = await credits.balanceOf(account)
 
     if (currency === "CAD") {
         setBalance(parseInt(userbalance) * 1.36);
@@ -143,7 +145,7 @@ function ShowBalance(props) {
                                 </div>
                             </div>
             </h5>
-            <button onClick={() => {getBalance(props.account, setBalance, currency, props.tether)}} class="btn btn-primary" id='profile-info-balance'>Reload balance</button>
+            <button onClick={() => {getBalance(props.account, setBalance, currency, props.credits)}} class="btn btn-primary" id='profile-info-balance'>Reload balance</button>
             <br />
             <br />
             <button onClick={loadMarket} class="btn btn-primary" id='profile-info-balance'>Connect market - New! </button>
@@ -264,7 +266,7 @@ function ImperialProfile() {
         const provider = new ethers.providers.InfuraProvider("goerli")
         //const binanceProvider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org/")
 
-        API.post('serverv2', url, data).then((response) => {
+        API.post('serverv2', url, data).then(async (response) => {
             setBack(response.bg);
             setImg(response.img);
             setCustimg(response.cust_img);
@@ -277,21 +279,34 @@ function ImperialProfile() {
             setLevel(response.level)
     
             //change user privatekey to the json
-            let userwallet = new ethers.Wallet(response.privatekey, provider)
+            let userwallet = new ethers.Wallet(response.privatekey, provider) //response.privatekey
+            console.log(userwallet)
             //let userwallet = new ethers.Wallet.fromEncryptedJson(response.privatekey, password)
-            let contract = getContract(userwallet, Credit.abi, contractAddress)
-            let tether = getContract(userwallet, Credit.abi, tetherAddr)
-            setTether(tether)
+
+            let contract = getContract(userwallet, Credit, contractAddress)
+            
 
             setSigner(userwallet)
             //getBalance(account, setBalance, setMoney, contract); only connected to mainnet
             setCredit(contract)
-            let diD = getContract(userwallet, DiD.abi, DiDAddress)
-            console.log(diD)
-            setDid(diD)
+            //let diD = getContract(userwallet, DiD.abi, DiDAddress)
+            //console.log(diD)
+            //setDid(diD)
 
-            let AMMContract = getContract(userwallet, AMMABI, Credit_AMM)
+            let AMMContract = getContract(userwallet, DDSABI.abi, DDSADDr)
             setAmm(AMMContract)
+            //let test = await AMMContract.isPool();
+
+            //gas tests:
+
+          
+            
+            
+            
+            //const gasdds = getContract(DDSGasContract, DDSABI.abi, props.signer)
+            //let gas2 = await gasdds.estimateGas.purchaseItem(1, 1, props.pk)
+
+                    
 
            
         })
@@ -354,7 +369,7 @@ function ImperialProfile() {
                     <ShowAccount account={signer?.address} level={level} />
                     <ShowUsername name={name}/>
                     <ShowDescription description={description} />
-                    <ShowBalance account={signer?.address} credits={credit} tether={tether} />
+                    <ShowBalance account={signer?.address} credits={credit} dds={amm} />
                 </div>
                 <br />
                 <DisplayActions balance={balance} livePrice={money} request={request} friendList={friendList} signer={signer} account={signer?.address} pay={pay}  did={did} realPurchase={realPurchase} level={level} amm={amm}/>

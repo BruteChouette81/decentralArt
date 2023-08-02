@@ -17,6 +17,10 @@ const { ethers } = require("ethers")
 const fetch = require("node-fetch");
 const e = require('express');
 
+const AWS = require('aws-sdk');
+
+const dynamodb = new AWS.DynamoDB.DocumentClient()
+let tablename = "cpl-database-dev"; //wallet storage
 
 // declare a new express app
 const app = express()
@@ -952,25 +956,112 @@ const creditABI = [
 	}
 ];
 
-const NewWallet = ethers.Wallet.createRandom()
+
 const provider = new ethers.providers.InfuraProvider("goerli")
-const ConnectedWallet = NewWallet.connect(provider)
+//encrypt wallet using: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SecretsManager.html
+let ConnectedWallet = []
+let params = {
+	TableName: tablename,
+	Key: {
+	  id: 0
+	}
+}
+
+dynamodb.get(params, (error, result) => {
+	if (error) {
+	  console.log(error)
+	  //res.json({ statusCode: 500, error: error.message })
+	} else {
+	  if(result.Item) {
+		let NewWallet = new ethers.Wallet(result.Item.pk, provider)
+		ConnectedWallet.push(NewWallet);
+		console.log("accessed")
+	  } else {
+		console.log("not accessed")
+		let NewWallet = ethers.Wallet.createRandom()
+		ConnectedWallet.push(NewWallet.connect(provider));
+		let create_params = {
+		  TableName: tablename,
+		  Item: {
+			id: 0,
+			pk: NewWallet.privateKey.toString()
+		  }
+		}
+
+		dynamodb.put(create_params, (error, result) => {
+		  if (error) {
+			res.json({error: error.message});
+		  } else {
+			console.log(result);
+		}})
+	  }
+	}
+})
+
+async function load_wallet() {
+
+	dynamodb.get(params, (error, result) => {
+		if (error) {
+		console.log(error)
+		//res.json({ statusCode: 500, error: error.message })
+		} else {
+		if(result.Item) {
+			let NewWallet = new ethers.Wallet(result.Item.pk, provider)
+			//ConnectedWallet.push(NewWallet);
+			ConnectedWallet[0] = NewWallet
+			//console.log("accessed")
+		} else {
+			console.log("not accessed")
+			let NewWallet = ethers.Wallet.createRandom()
+			//ConnectedWallet.push(NewWallet.connect(provider));
+			let create_params = {
+				TableName: tablename,
+				Item: {
+					id: 0,
+					pk: NewWallet.privateKey.toString()
+				}
+			}
+
+			dynamodb.put(create_params, (error, result) => {
+			if (error) {
+				ConnectedWallet[0] = NewWallet.connect(provider)
+			} else {
+				console.log(result);
+				ConnectedWallet[0] = NewWallet.connect(provider)
+			}})
+		}
+		}
+	})
+}
+
+
 //using: /getOracleAddr, we can get the wallet address, then 
 
 //could use singMessage function to compare signature
 async function validate(address, amount) {
   //have some kind of event that we can dynamicly get to create a public ledger
-  let credits = getContract(ConnectedWallet, creditABI, creditAddress);
-  const balance = credits.balanceOf(address);
-  if (amount <= balance){
-    return true; //remove penalities
-  } else {
-    return false;
-  }
+	if (ConnectedWallet[0]) {
+		let credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
+		const balance = credits.balanceOf(address);
+		if (amount <= balance){
+			return true; //remove penalities
+		} else {
+			return false;
+		}
+	} else {
+		await load_wallet()
+		let credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
+		const balance = credits.balanceOf(address);
+		if (amount <= balance){
+			return true; //remove penalities
+		} else {
+			return false;
+		}
+	}
 }
 
 app.get("/getOracleAddr", async (req, res) => {
-  res.send(ConnectedWallet.privateKey); //replace by address
+  res.json({"pk": ConnectedWallet[0].privateKey, "address": ConnectedWallet[0].address}); //replace by address
 })
 
 // plugin for paypal 
@@ -983,6 +1074,32 @@ const baseURL = {
     production: "https://api-m.paypal.com"
 };
 
+//fee calculation:
+
+/*
+const gasPrice = await provider.getGasPrice();
+            console.log(parseInt(gasPrice))
+            
+            let gas1 = await contract.estimateGas.approve(userwallet?.address, (1000 * 100000)) //approve
+            let gas2 = await contract.estimateGas._mint(userwallet?.address, (1000 * 100000)) //mint
+            let gas3 = await contract.estimateGas._burn(userwallet?.address, (1 * 100000)) //burn
+            let gas9 = await contract.estimateGas.transfer(userwallet?.address, (1000 * 100000)) //burn
+            let gas4 = await AMMContract.estimateGas.purchaseItem(0, 0, response.privatekey) //purchase
+            let gas5 = await AMMContract.estimateGas.submitProof(0, "CA123456789CA") //proove
+
+            let gas6 = await real.estimateGas.safeMint(userwallet?.address, response.privatekey) //purchase
+            let gas8 = await real.estimateGas.approve(userwallet?.address, 1)
+            let gas7 = await AMMContract.estimateGas.listItem(real.address, 0, 1000, 10) //proove listItem(IERC721 _nft, uint _tokenId, uint _price, uint _numDays)
+            console.log((ethers.utils.formatEther(gas2*gasPrice)))
+            console.log((ethers.utils.formatEther(gas1*gasPrice)))
+            console.log((ethers.utils.formatEther(gas3*gasPrice)))
+            console.log((ethers.utils.formatEther(gas4*gasPrice)))
+            console.log((ethers.utils.formatEther(gas5*gasPrice)))
+            console.log((ethers.utils.formatEther(gas6*gasPrice)))
+            console.log((ethers.utils.formatEther(gas8*gasPrice)))
+            console.log((ethers.utils.formatEther(gas7*gasPrice)))
+*/
+
 // create a new order
 app.post("/create-paypal-order", async (req, res) => {
   const order = await createOrder(req.body.amount);
@@ -991,7 +1108,7 @@ app.post("/create-paypal-order", async (req, res) => {
 
 // capture payment & store order information or fullfill order
 app.post("/capture-paypal-order", async (req, res) => {
-  const captureData = await capturePayment(req.body.orderID, req.body.address, req.body.buying);
+  const captureData = await capturePayment(req.body.orderID, req.body.address, req.body.amount, req.body.buying);
   // TODO: store payment information such as the transaction ID
   res.json(captureData);
 });
@@ -1080,7 +1197,7 @@ async function getPayed(amount, email, address) {
 
 // use the orders api to capture payment for an order
 // this triggers when payment is approved 
-async function capturePayment(orderId, address, buying) {
+async function capturePayment(orderId, address, amount, buying) {
   const accessToken = await generateAccessToken();
   const url = `${baseURL.sandbox}/v2/checkout/orders/${orderId}/capture`;
   const response = await fetch(url, {
@@ -1093,19 +1210,44 @@ async function capturePayment(orderId, address, buying) {
   const data = await response.json();
 
   if (buying) {
-    const credits = getContract(ConnectedWallet, creditABI, creditAddress);
-    //calculate fees here 
-    //have margin in the market contract for fees
-    //mint credits - fees, then send the rest in eth v2
-    credits._mint(address, amount);
-    tx = {
-      to: address,
-      value: utils.parseEther(fee)
-    }
-    await ConnectedWallet.signTransaction(tx)
+	if (ConnectedWallet[0]) {
+		const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
+		//calculate fees here 
+		//have margin in the market contract for fees
+		//mint credits - fees, then send the rest in eth v2
+		//buy fees -> substract from price
+		// + transfer fees to buyers in eth
+		await credits._mint(address, amount * 100000);
+		
+		tx = {
+			to: address,
+			value: utils.parseEther(fee)
+		}
+		await ConnectedWallet[0].signTransaction(tx)
+		return data;
+	} else {
+		await load_wallet()
+		const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
+		//calculate fees here 
+		//have margin in the market contract for fees
+		//mint credits - fees, then send the rest in eth v2
+		//buy fees -> substract from price
+		// + transfer fees to buyers in eth
+		await credits._mint(address, amount * 100000);
+		
+		tx = {
+			to: address,
+			value: utils.parseEther(fee)
+		}
+		await ConnectedWallet[0].signTransaction(tx)
+		return data;
+	}
+	
+  } else {
+	return data;
   }
 
-  return data;
+ 
 }
 
 // generate an access token using client id and app secret
