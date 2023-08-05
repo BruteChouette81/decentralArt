@@ -133,6 +133,20 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/oracleMint": {
+      "name": "/oracleMint",
+      "lambdaFunction": "paypalHandler",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/oracleMultiMint": {
+      "name": "/oracleMultiMint",
+      "lambdaFunction": "paypalHandler",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }

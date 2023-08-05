@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {ethers} from 'ethers'
 import { API, Storage } from 'aws-amplify';
+import { AES, enc } from "crypto-js"
 
 import default_profile from "../profile_pics/default_profile.png"
 
@@ -21,7 +22,7 @@ const contractAddress = '0xc183177E3207788ea9342255C8Fcb218763d46e2';
 const DiDAddress = "0x6f1d3cd1894b3b7259f31537AFbb930bd15e0EB8"; //goerli
 
 const Credit_AMM = '0xcAd1B86F5022A138053577ae03Ab773Ee770ec21'; //'0xB18A97e590F1d0C1e0B9A3c3803557aa230FD21c'
-const DDSADDr = '0xcAd1B86F5022A138053577ae03Ab773Ee770ec21';
+const DDSADDr = '0xabF75FC997bdF082D1d22E5Da6701C56e8A356D2';
 const ImperialRealAddress = '0xbC1Fe9f6B298cCCd108604a0Cf140B2d277f624a'
 
 const getContract = (signer, abi, address) => {
@@ -199,15 +200,20 @@ function ImperialProfile() {
         setPassword(event.target.value)
     }
 
-    const connectUsingPassword = (e) => {
+    const connectUsingPassword = async (e) => {
         e.preventDefault()
-        setNeedPassword(false)
+        
+
+        const hasWallet = window.localStorage.getItem("hasWallet")
+        //setAddress(window.localStorage.getItem("walletAddress"))
+        await connection(hasWallet);
     }
 
     function GetPassword() {
         return ( <div class="getPassword">
             <form onSubmit={connectUsingPassword}> 
                 <h3>Setup or enter your password</h3>
+                <p>IMPORTANT: once you setup a password: you can't change it without loosing your account !</p>
                 <br />
                 <div class="mb-3 row">
                     <label for="inputPassword" class="col-sm-2 col-form-label" onChange={changePass}>Password</label>
@@ -237,13 +243,22 @@ function ImperialProfile() {
     }
 
     const writePrivateKey = (account, privatekey) => { //function to write a privatekey to aws dynamo server
-        console.log(privatekey)
+        //console.log(privatekey)
+        const did_data = {
+            address: account,
+            pk: privatekey.toString()
+        }
+
+        let stringdata = JSON.stringify(did_data)
+        var encrypted = AES.encrypt(stringdata, password)
+        window.localStorage.setItem("did", encrypted);
+
+
         var data = {
             body: {
                 address: account.toLowerCase(),
-                privatekey: privatekey.toString() //custom private key
+                privatekey: "" //set did to "" for new accounts
             }
-            
         }
         setPrivatekey(privatekey)
 
@@ -254,7 +269,7 @@ function ImperialProfile() {
         })
     }
 
-    const getPrivateKey = async(account) => { //function to get privatekey from aws dynamo server
+    const getPrivateKey = async(account, privatekey) => { //function to get privatekey from aws dynamo server
         var data = {
             body: {
                 address: account?.toLowerCase()
@@ -279,7 +294,7 @@ function ImperialProfile() {
             setLevel(response.level)
     
             //change user privatekey to the json
-            let userwallet = new ethers.Wallet(response.privatekey, provider) //response.privatekey
+            let userwallet = new ethers.Wallet(privatekey, provider) //response.privatekey
             console.log(userwallet)
             //let userwallet = new ethers.Wallet.fromEncryptedJson(response.privatekey, password)
 
@@ -293,7 +308,7 @@ function ImperialProfile() {
             //console.log(diD)
             //setDid(diD)
 
-            let AMMContract = getContract(userwallet, DDSABI.abi, DDSADDr)
+            let AMMContract = getContract(userwallet, DDSABI, DDSADDr)
             setAmm(AMMContract)
             //let test = await AMMContract.isPool();
 
@@ -323,13 +338,27 @@ function ImperialProfile() {
             const provider = new ethers.providers.InfuraProvider("goerli")
             let newConnectedWallet = NewWallet.connect(provider)
             console.log(newConnectedWallet.privateKey)
-            writePrivateKey(newConnectedWallet.address, newConnectedWallet.privateKey) //newConnectedWallet.encrypt(password)
+            writePrivateKey(newConnectedWallet.address, newConnectedWallet.privateKey) //writting pk to did
             window.localStorage.setItem("hasWallet", true)
             window.localStorage.setItem("walletAddress", newConnectedWallet.address)
+            setNeedPassword(false)
         }
         else {
             window.localStorage.setItem("usingMetamask", false)
-            getPrivateKey(window.localStorage.getItem("walletAddress"))
+            let did = window.localStorage.getItem("did")
+            let res1 = AES.decrypt(did, password) //props.signer.privateKey
+            try {
+                let res = JSON.parse(res1.toString(enc.Utf8));
+                if (res.pk) {
+                    getPrivateKey(window.localStorage.getItem("walletAddress"), res.pk)
+                    setNeedPassword(false)
+                }
+            } catch(e) {
+                alert("wrong password");
+            }
+            
+            
+            //
             
             //console.log("already a wallet")
         }
@@ -337,9 +366,7 @@ function ImperialProfile() {
     useEffect(() => {
         
         async function boot() {
-            const hasWallet = window.localStorage.getItem("hasWallet")
-            //setAddress(window.localStorage.getItem("walletAddress"))
-            await connection(hasWallet);
+            console.log("test")
             
         }
         boot()
@@ -372,7 +399,7 @@ function ImperialProfile() {
                     <ShowBalance account={signer?.address} credits={credit} dds={amm} />
                 </div>
                 <br />
-                <DisplayActions balance={balance} livePrice={money} request={request} friendList={friendList} signer={signer} account={signer?.address} pay={pay}  did={did} realPurchase={realPurchase} level={level} amm={amm}/>
+                {signer?.address ? (<DisplayActions balance={balance} livePrice={money} request={request} friendList={friendList} signer={signer} account={signer?.address} pay={pay}  did={did} realPurchase={realPurchase} level={level} amm={amm} password={password}/>) : ""}
 
                 
             </div>
@@ -381,6 +408,7 @@ function ImperialProfile() {
     
     else {
         return(
+            needPassword ? <GetPassword /> :
             <div class='profile'>
                 <div class='settingdiv'>
                 </div>
@@ -398,7 +426,7 @@ function ImperialProfile() {
                     
                 </div>
                 <br />
-                <DisplayActions balance={balance} livePrice={money} request={request} friendList={friendList} signer={signer} account={signer?.address} pay={pay} did={did} realPurchase={realPurchase} level={level} amm={amm}/>
+                {signer?.address ? (<DisplayActions balance={balance} livePrice={money} request={request} friendList={friendList} signer={signer} account={signer?.address} pay={pay}  did={did} realPurchase={realPurchase} level={level} amm={amm} password={password}/>) : ""}
 
                 
             </div>

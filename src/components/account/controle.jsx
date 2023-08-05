@@ -7,27 +7,20 @@ import { ethers } from "ethers";
 import { AES, enc, SHA256, HmacSHA512 } from "crypto-js"
 import { stringify } from "urlencode"
 import { API, Storage } from 'aws-amplify';
-import {ConnectorController, DAppProvider, useLogs} from '@usedapp/core'
 
 import ReactLoading from "react-loading";
 import PayGas from "../F2C/gas/payGas";
 
-import * as IPFS from 'ipfs-core';  //IPSF to list nft metadata
 import axios from "axios";
-
-import Moralis from "moralis";
-import { EvmChain } from "@moralisweb3/common-evm-utils";
 
 import erc721ABI from '../../artifacts/contracts/nft.sol/nft.json'
 import erc1155ABI from '../../artifacts/contracts/nft.sol/erc1155.json'
 import realabi from '../../artifacts/contracts/Real.sol/Real.json'
-import Credit from '../../artifacts/contracts/token.sol/credit.json';
 import abi from '../../artifacts/contracts/market.sol/market.json'
 import TicketABI from '../../artifacts/contracts/ticket.sol/ticket.json'
 import DDSABI from '../../artifacts/contracts/DDS.sol/DDS.json'
 
 import default_profile from "./profile_pics/default_profile.png"
-import getGasPriceUsd from "../F2C/gazapi";
 import injected from "./connector";
 import PayGasList from "../F2C/gas/payGasList";
 import PayGasRetrieve from "../F2C/gas/payGasRetrieve";
@@ -42,11 +35,14 @@ const secret = "718da1ac14dfcf25c336bfea241e38563e5f2c9cc8bd77bcde1a5968ad8ebf6a
 const apikey = "681fa3fe8fcbfe2992fe"
 const key = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJmNjhjNmRmZi1mOGRmLTQzNzUtYjA5Ny1mMTNmNDk0OTk3ODIiLCJlbWFpbCI6ImhiYXJpbDFAaWNsb3VkLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI2ODFmYTNmZThmY2JmZTI5OTJmZSIsInNjb3BlZEtleVNlY3JldCI6IjcxOGRhMWFjMTRkZmNmMjVjMzM2YmZlYTI0MWUzODU2M2U1ZjJjOWNjOGJkNzdiY2RlMWE1OTY4YWQ4ZWJmNmEiLCJpYXQiOjE2ODUyODk0NDZ9.dheuwiicVcI3mM7yMo9voga4Bis7nDu7g5TJocC_xkc"
 const MarketAddress = '0x710005797eFf093Fa95Ce9a703Da9f0162A6916C'; //goerli test contract for listing from account
-const DDSAddress = '0x1D1db5570832b24b91F4703A52f25D1422CA86de' //gas contract: 0x14b92ddc0e26C0Cf0E7b17Fe742361B8cd1D95e1, Real: 0x1D1db5570832b24b91F4703A52f25D1422CA86de
+const DDSAddress = '0xdeAf39D7923dD5bbeb22C591694A0dBc38b6AD3a' //gas contract: 0x14b92ddc0e26C0Cf0E7b17Fe742361B8cd1D95e1, Real: 0x1D1db5570832b24b91F4703A52f25D1422CA86de
 const NftAddress = '0x3d275ed3B0B42a7A3fCAA33458C34C0b5dA8Cc3A';
 const TicketAddress = '0x6CFADe18df81Cd9C41950FBDAcc53047EdB2e565' //goerli test contract
-const ImperialRealAddress = '0xbC1Fe9f6B298cCCd108604a0Cf140B2d277f624a'
+const ImperialRealAddress = "0x666f393A06285c3Ec10895D4092d9Dc86aeFD45b"
 
+/**
+ * Kraken management: moove to oracle 
+ */
 
 const getMessageSignatureKraken = (path, request, secret, nonce) => {
            
@@ -131,6 +127,13 @@ async function retrieveMoney(key, secret, amount, price) {
 
 }
 
+
+
+/**
+ * connecting to contracts
+ */
+
+
 const connectContract = (address, abi, injected_prov) => { //for metamask
     const provider = new ethers.providers.Web3Provider(injected_prov);
 
@@ -149,367 +152,7 @@ const getContract = (address, abi, signer ) => { //for Imperial Account
     const contract = new ethers.Contract(address, abi, signer);
     return contract
 }
-//const contractAddress = '0xD3afbEFD991776426Fb0e093b1d9e33E0BD5Cd71';
-const list = async ( nftAddress, nftABI, tokenid, price, account, tag, name, description, image, signer) => {
-    // price is in credit (5 decimals)
-    try {
-            if (window.localStorage.getItem("usingMetamask") === "true") {
-                let provider = await injected.getProvider()
-                const nft = connectContract(nftAddress, nftABI, provider) //check if erc1155 for abi (response.contractType)
-                const market = connectContract(MarketAddress, abi.abi, provider)
-                console.log(nft)
 
-                //make the market approve to get the token
-                await(await nft.approve(MarketAddress, tokenid)).wait()
-                //add pending screem
-                
-                //create a new item with a sell order
-                await(await market.listItem(nft.address, tokenid, (price * 10000))).wait()
-                const marketCountIndex = await market.itemCount()
-                var data = {
-                    body: {
-                        address: account,
-                        itemid: parseInt(marketCountIndex), //market item id
-                        name: name, //get the name in the form
-                        score: 0, //set score to zero
-                        tag: tag, 
-                        description: description,
-                        image: image
-                    }
-                    
-                }
-    
-                var url = "/listItem"
-    
-                API.post('serverv2', url, data).then((response) => {
-                    console.log(response)
-                    alert("token listed!")
-                })
-            } else {
-                //const provider  = new ethers.providers.InfuraProvider("goerli")
-                const nft = getContract(nftAddress, nftABI, signer) //check if erc1155 for abi (response.contractType)
-                const market = getContract(MarketAddress, abi.abi, signer)
-                console.log(nft)
-
-                //make the market approve to get the token
-                await(await nft.approve(MarketAddress, tokenid)).wait()
-                //add pending screem
-                
-                //create a new item with a sell order
-                await(await market.listItem(nft.address, tokenid, (price* 10000))).wait()
-                const marketCountIndex = await market.itemCount()
-                var data = {
-                    body: {
-                        address: account,
-                        itemid: parseInt(marketCountIndex), //market item id
-                        name: name, //get the name in the form
-                        score: 0, //set score to zero
-                        tag: tag, 
-                        description: description,
-                        image: image
-                    }
-                    
-                }
-    
-                var url = "/listItem"
-    
-                API.post('serverv2', url, data).then((response) => {
-                    console.log(response)
-                    alert("token listed!")
-                })
-            }
-    
-        }
-        catch {
-            alert("Unable to connect to: " + nftAddress + ". Please make sure you are the nft owner! Error code - 1")
-        }
-    
-   
-
-}
-
-const listDDS = async (tokenid, price, account, name, description, image, tag, numDays, signer, setSellLoading) => { // already know what addess and abi are 
-    // price is in credit (5 decimals)
-    try {
-            if (window.localStorage.getItem("usingMetamask") === "true") {
-                let provider = await injected.getProvider()
-                const nft = connectContract(ImperialRealAddress, realabi.abi, provider) //check if erc1155 for abi (response.contractType)
-                const DDS = connectContract(DDSAddress, DDSABI.abi, provider)
-                console.log(DDS)
-                console.log(parseInt(tokenid))
-                console.log(parseInt(price))
-                console.log(parseInt(numDays))
-
-                //make the market approve to get the token
-                await(await nft.approve(DDSAddress, tokenid)).wait()
-                //add pending screem
-                
-                //create a new item with a sell order
-                await(await DDS.listItem(nft.address, parseInt(tokenid), parseInt(price * 100000), parseInt(numDays))).wait()
-                const marketCountIndex = await DDS.itemCount()
-                var data = {
-                    body: {
-                        address: account.toLowerCase(),
-                        itemid: parseInt(marketCountIndex), //market item id
-                        name: name, //get the name in the form
-                        score: 0, //set score to zero
-                        tag: tag, //"real" 
-                        description: description,
-                        image: image
-                    }
-                    
-                }
-    
-                var url = "/listItem"
-    
-                API.post('serverv2', url, data).then((response) => {
-                    console.log(response)
-                    setSellLoading(false)
-                    alert("token listed!")
-                })
-            } else {
-                //const provider  = new ethers.providers.InfuraProvider("goerli")
-                const nft = getContract(ImperialRealAddress, realabi.abi, signer) //check if erc1155 for abi (response.contractType)
-                const DDS = getContract(DDSAddress, DDSABI.abi, signer)
-                console.log(nft)
-
-                //make the market approve to get the token
-                await(await nft.approve(DDSAddress, tokenid)).wait()
-                //add pending screem
-                
-                //create a new item with a sell order
-                await(await DDS.listItem(nft.address, parseInt(tokenid), parseInt(price * 10000), parseInt(numDays))).wait() //IERC721 _nft, uint _tokenId, uint _price, uint _numDays
-                const DDSCountIndex = await DDS.itemCount()
-                var data = {
-                    body: {
-                        address: account.toLowerCase(),
-                        itemid: parseInt(DDSCountIndex), //market item id
-                        name: name, //get the name in the form
-                        score: 0, //set score to zero
-                        tag: tag, //"real" 
-                        description: description,
-                        image: image
-                    }
-                    
-                }
-    
-                var url = "/listItem"
-    
-                API.post('serverv2', url, data).then((response) => {
-                    console.log(response)
-                    setSellLoading(false)
-                    alert("token listed!")
-                })
-            }
-    
-        }
-        catch(e) {
-            console.log(e)
-            setSellLoading(false)
-            alert("Unable to connect to: " + DDSAddress + ". Please make sure you are the nft owner! Error code - 1")
-        }
-    
-   
-
-}
-
-const mintNFT = async (account, uri, signer) => {
-    if (window.localStorage.getItem("usingMetamask") === "true") {
-        let provider = await injected.getProvider()
-        const nft = connectContract(NftAddress, erc721ABI.abi, provider)
-        const id = await (await nft.mint(account, uri)).wait()
-        console.log(id)
-        const transac = await nft.ownerOf(parseInt(id))
-        console.log(transac)
-    } else {
-        //const provider  = new ethers.providers.InfuraProvider("goerli")
-        const nft = getContract(NftAddress, erc721ABI.abi, signer)
-        const id = await (await nft.mint(account, uri)).wait()
-        console.log(id)
-        const transac = await nft.ownerOf(parseInt(id))
-        console.log(transac)
-    }
-    
-}
-
-const mintTicket = async (account, uri, ticket, signer) => {
-    if (window.localStorage.getItem("usingMetamask") === "true") {
-        let provider = await injected.getProvider()
-        const nft = connectContract(TicketAddress, TicketABI.abi, provider)
-        const id = await nft.safeMint(account, uri, ticket)
-        console.log(id)
-        const transac = await nft.ownerOf(id)
-        console.log(transac)
-    } else {
-        //const provider  = new ethers.providers.InfuraProvider("goerli")
-        const nft = getContract(TicketAddress, TicketABI.abi, signer)
-        const id = await nft.safeMint(account, uri, ticket)
-        console.log(id)
-        const transac = await nft.ownerOf(id)
-        console.log(transac)
-    }
-}
-
-const mintReal = async (account, uri, signer) => {
-    if (window.localStorage.getItem("usingMetamask") === "true") {
-        let provider = await injected.getProvider()
-        const nft = connectContract(ImperialRealAddress, realabi.abi, provider)
-        console.log(nft)
-        console.log(uri)
-        const id = await (await nft.safeMint(account, uri)).wait()
-        console.log(id)
-        alert("NFT successfully created. See your item in the Your NFTs section.")
-    } else {
-        //const provider  = new ethers.providers.InfuraProvider("goerli")
-        const nft = getContract(ImperialRealAddress, realabi.abi, signer)
-        const id = await (await nft.safeMint(account, uri)).wait()
-        console.log(id)
-        alert("NFT successfully created. See your item in the Your NFTs section.")
-    }
-}
-
-const multipleMintReal =  async (account, uri, signer) => {
-    if (window.localStorage.getItem("usingMetamask") === "true") {
-        let provider = await injected.getProvider()
-        const nft = connectContract(ImperialRealAddress, realabi.abi, provider)
-        console.log(nft)
-        console.log(uri)
-        const id = await (await nft.multipleMint(account, uri)).wait()
-        console.log(id)
-        alert("NFT successfully created. See your item in the Your NFTs section.")
-    } else {
-        //const provider  = new ethers.providers.InfuraProvider("goerli")
-        const nft = getContract(ImperialRealAddress, realabi.abi, signer)
-        const id = await (await nft.multipleMint(account, uri)).wait()+
-        console.log(id)
-        alert("NFT successfully created. See your item in the Your NFTs section.")
-    }
-}
-
-function dealWithFriend(address, accepted, is_accepted) {
-    console.log(address)
-    console.log(accepted)
-    console.log(is_accepted)
-    
-    var data = {
-        body: {
-            address: address.toLowerCase(),
-            accepted: accepted.toLowerCase(),
-            is_accepted: is_accepted
-        }
-        
-    }
-
-    var url = "/acceptFriend"
-
-    API.post('serverv2', url, data).then((response) => {
-        console.log(response)
-    })
-}
-function Request(props) {
-    const newDeal = () => {
-        dealWithFriend(props.address, props.accepted, true)
-    }
-
-    const newDeny = () => {
-        dealWithFriend(props.address, props.accepted, false)
-    }
-    return (<div> 
-        <h6>Address: {props.accepted} </h6> <button onClick={newDeal} class="btn btn-success">Accept</button> <button onClick={newDeny} class="btn btn-danger">Deny</button>
-    </div>)
-}
-
-function Friend(props) {
-    /*
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                {props.address}
-            </div>
-        </div>
-    </div>
-    */
-    return (
-        <div>
-            <img id="friendimg" src={default_profile} alt="" />      <h6>address: <a href={`/Seller/${props.address}`}>{props.address}</a> </h6>
-        </div>
-        
-    )
-}
-function ListOfFriends(props) {
-    //const friendList = ["0xDBC05B1ECB4FDAEF943819C0B04E9EF6DF4BABD6","0x721B68FA152A930F3DF71F54AC1CE7ED3AC5F867","0xB3B66043A8F1E7F558BA5D7F46A26D1B41F5CA2A"]
-    return(<div class="friendList">
-                {props.friendList?.map(i => {
-                return <Friend address={i} />
-                })}
-                {props.friendList?.length === 0 ? ( <p>You have no friend! Go request friendship to users in the market!</p> ) : ""}
-            </div>     
-    ) //
-}
-
-function ListOfRequests(props) {
-    
-    return(<div class="friendList">
-                {props.request?.map(i => {
-                    return <Request accepted={i} address={props.account} />
-                })}
-                {props.request?.length === 0 ? ( <p>You have no request!</p> ) : ""}
-            </div>     
-    ) //
-}
-
-function DisplayFriends(props) {
-    return(
-        <div class="friends">
-            <h4>Friend List: </h4>
-            <ListOfFriends friendList={props.friendList} />
-            <br />
-            <h4>Requests: </h4>
-            <ListOfRequests request={props.request} account={props.account}/>
-        </div>
-    )
-}
-
-
-function PaymentCard(props) {
-    return (
-        <div class="paymentcard">
-            <div class="paymentinfo">
-                <h5 id="cardnum" >Card Number: <strong>{props.card}</strong></h5>
-                <p>expiration date: {props.date}</p>
-                <br />
-                <div class="separator">
-
-                </div>
-                <br />
-                <button class="btn btn-danger">Delete</button>
-            </div>
-            
-
-        </div>
-    )
-}
-
-function ListPaymentMethod(props) {
-    const paymentid = window.localStorage.getItem("paymentid")
-    if (paymentid) {
-        return (
-            <div class="payList">
-                {props.paymentMethod?.map(i => {
-                    return <PaymentCard card={i[0]} date={i[1]} cvv={i[2]}/>
-                })}
-            </div>
-        )
-    }
-    else {
-        return (
-            <div class="payList">
-                <p>No payment</p>
-            </div>
-        )
-    }
-    
-}
 
 
 function DisplayNoToken() {
@@ -589,6 +232,14 @@ function DisplayActions(props) {
     const [price2, setPrice2] = useState(0)
     const [nftname, setNftname] = useState("")
     const [description, setDescription] = useState("")
+    const [itemPrice, setItemPrice] = useState(0)
+    const [itemDays, setItemDays] = useState(0)
+    const [tags, setTags] = useState([])
+    //const [price2, setPrice2] = useState(0)
+    const [nftnames, setNftnames] = useState([])
+    const [descriptions, setDescriptions] = useState([])
+    const [itemPrices, setItemPrices] = useState([])
+    const [itemsDays, setItemsDays] = useState([])
     const [real, setReal] = useState(false)
     const [image_file, setImage] = useState(null);
     const [images, setImages] = useState(null);
@@ -626,76 +277,7 @@ function DisplayActions(props) {
     const dates = [];
 
     //helper fonction to handle minting multiple item
-    const handleMultipleMint = async () => {
-        setCreateLoading(true)
-        try {
-            if (props.signer) {
-                
-                console.log(props.signer)
-                await multipleMintReal(props.account, tokenuri, props.signer)
-                setCreateLoading(false)
-                alert("You can see your items in Your Art. You will receive a notification on what are the procedure concerning the Proof of Sending.")
-                
-            } else {
-                await multipleMintReal(props.account, tokenuri, props.signer)
-                setCreateLoading(false)
-                alert("You can see your items in Your Art. You will receive a notification on what are the procedure concerning the Proof of Sending.")
-            }
-
-            } catch(e) {
-                if (window.localStorage.getItem("usingMetamask") === "true") {
-                    console.log(e)
-                    alert("You need ethereum gas fee to pay for item creation.")
-
-                    setCreateLoading(false)
-
-                    let provider = await injected.getProvider()
-                    const nft = connectContract(ImperialRealAddress, realabi.abi, provider)
-
-                    setNft(nft)
-
-                    const gasPrice = await nft.provider.getGasPrice();
-                    let gas = await nft.estimateGas.multipleMint(props.account, tokenuri)
-                    let price = gas * gasPrice
-
-
-                    //get the ether price and a little bit more than gaz price to be sure not to run out
-                    fetch("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=5c62b32f93bf731a5eae052066e37683cdee22fd71f3f4e2b987d495113f8534").then(res => {
-                        res.json().then(jsonres => {
-                            let usdPrice = ethers.utils.formatEther(price) * jsonres.USD 
-                            setUsdprice(usdPrice)
-                            setReal(true)
-                        })
-                    })
-                    
-                } else {
-                    alert("You need ethereum gas fee to pay for item creation.")
-                    console.log(e)
-
-                    setCreateLoading(false)
-                    console.log(props.signer)
-                    //const provider  = new ethers.providers.InfuraProvider("goerli")
-                    const nft2 = getContract(ImperialRealAddress, realabi.abi, props.signer)
-                    console.log(nft2)
-                    setNft(nft2)
-
-                    const gasPrice = await nft2.provider.getGasPrice();
-                    let gas = await nft2.estimateGas.multipleMint(props.account, tokenuri)
-                    let price = gas * gasPrice
-
-
-                    //get the ether price and a little bit more than gaz price to be sure not to run out
-                    fetch("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=5c62b32f93bf731a5eae052066e37683cdee22fd71f3f4e2b987d495113f8534").then(res => {
-                        res.json().then(jsonres => {
-                            let usdPrice = ethers.utils.formatEther(price) * jsonres.USD 
-                            setUsdprice(usdPrice)
-                            setReal(true)
-                        })
-                    })
-                    
-                }
-            }
-    }
+    
 
     const setExchangeKraken = () => {
         setSellerExchange("kraken")
@@ -774,9 +356,7 @@ function DisplayActions(props) {
                 alert("Successfully connected account !")
             } catch(e) {
                 alert("Failed to connect you account...")
-            }
-
-            
+            }            
         }
     }
 
@@ -787,7 +367,7 @@ function DisplayActions(props) {
     const saveSellerRetrieveAddress = (e) => {
         e.preventDefault()
         //check if valid address 
-        window.localStorage.setItem("MoneyAddress", sellerRetrieveAddress.toLowerCase())
+        window.localStorage.setItem("MoneyAddress", sellerRetrieveAddress) //.toLowerCase()
 
     }
 
@@ -945,164 +525,15 @@ function DisplayActions(props) {
         setOrderID(event.target.value)
     }
 
-    const createNft = async(event) => {
-        event.preventDefault()
-       if (nftname !== "" && description !== "" && image_file !== null) {
-
-
-            async function postMetadataPinata() {
-
-                let attributes = []
-                if (numAttribute > 0) {
-                    for (let i=0; i < numAttribute; i++) {
-                        attributes.push({"key": keys[i], "value": values[i]})
-                    }
-                    
-                }
-
-                const formData = new FormData();
     
-                formData.append('file', image_file)
-            
-                if (numAttribute > 0) {
-                    let metadata = {
-                        name: nftname,
-                        keyvalues: { 
-                          description: description,
-                          
-                        }
-                    };
-                    for (let i=0; i < numAttribute; i++) {
-                        metadata.keyvalues.keys[i] = values[i]
-                    }
-                    
-                    formData.append('pinataMetadata', metadata);
-                }
-                else {
-                    const metadata = JSON.stringify({
-                        name: nftname,
-                        keyvalues: { 
-                          description: description,
-                        }
-                       
-                      });
-                      formData.append('pinataMetadata', metadata);
-                }
-               
-
-                
-                
-                const options = JSON.stringify({
-                  cidVersion: 0,
-                })
-                formData.append('pinataOptions', options);
-            
-                try{
-                    const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
-                        maxBodyLength: "Infinity",
-                        headers: {
-                        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-                        Authorization: key
-                        }
-                    });
-                    console.log(res.data);
-
-                    return res.data
-
-                } catch (error) {
-                  console.log(error);
-                }
-            };
-
-            
-            setCreateLoading(true)
-            const res2data = await postMetadataPinata()
-            console.log("https://ipfs.io/ipfs/" + res2data?.IpfsHash)
-
-            let cid = res2data.IpfsHash
-
-            const res = await axios.get("https://api.pinata.cloud/data/pinList?hashContains=" + cid ,{
-            headers: {
-                    Authorization: key
-                    }
-            })
-
-            console.log(res)
-                
-            setTokenuri("https://ipfs.io/ipfs/" + cid)
-
-            try {
-                    if (props.signer) {
-                        await mintNFT(props.account, tokenuri, props.signer)
-                        setCreateLoading(false)
-                        alert("NFT successfully created. See your item in the Your NFTs section.")
-                    } else {
-                        await mintNFT(props.account, tokenuri, "")
-                        setCreateLoading(false)
-                        alert("NFT successfully created. See your item in the Your NFTs section.")
-                    }
-                    
-                   
-                } catch(e) {
-                    if (window.localStorage.getItem("usingMetamask") === "true") {
-                        alert("You need ethereum gas fee to pay for item creation.")
-                        setCreateLoading(false)
-
-                        let provider = await injected.getProvider()
-                        const nft = connectContract(NftAddress, erc721ABI.abi, provider)
-                        
-                        setNft(nft)
-
-                        const gasPrice = await provider.getGasPrice();
-                        let gas = await nft.estimateGas.mint(props.account, tokenuri)
-                        let price = gas * gasPrice
-
-
-                        //get the ether price and a little bit more than gaz price to be sure not to run out
-                        fetch("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=5c62b32f93bf731a5eae052066e37683cdee22fd71f3f4e2b987d495113f8534").then(res => {
-                            res.json().then(jsonres => {
-                                let usdPrice = ethers.utils.formatEther(price) * jsonres.USD 
-                                setUsdprice(usdPrice)
-                                setReal(false)
-                            })
-                        })
-                       
-                    } else {
-                        alert("You need ethereum gas fee to pay for item creation.")
-                        setCreateLoading(false)
-                        //const provider  = new ethers.providers.InfuraProvider("goerli")
-                        const nft = getContract(NftAddress, erc721ABI.abi, props.signer)
-                        setNft(nft)
-
-                        const gasPrice = await nft.provider.getGasPrice();
-                        let gas = await nft.estimateGas.mint(props.account, tokenuri)
-                        let price = gas * gasPrice
-
-
-                        //get the ether price and a little bit more than gaz price to be sure not to run out
-                        fetch("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=5c62b32f93bf731a5eae052066e37683cdee22fd71f3f4e2b987d495113f8534").then(res => {
-                            res.json().then(jsonres => {
-                                let usdPrice = ethers.utils.formatEther(price) * jsonres.USD 
-                                setUsdprice(usdPrice)
-                                setReal(false)
-                            })
-                        })
-                    }
-                }
-                
-        }
-        
-       else {
-           alert("Need to fill out the whole form!")
-       }
-    }
 
     const cancelPayGas = () => {
         setUsdprice(0)
     }
     const createReal = async(event) => {
         event.preventDefault();
-        if (nftname !== ""  && description !== "" && image_file !== null && tag !== "") {
+        if (nftname !== ""  && description !== "" && image_file !== null && tag !== "" && itemDays !== 0 && itemPrice !== 0) {
+            //function to poat item to ipfs
             async function postMetadataPinata() {
 
                 let attributes = []
@@ -1178,86 +609,140 @@ function DisplayActions(props) {
                     let tokensuris = tokenuri;
                     tokensuris.push("https://ipfs.io/ipfs/" + cid)
                     setTokenuri(tokensuris)
+                    let names2 = nftnames;
+                    names2.push(nftname)
+                    setNftnames(names2)
+                    let tags2 = tags;
+                    tags2.push(tag)
+                    setTags(tags2)
+                    let descriptions2 = descriptions;
+                    descriptions2.push(description)
+                    setDescriptions(descriptions2)
+                    let itemsprices2 = itemPrices;
+                    itemsprices2.push(itemPrice)
+                    setItemPrices(itemsprices2)
+                    let itemsdays2 = itemsDays;
+                    itemsdays2.push(itemDays)
+                    setItemsDays(itemsdays2)
                 } else {
                     setTokenuri(["https://ipfs.io/ipfs/" + cid])
+                    setNftnames([nftname])
+                    setTags([tag])
+                    setDescriptions([description])
+                    setItemPrices([itemPrice])
+                    setItemsDays([itemDays])
                 }
                 
                 
             } else {
                 setTokenuri("https://ipfs.io/ipfs/" + cid)
                 console.log("https://ipfs.io/ipfs/" + cid)
+                //mint using oracle
                 try {
-                    if (props.signer) {
                         
-                        console.log(props.signer)
-                        await mintReal(props.account, "https://ipfs.io/ipfs/" + cid, props.signer)
-                        setCreateLoading(false)
-                        alert("You can see your items in Your Art. You will receive a notification on what are the procedure concerning the Proof of Sending.")
-                        
-                    } else {
-                        await mintReal(props.account, "https://ipfs.io/ipfs/" + cid, "")
-                        setCreateLoading(false)
-                        alert("You can see your items in Your Art. You will receive a notification on what are the procedure concerning the Proof of Sending.")
-                    }
-
-                    } catch(e) {
-                        if (window.localStorage.getItem("usingMetamask") === "true") {
-                            console.log(e)
-                            alert("You need ethereum gas fee to pay for item creation.")
-
-                            setCreateLoading(false)
-
-                            let provider = await injected.getProvider()
-                            const nft = connectContract(ImperialRealAddress, realabi.abi, provider)
-
-                            setNft(nft)
-
-                            const gasPrice = await nft.provider.getGasPrice();
-                            let gas = await nft.estimateGas.safeMint(props.account, "https://ipfs.io/ipfs/" + cid)
-                            let price = gas * gasPrice
-
-
-                            //get the ether price and a little bit more than gaz price to be sure not to run out
-                            fetch("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=5c62b32f93bf731a5eae052066e37683cdee22fd71f3f4e2b987d495113f8534").then(res => {
-                                res.json().then(jsonres => {
-                                    let usdPrice = ethers.utils.formatEther(price) * jsonres.USD 
-                                    setUsdprice(usdPrice)
-                                    setReal(true)
-                                })
-                            })
-                            
-                        } else {
-                            alert("You need ethereum gas fee to pay for item creation.")
-                            console.log(e)
-
-                            setCreateLoading(false)
-                            console.log(props.signer)
-                            //const provider  = new ethers.providers.InfuraProvider("goerli")
-                            const nft2 = getContract(ImperialRealAddress, realabi.abi, props.signer)
-                            console.log(nft2)
-                            setNft(nft2)
-        
-                            const gasPrice = await nft2.provider.getGasPrice();
-                            let gas = await nft2.estimateGas.safeMint(props.account, "https://ipfs.io/ipfs/" + cid)
-                            let price = gas * gasPrice
-        
-        
-                            //get the ether price and a little bit more than gaz price to be sure not to run out
-                            fetch("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=5c62b32f93bf731a5eae052066e37683cdee22fd71f3f4e2b987d495113f8534").then(res => {
-                                res.json().then(jsonres => {
-                                    let usdPrice = ethers.utils.formatEther(price) * jsonres.USD 
-                                    setUsdprice(usdPrice)
-                                    setReal(true)
-                                })
-                            })
+                        console.log(props.signer.address)
+                        //await mintReal(props.account, "https://ipfs.io/ipfs/" + cid, props.signer)
+                        var data = {
+                            body: {
+                                address: props.signer.address,
+                                uri: "https://ipfs.io/ipfs/" + cid,
+                                price: itemPrice,
+                                numDays: itemDays
+                            }
                             
                         }
-                    }
+            
+                        var url = "/oracleMint"
+                            
+                        
+                        API.post('serverv2', url, data).then((response) => {
+                            console.log(parseInt(response.hex))
+                            var data = {
+                                body: {
+                                    address: props.signer.address.toLowerCase(),
+                                    itemid: parseInt(response.hex), //market item id
+                                    name: nftname, //get the name in the form
+                                    score: 0, //set score to zero
+                                    tag: tag, //"real" 
+                                    description: description,
+                                    image: "https://ipfs.io/ipfs/" + cid
+                                }
+                                
+                            }
+                
+                            var url = "/listItem"
+                
+                            API.post('serverv2', url, data).then((response) => {
+                                console.log(response)
+                                setCreateLoading(false)
+                                alert("Your Item is Created and Listed")
+                            })
+                            
+                           
+                        })
+
+            } catch (e) {
+                alert("Unable to create, check console for more informations");
+                console.log(e)
             }
             
         }
+    }
         else {
             alert("Need to fill our the whole form!")
+        }
+    }
+
+    function multipleMint() {
+        try {        
+            console.log(props.signer)
+            //await mintReal(props.account, "https://ipfs.io/ipfs/" + cid, props.signer)
+            console.log(tokenuri)
+            console.log(itemPrices)
+            console.log(itemsDays)
+            var data = {
+                body: {
+                    address: props.signer.address,
+                    uri: tokenuri,
+                    price: itemPrices,
+                    numDays: itemsDays
+                }
+                
+            }
+
+            var url = "/oracleMultiMint"
+            
+            API.post('serverv2', url, data).then((response) => {
+                console.log(response)
+                for(let i=0; i<tokenuri?.length; i++) {
+                    var data = {
+                        body: {
+                            address: props.signer.address.toLowerCase(),
+                            itemid: (parseInt(response) - tokenuri?.length + i + 1), //market item id
+                            name: nftnames[i], //get the name in the form
+                            score: 0, //set score to zero
+                            tag: tags[i], //"real" 
+                            description: descriptions[i],
+                            image: tokenuri[i]
+                        }
+                        
+                    }
+        
+                    var url = "/listItem"
+                    API.post('serverv2', url, data).then((response) => {
+                        console.log(response)
+                        
+                    })
+
+                }
+
+                setCreateLoading(false)
+                alert("Your Item is Created and Listed")
+            })
+
+        } catch (e) {
+            alert("Unable to create, check console for more informations");
+            console.log(e)
         }
     }
 
@@ -1272,9 +757,7 @@ function DisplayActions(props) {
         }
     }
 
-    const onTicketChange = (event) => {
-        setTickets(event.target.files[0])
-    }
+    
     const onDayChange = async(event) => {
         setDay(event.target.value)
         //console.log(event.target.value)
@@ -1311,12 +794,11 @@ function DisplayActions(props) {
     const onDescriptionChange = (event) => {
         setDescription(event.target.value)
     }
-
-    const onSelectedReal = (event) => {
-        setReal(true)
+    const onItemPriceChange = (event) => {
+        setItemPrice(event.target.value)
     }
-    const onSelectedNFT = (event) => {
-        setReal(false)
+    const onItemDaysChange = (event) => {
+        setItemDays(event.target.value)
     }
 
     function DisplayCreate() {
@@ -1327,7 +809,7 @@ function DisplayActions(props) {
                 <br />
                 <br />
                 <h5>Items ready to be publish: {tokenuri ? tokenuri?.length : "0"}</h5>
-                {tokenuri?.length > 0 ?<button class="btn btn-warning">Publish all my items !</button> : ""}
+                {tokenuri?.length > 0 ?<button onClick={multipleMint} class="btn btn-warning">Publish all my items !</button> : ""}
                 <p>For more informations, contact our team</p>
                
                 
@@ -1385,7 +867,7 @@ function DisplayActions(props) {
             setState(res.address.state)
         } else {
             let did = window.localStorage.getItem("did")
-            let res1 = AES.decrypt(did, props.signer.privateKey)
+            let res1 = AES.decrypt(did, props.password)
             let res = JSON.parse(res1.toString(enc.Utf8));
             setCity(res.address.city)
             setCode(res.address.postCode)
@@ -1407,6 +889,8 @@ function DisplayActions(props) {
         }
         else {
             const data = {
+                address: props.signer.address,
+                pk: props.signer.privatekey,
                 first_name: fname,
                 last_name: lname,
                 email: email,
@@ -1424,9 +908,9 @@ function DisplayActions(props) {
             let stringdata = JSON.stringify(data)
             //let bytedata = ethers.utils.toUtf8Bytes(stringdata)
     
-            console.log(props.signer.privateKey)
+            //console.log(props.signer.privateKey)
     
-            var encrypted = AES.encrypt(stringdata, props.signer.privateKey)
+            var encrypted = AES.encrypt(stringdata, props.password)
             //hash the data object and store it in user storage
             //ethers.utils.computeHmac("sha256", key, bytedata)
             
@@ -1438,169 +922,11 @@ function DisplayActions(props) {
         
     }
 
-    /*
-    const payGas = async () => {
-        setLoading(true)
-        //getdId()
-        const gasPrice = await props.did.provider.getGasPrice();
-        let gas = await props.did.estimateGas.newId(parseInt(window.localStorage.getItem("id")), parseInt(window.localStorage.getItem("id")), city, state, code, country, street, phone, email, fname, lname)
-        let price = gas * gasPrice
-
-        console.log(ethers.utils.formatEther(price))
-        console.log(gasPrice)
-        let usdPrice = 0
-        //get the ether price and a little bit more than gaz price to be sure not to run out
-        fetch("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=5c62b32f93bf731a5eae052066e37683cdee22fd71f3f4e2b987d495113f8534").then(res => {
-            res.json().then(jsonres => {
-                usdPrice = ethers.utils.formatEther(price) * jsonres.USD 
-                console.log(usdPrice)                
-            })
-        })
-        if (props.pay) {
-            let mounthDate = props.pay[0][1].split("/")
-            let paymentList = [props.pay[0][0], mounthDate[0], "20" + mounthDate[1], props.pay[0][2]]
-
-            //let completed = false
-            const completed = await getGasPriceUsd(usdPrice, props.did.signer.address, paymentList, city, state, code, country, street, phone, email, fname, lname) //"+" + phone
-            if (completed) {
-                await ( await props.did.newId(parseInt(window.localStorage.getItem("id")), parseInt(window.localStorage.getItem("id")), city, state, code, country, street, phone, email, fname, lname)).wait()
-               
-                alert("New Decentralized Identity. You are now free to use the F2C prrotocol to buy and sell Items!")
-                setLoading(false)
-                setPayingGas(false)
-    
-            }
-            else {
-                alert("something went wrong..." + completed)
-                setLoading(false)
-                setPayingGas(false)
-            }
-        } else {
-            let mounthDate = eDate.split("/")
-            let paymentList = [card, mounthDate[0], "20" + mounthDate[1], cvv]
-    
-            //let completed = false
-            const completed = await getGasPriceUsd(usdPrice, props.did.signer.address, paymentList, city, state, code, country, street, phone, email, fname, lname) //"+" + phone
-            if (completed) {
-                await ( await props.did.newId(parseInt(window.localStorage.getItem("id")), parseInt(window.localStorage.getItem("id")), city, state, code, country, street, phone, email, fname, lname)).wait()
-               
-                alert("New Decentralized Identity. You are now free to use the F2C prrotocol to buy and sell Items!")
-                setLoading(false)
-                setPayingGas(false)
-    
-            }
-            else {
-                alert("something went wrong..." + completed)
-                setLoading(false)
-                setPayingGas(false)
-            }
-        }
-
-       
-    }
     
 
-    const cancel = () => {
-        setPayingGas(false)
-    }
+   
 
-    const DisplayPayGas = () => {
-        return (
-            <div class="payGas">
-            {loading ? (<div style={{paddingLeft: 25 + "%"}}><ReactLoading type="spin" color="#0000FF"
-        height={200} width={200} /><h5>Transaction loading...</h5></div>) : (<div>
-                <h4>F2C Checkout</h4>
-                <p><a href="">Learn about F2C</a></p>
-                <p>This Ethereum fee allow your data to be securly store in the BlockChain</p>
-                <br />
-                <h6>Payment method: <strong>{card}</strong></h6>
-                <h5>Total USD price: 0.004$</h5>
-
-                <button onClick={payGas} class="btn btn-primary">Approve</button> <button onClick={cancel} class="btn btn-danger">Cancel</button>
-            </div>)}
-            
-
-        </div>
-        )
-    }
-    */
-
-    function HandleRealForm(props) {
-        
-        return (
-            <div> 
-                <form onSubmit={props.handleRealList}>
-                                            
-                                            <h5>Name: {props.name}</h5> 
-                                            <br />  
-                                            <h5>Description: {props.description}</h5>     
-
-                                            <br />
-                                                <label for="days" class="form-label">Number of days for sending:</label><br />
-                                                <a href="">More information on what is the number of days</a>
-                                                <div class="input-group mb-3">
-                                                    <input type="number" class="form-control" id="days" name="days" aria-describedby="basic-addon2" onChange={onDay2Change} />
-                                                    <span class="input-group-text" id="basic-addon2">Days</span>
-                                            </div>
-                                            <br />
-
-                                            <label for="price" class="form-label">Price:</label><br />
-                                            <div class="input-group mb-3">
-                                                <input type="number" class="form-control" id="price" name="price" aria-describedby="basic-addon2"  onChange={onPrice3Change} />
-                                                <span class="input-group-text" id="basic-addon2">$CREDIT</span>
-                                            </div>
-                                            <br />
-
-                                            <h3>Fees Calculator: </h3>
-                                            <button class="btn btn-primary" onClick={calculateFeesSeller}>Calculate fees</button>
-                                            <p><a href="#">Learn more about fees and why those are applied</a></p>
-                                            <div class="Staking-Program">
-                                                <p>Total fees: {fee} $</p>
-                                                <p>Fee: {(timeToReinvest * 100).toLocaleString('en-US')} %</p>
-                                                <h6>You will get: {(pricex3).toLocaleString('en-US')} $</h6>
-                                                <br />
-                                                <h6>Our Staking program: </h6>
-                                                <p>Refund your fees in less then 3 months!</p>
-                                                <p>3 Months: {pricex3 + pricex3 * 0.06} $</p>
-                                                <p>6 Months: {pricex3 + pricex3 * 0.07} $</p>
-                                                <p>9 Months: {pricex3 + pricex3 * 0.09} $</p>
-                                                <p>12 Months: {pricex3 + pricex3 * 0.11} $</p>
-                                            </div>
-                                            <input type="submit" class="btn btn-primary" value="Submit" />
-                    </form>
-            </div>
-        )
-    }
-
-    function HandleForm(props) {
-        return (
-            <div>
-                <form onSubmit={props.handleList}>
-                                            
-                                            <h5>Name: {props.name}</h5> 
-                                            <br />  
-                                            <h5>Description: {props.description}</h5>     
-                                            <br />
-                                            <div class="form-floating">
-                                                                <select onChange={onChangeTags} class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                                                                    <option selected>Categorize your digital item </option>
-                                                                    <option value="1" >NFT</option>
-                                                                    <option value="2" >Tickets</option>
-                                                                    <option value="3" >Virtual Property</option>
-                                                                </select>
-                                                                <label for="floatingSelect">Tag</label>
-                                            </div>
-                                            <br />
-                                            <label for="price" class="form-label">Price:</label><br />
-                                            <div class="input-group mb-3">
-                                                <input type="number" class="form-control" id="price" name="price" aria-describedby="basic-addon2" onChange={onPrice3Change} />
-                                                <span class="input-group-text" id="basic-addon2">$CREDIT</span>
-                                            </div>
-                                            <input type="submit" class="btn btn-primary" value="Submit" />
-                    </form> 
-            </div>
-        )
-    }
+    
 
     //account, did, pay, RealPurchase 
     function YnftCard(props) {
@@ -1690,163 +1016,7 @@ function DisplayActions(props) {
             //return logs
         }
 
-        const handleList = async(e) => {
-            e.preventDefault()
-            try {
-                if (props.signer) {
-                    if(props.abi === 'ERC721') {
-                        list(props.address, erc721ABI.abi, props.tokenid, price3, props.account, tag, props.name, props.description, props.image, props.signer) //check for abi
-                    }
-                    else {
-                        list(props.address, erc1155ABI, props.tokenid, price3, props.account, tag, props.name, props.description, props.image, props.signer) //check for abi
-                    }
-                    
-                } else {
-                    if (props.abi === 'ERC721') {
-                        list(props.address, erc721ABI.abi, props.tokenid, price3, props.account, tag, props.name, props.description, props.image, "") //check for abi
-
-                    } else {
-                        list(props.address, erc1155ABI, props.tokenid, price3, props.account, tag, props.name, props.description, props.image, "") //check for abi
-                    }
-                    
-                }
-                
-                alert("Success")
-
-            } catch (error) {
-                if (window.localStorage.getItem("usingMetamask") === "true") {
-                    let provider = await injected.getProvider()
-                    const nft = connectContract(props.address, erc721ABI.abi, provider) //check if erc1155 for abi (response.contractType)
-                    const market = connectContract(MarketAddress, abi.abi, provider)
-                    console.log(nft)
-
-                    const gasPrice = await nft.provider.getGasPrice();
-                    let gas1 = await nft.estimateGas.approve(MarketAddress, props.tokenid)
-                    let price1 = gas1 * gasPrice
-                    let gas2 = await market.estimateGas.listItem(nft.address, props.tokenid, price3)
-                    let price4 = gas2 * gasPrice
-                    //get the ether price and a little bit more than gaz price to be sure not to run out
-                    fetch("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=5c62b32f93bf731a5eae052066e37683cdee22fd71f3f4e2b987d495113f8534").then(res => {
-                        res.json().then(jsonres => {
-                            let usdPrice = (ethers.utils.formatEther(price1) * jsonres.USD) + (ethers.utils.formatEther(price4) * jsonres.USD)
-                            setPrice2(usdPrice)
-                        })
-                    })
-                    
-                } else {
-                    //const provider  = new ethers.providers.InfuraProvider("goerli")
-                    const nft = getContract(props.address, erc721ABI.abi, props.signer) //check if erc1155 for abi (response.contractType)
-                    const market = getContract(MarketAddress, abi.abi, props.signer)
-                    console.log(nft)
-
-                    const gasPrice = await nft.provider.getGasPrice();
-                    let gas1 = await nft.estimateGas.approve(MarketAddress, props.tokenid)
-                    let price1 = gas1 * gasPrice
-                    let gas2 = await market.estimateGas.listItem(nft.address, props.tokenid, price3)
-                    let price4 = gas2 * gasPrice
-                    //get the ether price and a little bit more than gaz price to be sure not to run out
-                    fetch("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=5c62b32f93bf731a5eae052066e37683cdee22fd71f3f4e2b987d495113f8534").then(res => {
-                        res.json().then(jsonres => {
-                            let usdPrice = (ethers.utils.formatEther(price1) * jsonres.USD) + (ethers.utils.formatEther(price4) * jsonres.USD)
-                            setPrice2(usdPrice)
-                        })
-                    })
-                    
-                }
-    
-            }
-            
-        }
-
-        const handleRealList = async(e) => {
-            e.preventDefault()
-            try {
-                setSellLoading(true)
-                if (props.signer) {
-                    await listDDS(props.tokenid, price3, props.account, props.name, props.description, props.image, props.tag, day2, props.signer, setSellLoading) //check for abi
-                    //alert("Success")
-                }
-                else {
-                    await listDDS(props.tokenid, price3, props.account, props.name, props.description, props.image, props.tag, day2, "", setSellLoading) //check for abi
-                    //alert("Success")
-                }
-                
-                
-
-            } catch (error) {
-                if (window.localStorage.getItem("usingMetamask") === "true") {
-                    let provider = await injected.getProvider()
-                    const nft = connectContract(props.address, erc721ABI.abi, provider) //check if erc1155 for abi (response.contractType)
-                    const DDS = connectContract(DDSAddress, DDSABI.abi, provider)
-                    console.log(nft)
-
-                    const gasPrice = await nft.provider.getGasPrice();
-                    let gas1 = await nft.estimateGas.approve(DDSAddress, props.tokenid)
-                    let price1 = gas1 * gasPrice
-                    let gas2 = await DDS.estimateGas.listItem(nft.address, props.tokenid, price3, day2) //&& day > 0
-                    let price2 = gas2 * gasPrice
-
-                    setSellLoading(false)
-                    //get the ether price and a little bit more than gaz price to be sure not to run out
-                    fetch("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=5c62b32f93bf731a5eae052066e37683cdee22fd71f3f4e2b987d495113f8534").then(res => {
-                        res.json().then(jsonres => {
-                            let usdPrice = (ethers.utils.formatEther(price1) * jsonres.USD) + (ethers.utils.formatEther(price2) * jsonres.USD)
-                            setReal(true)
-                            setPrice2(usdPrice)
-                        })
-                    })
-                } else {
-                    //const provider  = new ethers.providers.InfuraProvider("goerli")
-                    const nft = getContract(props.address, erc721ABI.abi, props.signer) //check if erc1155 for abi (response.contractType)
-                    const DDS = getContract(DDSAddress, DDSABI.abi, props.signer)
-                    console.log(nft)
-
-
-                    const gasPrice = await nft.provider.getGasPrice();
-                    let gas1 = await nft.estimateGas.approve(DDSAddress, props.tokenid)
-                    let price1 = gas1 * gasPrice
-                    let gas2 = await DDS.estimateGas.listItem(nft.address, props.tokenid, price3, day2)
-                    let price2 = gas2 * gasPrice
-
-                    setSellLoading(false)
-                    //get the ether price and a little bit more than gaz price to be sure not to run out
-                    fetch("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=5c62b32f93bf731a5eae052066e37683cdee22fd71f3f4e2b987d495113f8534").then(res => {
-                        res.json().then(jsonres => {
-                            let usdPrice = (ethers.utils.formatEther(price1) * jsonres.USD) + (ethers.utils.formatEther(price2) * jsonres.USD)
-                            setReal(true)
-                            setPrice2(usdPrice)
-                        })
-                    })
-                }
-    
-            }
-            
-        }
-
-        const revealTicket = async () => {
-            if (window.localStorage.getItem("usingMetamask") === "true") {
-                let provider = await injected.getProvider()
-                const nft = connectContract(TicketAddress, erc721ABI.abi, provider)
-                const url = await nft.getMyTicket(props.tokenid)
-                window.open(url, '_blank', 'width=300,height=500')
-
-            } else {
-                //const provider  = new ethers.providers.InfuraProvider("goerli")
-                const nft = getContract(TicketAddress, erc721ABI.abi, props.signer)
-                const url = await nft.getMyTicket(props.tokenid)
-                window.open(url, '_blank', 'width=300,height=500')
-            }
-        }
-        const cancelListing = () => {
-            setListing(false)
-            setUsdPrice2(0)
-            setUsdPrice3(0)
-        }
-
-        const activateListing = () => {
-            setListing(true)
-            
-        }
+       
 
         const retrieve = async() => {
             for (let i=0; i<props.realPurchase.length; i++) {
@@ -1865,35 +1035,11 @@ function DisplayActions(props) {
         } 
 
 
-        const Listing = () => {
-            if (props.address === ImperialRealAddress.toLowerCase()) {
-                return (
-                    <div class="listing">
-                       
-                        <HandleRealForm handleRealList={handleRealList} name={props.name} description={props.description} tag={props.tag}/>
-                        <br /> <br />
-                        <button onClick={cancelListing} class="btn btn-danger">Cancel</button> 
-                    </div>
-                )
-            }
-            else {
-                return (
-                    <div class="listing">
-                        <HandleForm handleList={handleList} name={props.name} description={props.description} /> 
-                        <br /> <br />
-                        <button onClick={cancelListing} class="btn btn-danger">Cancel</button> 
-                    </div>
-                )
-            }
-
-            
-        }
+        
 
        
         return (
-            sellLoading ? (<div class="ynftcard" ><ReactLoading type={type} color={color}
-            height={200} width={200} /><h5>Listing Item loading...</h5></div>) : real ? usdPrice2 > 0 ? (<PayGasList real={true} account={props.account} day={day2} total={usdPrice2} pay={props.pay} cancel={cancelListing} listItem={listDDS} did={props.did} nftAddress={props.address} tokenid={props.tokenid} name={props.name} description={props.description} image={props.image} tag={"real"} price={price3}/>) :
-                listingItem === true ? (<Listing/>) : (<div class="ynftcard">
+           <div class="ynftcard">
                 
                 {props.image?.includes("ipfs://") ? <img id='cardimg' src={"https://ipfs.io/ipfs/" + props.image?.split("//").pop()} alt="" /> : <img id='cardimg' src={props.image} alt="" />}
             
@@ -1901,25 +1047,12 @@ function DisplayActions(props) {
                 <br />
                 <h4> Name:  <a href="">{props.name}</a></h4>
                 <p>description: {props.description?.slice(0, 20)}...</p>
-                <button type="button" onClick={activateListing} class="btn btn-secondary">Sell</button>
-                {props.address === TicketAddress.toLowerCase() ? ( <button onClick={revealTicket} class="btn btn-success">Reveal Secret Ticket</button> ) : "" }
-            </div>) : usdPrice2 > 0 && usdPrice3 === 0 ? (<PayGasList real={false} day={day2} account={props.account} total={usdPrice2} pay={props.pay} cancel={cancelListing} listItem={list} did={props.did} nftAddress={props.address} tokenid={props.tokenid} name={props.name} description={props.description} image={props.image} tag={tag} price={price3}/>) :
-                usdPrice3 > 0 && usdPrice2 === 0 ? ( <PayGasRetrieve account={props.account} total={usdPrice3} pay={props.pay} cancel={cancelListing} dds={dds} did={props.did} itemId={gasItemId} />) : listingItem === true ? (<Listing  />) : (<div class="ynftcard">
-                
-                {props.image?.includes("ipfs://") ? <img id='cardimg' src={"https://ipfs.io/ipfs/" + props.image?.split("//").pop()} alt="" /> : <img id='cardimg' src={props.image} alt="" />}
-            
-                <br />
-                <br />
-                <h4> Name:  <a href="">{props.name}</a></h4>
-                <p>description: {props.description?.slice(0, 20)}...</p>
-                {props.level === 5 ? (<button type="button" onClick={activateListing} class="btn btn-secondary">Sell</button>) : ""}
-                {props.address === TicketAddress.toLowerCase() ? ( <button onClick={revealTicket} class="btn btn-success">Reveal Secret Ticket</button> ) : "" }
                 {props.address === ImperialRealAddress.toLowerCase() ? ( <button onClick={pollStatus} class="btn btn-primary"> Get status</button> ) : ""}
                 {props.address === ImperialRealAddress.toLowerCase() ? status === "Not prooved" ? numdaysToRetrieve > 0 ? ( <h5 style={{color: "yellow"}}>Pending</h5> ) : ( <h5 style={{color: "red"}}>Not Prooved</h5> ) : ( <h5 style={{color: "green"}}>Prooved</h5> ) : ""}
-                {props.address === ImperialRealAddress.toLowerCase() ? ( <button onClick={retrieve} class="btn btn-primary"> Retrieve $CREDITs</button> ) : ""}
+                {props.address === ImperialRealAddress.toLowerCase() ? ( <button onClick={retrieve} class="btn btn-primary"> Retrieve cash</button> ) : ""}
                 { props.address === ImperialRealAddress.toLowerCase() ? numdaysToRetrieve > 0 ? ( <h6>Item Prooved in {numdaysToRetrieve} days</h6> ) : ( <h6>Item Not prooved in time</h6> ) : ""  }
-                {trackingCode ? ( <h5>Tracking Code: {trackingCode}</h5> ) : ""}
-            </div>)
+                {trackingCode ? ( <h5>Tracking Code: <a href="https://www.canadapost-postescanada.ca/track-reperage/en#/home">{trackingCode}</a></h5> ) : ""}
+            </div>
         )
     }
 
@@ -1998,7 +1131,7 @@ function DisplayActions(props) {
                 'X-API-Key': web3ApiKey
               }
             };
-            let address = '0x4c62fc52d5ad4c8273feb97684ba612288ee9507'
+            let address = '0x953888Ae66748E5732a95D65e9460724D56e8957'
             let nftlist = []
             
             fetch('https://deep-index.moralis.io/api/v2/'+ address + '/nft?chain=goerli&format=decimal&media_items=false', options) //chain to arbitrum
@@ -2006,42 +1139,45 @@ function DisplayActions(props) {
               .then((data) => {
                 console.log(data.result)
                 for (let i=0; i<data?.result.length; i++) {
-                    let metadata = data.result[i].token_uri
-
-                    console.log("CID: " + metadata?.replace("https://ipfs.moralis.io:2053/ipfs/", "") )
-
-                    //'https://api.pinata.cloud/data/pinList?status=pinned&pinSizeMin=100' \--header 'Authorization: Bearer PINATA JWT'
-
-                    const options2 = {
-                        method: 'GET',
-                        headers: {
-                          accept: 'application/json',
-                          Authorization: key
-                        }
-                    };
-          
-                    fetch('https://api.pinata.cloud/data/pinList?status=pinned&hashContains=' + metadata?.replace("https://ipfs.moralis.io:2053/ipfs/", ""), options2).then((res2) => res2.json()
-                    ).then((data2) => {
+                    if (data.result[i].token_address == ImperialRealAddress.toLowerCase()){
+                        let metadata = data.result[i].token_uri
                         
-                        console.log(data2?.rows[0])
-                        if (ynft) {
-                            let ynftlist = ynft;
 
-                            setYnft(ynftlist)
-                            console.log(ynftlist)
-                        }
-                        
-                        nftlist.push({
-                            name: data2?.rows[0]?.metadata.name,
-                            tokenAddress: data.result[i].token_address,
-                            tokenId: data.result[i].token_id, //put to int
-                            metadata: {
-                                description: data2?.rows[0]?.metadata.keyvalues?.description,
-                                tag: data2?.rows[0]?.metadata.keyvalues?.tag,
-                                image: metadata
+                        console.log("CID: " + metadata?.replace("https://ipfs.moralis.io:2053/ipfs/", "") )
+
+                        //'https://api.pinata.cloud/data/pinList?status=pinned&pinSizeMin=100' \--header 'Authorization: Bearer PINATA JWT'
+
+                        const options2 = {
+                            method: 'GET',
+                            headers: {
+                            accept: 'application/json',
+                            Authorization: key
                             }
+                        };
+            
+                        fetch('https://api.pinata.cloud/data/pinList?status=pinned&hashContains=' + metadata?.replace("https://ipfs.moralis.io:2053/ipfs/", ""), options2).then((res2) => res2.json()
+                        ).then((data2) => {
+                            
+                            console.log(data2?.rows[0])
+                            if (ynft) {
+                                let ynftlist = ynft;
+
+                                setYnft(ynftlist)
+                                console.log(ynftlist)
+                            }
+                            
+                            nftlist.push({
+                                name: data2?.rows[0]?.metadata.name,
+                                tokenAddress: data.result[i].token_address,
+                                tokenId: data.result[i].token_id, //put to int
+                                metadata: {
+                                    description: data2?.rows[0]?.metadata.keyvalues?.description,
+                                    tag: data2?.rows[0]?.metadata.keyvalues?.tag,
+                                    image: metadata
+                                }
+                            })
                         })
-                    })
+                    }
                 }
                 return nftlist
                 
@@ -2058,11 +1194,11 @@ function DisplayActions(props) {
             //load DDS contract 
             if (window.localStorage.getItem("usingMetamask") === "true") {
                 let provider = await injected.getProvider()
-                const contract = connectContract(DDSAddress, DDSABI.abi, provider)
+                const contract = connectContract(DDSAddress, DDSABI, provider)
                 setDds(contract)
             } else {
                 //const provider  = new ethers.providers.InfuraProvider("goerli")
-                const contract = getContract(DDSAddress, DDSABI.abi, props.signer)
+                const contract = getContract(DDSAddress, DDSABI, props.signer)
                 setDds(contract)
             }
            
@@ -2100,42 +1236,29 @@ function DisplayActions(props) {
             const getClientInfo = async() => {
                 console.log("activated")
                 let key = await dds.getClientInfos(props.orderid - 1, props.orderid) //itemID, order ID or let keyid = ... keyid[0], keyid[1], keyid[0]
-                console.log(key)
+                //console.log(key)
                 const item = await dds?.items(props.orderid - 1)
-                console.log(item.nft)
-                if (window.localStorage.getItem("usingMetamask") === "true") {
-                    let provider = await injected.getProvider()
-                    const nft = connectContract(item.nft, realabi.abi, provider)
-                    const buyer_address = await nft.ownerOf(item.tokenId)
-                    console.log(buyer_address)
-                    // go take hash form bucket file then, delete the file
-                    setS3Config("didtransfer", "public")
-                    const file = await Storage.get(`${buyer_address.toLowerCase()}.txt`)
-                    fetch(file).then((res) => res.text()).then((text) => {
-                        let res1 = AES.decrypt(text, key)
-                        const res = JSON.parse(res1.toString(enc.Utf8));
-                        console.log(res)
-                        setClientId(res)
-                        setGettingID(true)
+                //console.log(item.tokenId)
+                
+                const nft = getContract(item.nft, realabi, props.signer)
+                //console.log(nft)
 
-                    })
-                } else {
-                    const nft = getContract(item.nft, realabi.abi, props.signer)
-
-                    const buyer_address = await nft.ownerOf(item.tokenId)
-                    console.log(buyer_address)
-                    // go take hash form bucket file then, delete the file
-                    setS3Config("didtransfer", "public")
-                    const file = await Storage.get(`${buyer_address.toLowerCase()}.txt`)
-                    fetch(file).then((res) => res.text()).then((text) => {
-                        console.log(text)
+                const buyer_address = await nft.ownerOf(parseInt(item.tokenId))
+               //console.log(buyer_address)
+                // go take hash form bucket file then, delete the file
+                setS3Config("didtransfer", "public")
+                const file = await Storage.get(`${props.signer.address.toLowerCase()}/${buyer_address.toLowerCase()}.txt`)
+                fetch(file).then((res) => res.text()).then((text) => {
+                        //console.log(text)
                         let res1 = AES.decrypt(text, key)
                         const res = JSON.parse(res1.toString(enc.Utf8));
                         setClientId(res)
                         setGettingID(true)
 
-                    })
-                }
+                }).catch((e) => {
+                    console.log(e)
+                })
+                
                 
                 
                 
@@ -2170,16 +1293,17 @@ function DisplayActions(props) {
         const loadDDS = async() => {
             if (window.localStorage.getItem("usingMetamask") === "true") {
                 let provider = await injected.getProvider()
-                const contract = connectContract(DDSAddress, DDSABI.abi, provider)
+                const contract = connectContract(DDSAddress, DDSABI, provider)
                 setDds(contract)
             } else {
                 //const provider  = new ethers.providers.InfuraProvider("goerli")
-                const contract = getContract(DDSAddress, DDSABI.abi, props.signer)
+                const contract = getContract(DDSAddress, DDSABI, props.signer)
                 setDds(contract)
             }
         }
         
         const getNumItems = async () => {
+            console.log(props.address?.toLowerCase())
             var data = {
                 body: {
                     address: props.address?.toLowerCase(),
@@ -2196,21 +1320,33 @@ function DisplayActions(props) {
             API.post('serverv2', url, data).then(async (response) => {
                 console.log(response)
                     for(let i=0; i<=response.ids?.length; i++) { //loop trought every listed item of an owner 
-                        if (response.tags[i] === "real") { // once you got the item we want to display:
-                            numItem ++
-                            console.log(dds)
+                        //console.log(response.ids[i])
+                        if(response.ids[i] > 0) {
+                            numItem++
+                            //console.log(dds)
                             const item = await dds?.items(parseInt(response.ids[i])) //get the DDS item
+                            //console.log(item)
                             if (item?.sold === true && item?.prooved === false) {
                                 orderIdToComplete.push(parseInt(item.itemId) + 1) //orderID
                                 names.push(response.names[i])
                             }
                         }
                     }
-            })
-            if (names.length > 0) {
-                setOrderIds([[names, orderIdToComplete]])
-            }
-            setNumItems(numItem)
+                    if (names.length > 0) {
+                        let item = []
+                        for (let i=0; i<names.length; i++) {
+                            item[i] = {name: names[i], orderId: orderIdToComplete[i]}
+                        }
+                        setOrderIds(item)
+                    }
+                    setNumItems(numItem)
+                    console.log(numItem)
+            }).catch((e) => {
+                console.log(e)
+            }) 
+               
+            
+            
 
            
             
@@ -2250,7 +1386,7 @@ function DisplayActions(props) {
             <div>
                 <h4>You have listed {numItems} Real Items </h4>
                 <h4>You need to confirm {orderIds?.lenght > 0 ? orderIds[0]?.length : orderIds?.length} purchase</h4>
-                <h5>Order Ids of command to verify: {orderIds.map(ids => ( <OrderToComplete name={ids[0]} orderid={ids[1]} did={props.did}/> ))}</h5>
+                <h5>Order Ids of command to verify: {orderIds.map(ids => ( <OrderToComplete name={ids.name} signer={props.signer} orderid={ids.orderId} did={props.did}/> ))}</h5>
             </div>
         )
     }
@@ -2264,23 +1400,32 @@ function DisplayActions(props) {
         console.log(dds)
         setSubmitLoading(true)
         try {
-            await dds.submitProof(orderID, proof)
-            alert("successfully submited proof!")
-            setSubmitLoading(false)
-        } catch (error) {
-            alert("Need gas to complete transaction!")
-            setSubmitLoading(false)
-            const gasPrice = await dds.provider.getGasPrice();
-                        
-            let gas2 = await dds.estimateGas.submitProof(orderID, proof)
-            let price2 = gas2 * gasPrice
-            //get the ether price and a little bit more than gaz price to be sure not to run out
-            fetch("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD&api_key=5c62b32f93bf731a5eae052066e37683cdee22fd71f3f4e2b987d495113f8534").then(res => {
-                            res.json().then(jsonres => {
-                                let usdPrice = ethers.utils.formatEther(price2) * jsonres.USD
-                                setProofPrice(usdPrice)
-                            })
+            //await dds.submitProof(orderID, proof)
+            let item = await dds.items(orderID-1);
+            //console.log(parseFloat()
+            
+            let data = {
+                body: {
+                    address: props.signer.address,
+                    amount: (item.price/100000 * 1.36).toFixed(2),
+                    email: window.localStorage.getItem("moneyAddress"),
+                    id: orderID,
+                    proof: proof
+                }
+            
+            }
+
+            var url = "/get-payed"
+        
+            API.post('serverv2', url, data).then((response) => {
+                console.log(response)
+                alert("successfully submited proof!")
+                setSubmitLoading(false)
             })
+            
+        } catch (error) {
+            alert("Unable to submit Proof");
+            setSubmitLoading(false)
             
         }
         
@@ -2357,7 +1502,7 @@ function DisplayActions(props) {
             //function to get the amount of ETH based on the amount of usdc(credits)
             //always the same high and low price to save memory and inpermanent loss
             // pricex96 = BigInt(Math.floor(Math.sqrt(price) * 2 ** 96))
-            window.location.replace("https://www.layerswap.io/app?from=arbitrum_mainnet&to=kraken&lockFrom=arbitrum_mainnet&lockTo=kraken&amount=300&asset=usdc")
+            //window.location.replace("https://www.layerswap.io/app?from=arbitrum_mainnet&to=kraken&lockFrom=arbitrum_mainnet&lockTo=kraken&amount=300&asset=usdc")
             //const price_high = 0
             //const price = 1910
             //const x = amount * price
@@ -2365,6 +1510,7 @@ function DisplayActions(props) {
             //await props.amm.retrieveSeller(amount, liquidity, 0) //not obligated: https://ethereum.stackexchange.com/questions/138055/what-is-sqrtpricelimitx96-for-in-uniswap
             //const res = await retrieveMoney()
             //https://www.layerswap.io/app?from=&to=&lockFrom=&lockTo=
+            // <button class="btn btn-primary" onClick={retrieveMoneyHelper}>Cash out full account</button>
         }
         
 
@@ -2372,9 +1518,7 @@ function DisplayActions(props) {
         return ( 
             <div class="sellersetup">
                 <h2>Seller Dashboard</h2>
-                <h5>Withdraw address connected: <strong>{window.localStorage.getItem("MoneyAddress")}</strong></h5>
-                
-                <button class="btn btn-primary" onClick={retrieveMoneyHelper}>Cash out full account</button>
+                {window.localStorage.getItem("MoneyAddress") ? (<h5>Withdraw email address connected: <strong>{window.localStorage.getItem("MoneyAddress")}</strong></h5>) : ( <h5>No connected address... please, connect one in order to get payed! </h5> )}
             </div> 
         )
     }
@@ -2452,11 +1596,11 @@ function DisplayActions(props) {
         const loadDDS = async() => {
             if (window.localStorage.getItem("usingMetamask") === "true") {
                 let provider = await injected.getProvider()
-                const contract = connectContract(DDSAddress, DDSABI.abi, provider)
+                const contract = connectContract(DDSAddress, DDSABI, provider)
                 setDds(contract)
             } else {
                 //const provider  = new ethers.providers.InfuraProvider("goerli")
-                const contract = getContract(DDSAddress, DDSABI.abi, props.signer)
+                const contract = getContract(DDSAddress, DDSABI, props.signer)
                 setDds(contract)
             }
         }
@@ -2485,10 +1629,10 @@ function DisplayActions(props) {
                     (<li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-create-tab" data-bs-toggle="pill" data-bs-target="#pill-create" type="button" role="tab" aria-controls="pill-create" aria-selected="false">Create !</button>
                     </li>)
-    }
-                    <li class="nav-item" role="presentation">
+    }               { props.level != 5 ?
+                    (<li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-ynft-tab" data-bs-toggle="pill" data-bs-target="#pill-ynft" type="button" role="tab" aria-controls="pill-ynft" aria-selected="false">Your Art</button>
-                    </li>
+                    </li>) : ""}
                     { props.level != 5 ? "" : 
                     (<li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-pos-tab" data-bs-toggle="pill" data-bs-target="#pill-pos" type="button" role="tab" aria-controls="pill-pos" aria-selected="false">Proof of Sending</button>
@@ -2621,6 +1765,10 @@ function DisplayActions(props) {
                                                 <br />  
                                                 <input class="form-control" type="text" placeholder="Description" onChange={onDescriptionChange}/>    
                                                 <br />
+                                                <input class="form-control" type="number" placeholder="Price of the Item (in $)" onChange={onItemPriceChange}/>    
+                                                <br />
+                                                <input class="form-control" type="number" placeholder="Number of day to send the Item" onChange={onItemDaysChange}/>    
+                                                <br />
                                                 <div class="form-floating">
                                                     <select onChange={onChangeTags} class="form-select" id="floatingSelect" aria-label="Floating label select example">
                                                         <option selected>Categorize your digital item </option>
@@ -2676,7 +1824,7 @@ function DisplayActions(props) {
                             {submitLoading ? (<div style={{paddingLeft: 25 + "%"}}><ReactLoading type={type} color={color}
         height={200} width={200} /><h5>{step} loading...</h5></div>) : (
                             <div>
-                                <GetClient address={props.account} did={props.did} level={props.level}/>
+                                <GetClient address={props.account} signer={props.signer} did={props.did} level={props.level}/>
                                 <div class="submitPos">
                                     <h4>Proof submition:</h4>
                                     <form onSubmit={handleProof}>
@@ -2695,45 +1843,14 @@ function DisplayActions(props) {
                     </div>
                     <div class="tab-pane fade" id="pill-seller" role="tabpanel" aria-labelledby="pills-seller-tab">
                         <div class="pos">
-                            {window.localStorage.getItem("MoneyAddress") ? ( <div> <SellerSetup /> </div> ) : (
-                            <div class="connect">
-                                {sellerExchange !== "" ? ( <div>
-                                <h2 style={{"color": "yellow"}} >{sellerExchange} Account currently connecting...</h2>
-                                <form onSubmit={saveApi}>
-                                    <input type="text" id="order" name="order" class="form-control" placeholder="API key" onChange={onApiChanged}/>
-                                    <br />
-                                    <input type="text" id="proof" name="proof" class="form-control" placeholder="API secret key" onChange={onSecChanged}/>
-                                    <br />
-                                    <input type="submit" class="btn btn-primary" value="Submit" />
-                                </form></div> ) : ( <div>
-                                <h2 style={{"color": "red"}} >No Account linked</h2>
-                                <p>Choose an account to link: </p>
+                             <div> <SellerSetup /> 
+                             <form onSubmit={saveSellerRetrieveAddress}>
+                                <input type="text" id="order" name="order" class="form-control" placeholder="john@example.com" onChange={onSellerRetrieveAddressChange}/>
                                 <br />
-                                <button class="btn btn-primary" style={{"width": 275 + "px"}} onClick={setExchangeKraken}> 
-                                    <div className="icon">
-                                        <img src="https://logos-world.net/wp-content/uploads/2021/02/Kraken-Logo.png" alt="icon" />
-                                    </div> <h4 style={{"float": "left"}}>Kraken</h4>
-                                </button>
-                                <br />
-                                <br />
-                                <button class="btn btn-primary" style={{"width": 275 + "px"}} onClick={setExchangeCryptocom} disabled> <div className="icon">
-                                        <img src="https://downloads.intercomcdn.com/i/o/25103/6b16e1e91ff7d2ef82b1e31b/Monaco-Logo_icon.png" alt="icon" />
-                                    </div> <h4 style={{"float": "left"}}>Crypto.com</h4></button>
-                                <br />
-                                <br /> 
-                                <button class="btn btn-primary" style={{"width": 275 + "px"}} onClick={setExchangeBitbuy} disabled><div className="icon">
-                                        <img src="https://3.bp.blogspot.com/-OusYdcMHqQM/W9cdzEbCXEI/AAAAAAAAFd4/wsS34ZLjcCgQk_EJKT2q-nhgzo_mCprWACLcBGAs/s320/bitbuy-logo-filled.png" alt="icon" />
-                                    </div> <h4 style={{"float": "left"}}>BitBuy.ca</h4></button>
-                                <br />
-                                <br />
-                                <p>Or select a specific retrieve address: </p>
-                                <form onSubmit={saveSellerRetrieveAddress}>
-                                    <input type="text" id="order" name="order" class="form-control" placeholder="Address: 0x0000..." onChange={onSellerRetrieveAddressChange}/>
-                                    <br />
-                                    <input type="submit" class="btn btn-primary" value="Submit" />
-                                </form>
-                                </div> )}
-                            </div>)}
+                                <input type="submit" class="btn btn-primary" value="Submit" />
+                            </form>
+                             
+                             </div> 
                         </div>
                     </div>
                 </div>

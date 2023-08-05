@@ -83,7 +83,7 @@ function Account() {
                                 </div>
                             </div>
                             <br />
-                            <button className="btn  btn-secondary" onClick={imperialConnect} >
+                            <button className="btn  btn-secondary" onClick={imperialConnect}>
                                 <div className="icon">
                                     <img src={RedLogo} alt="icon" />
                                 </div>
@@ -94,7 +94,7 @@ function Account() {
                             <br />
                             <h4>Connect your Wallet</h4>
                             <br />
-                            <button className="btn  btn-primary" onClick={connect} >
+                            <button className="btn  btn-primary" onClick={connect} disabled>
                                 <div className="icon">
                                     <img src={icon} alt="icon" />
                                 </div>

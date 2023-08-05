@@ -18,6 +18,11 @@ import DDSABI from '../../artifacts/contracts/DDS.sol/DDS.json'
 import { API } from "aws-amplify";
 const DDSGasContract = '0x14b92ddc0e26C0Cf0E7b17Fe742361B8cd1D95e1'
 
+let USDollar = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+});
+
 const connectContract = (address, abi, injected_prov) => { //for metamask
     const provider = new ethers.providers.Web3Provider(injected_prov);
 
@@ -39,7 +44,7 @@ const getContract = (address, abi, signer ) => { //for Imperial Account
 
 
 function Receipt (props) {
-    const [fees, setFees] = useState()
+    //const [fees, setFees] = useState()
     const [loadF2C, setLoadF2C] = useState(false)
     const type = "spin"
     const color = "#0000FF"
@@ -61,7 +66,7 @@ function Receipt (props) {
                     environment: 'STAGING', // (Required)
                     fiatCurrency: 'CAD',
                     walletAddress: props.account.toString(),
-                    fiatAmount: (props.total/100000  * 1.36 + fees)
+                    fiatAmount: (props.total/100000  * 1.36)
                     // .....
                     // For the full list of customisation options check the link above
                 });
@@ -93,53 +98,11 @@ function Receipt (props) {
         
         
     }
+    
 
-    const calculateGasFees = async() => {
+    
 
-            const gasPrice = await props.contract.provider.getGasPrice();
-            console.log(parseFloat(ethers.utils.formatEther(gasPrice)))
-            
-            let price = props.subtotal
-            let gas = await props.contract.estimateGas.approve(props.seller, price) //()
-            console.log(parseInt(price))
-            console.log(props)
-
-            if (props.dds) { //real item
-                if (window.localStorage.getItem("usingMetamask") === "false") {
-                    const gasdds = getContract(DDSGasContract, DDSABI.abi, props.signer)
-                    let gas2 = await gasdds.estimateGas.purchaseItem(1, 1, props.pk)
-
-                    console.log(gas2)
-                    return[(gas * gasPrice),  (gas2 * gasPrice)]
-                }
-                else {
-                    let provider = await injected.getProvider()
-                    const gasdds = connectContract(DDSGasContract, DDSABI.abi, provider)
-
-                    let gas2 = await gasdds.estimateGas.purchaseItem(1, 1, "")
-                    console.log(gas2)
-                    return[(gas * gasPrice),  (gas2 * gasPrice)]
-                }
-                
-            }
-            else {
-                let gas2 = await props.market.estimateGas.purchaseItem(props.id)
-                return [(gas * gasPrice),  (gas2 * gasPrice)]
-            }
-
-        
-        
-        
-    }
-
-    useEffect(() => {
-        calculateGasFees().then((fee) => {
-            console.log(fee[1])
-            setFees((ethers.utils.formatEther(fee[0])  * 2440.40) + (ethers.utils.formatEther(fee[1])  * 2440.40)) //credit price: 31400700
-            
-        })
-        
-    })
+   
     //{props.quebec ? <div> <h6>GST: 1,500 $CREDIT (2,5$ at 5%) </h6> <h6>QST: 3,000 $CREDIT (5$ at 10%)</h6> </div> : <h6 class="tax">Tax: 3,000 $CREDITs ({props.taxprice}$ at {props.tax}%)</h6> } <a href="" class="link link-primary">taxes policies ({props.state})</a>
     return (
         <div>
@@ -151,10 +114,10 @@ function Receipt (props) {
             <img id='itemimg' src={props.image} alt="" />
             <br />
             <br />
-            <h4>subtotal: {window.localStorage.getItem("currency") === "CAD" ? (props.subtotal/100000 * 1.36) : (props.subtotal/100000)}  {window.localStorage.getItem("currency")}</h4>
-            <h6>Gas Fee: {parseFloat(fees)} {window.localStorage.getItem("currency")}</h6>
+            <h4>subtotal: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.subtotal/100000 * 1.36)) : USDollar.format((props.subtotal/100000))}  {window.localStorage.getItem("currency")}</h4>
             
-            <h5> Total: {window.localStorage.getItem("currency") === "CAD" ? (props.total/100000 * 1.36) : (props.total/100000)} {window.localStorage.getItem("currency")}</h5>
+            
+            <h5> Total: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.total/100000 * 1.36)) : USDollar.format((props.total/100000))} {window.localStorage.getItem("currency")}</h5>
             <button onClick={props.purchase} type="button" class="btn btn-secondary" id="buy">Buy</button>
             <button onClick={loadOrder} type="button" class="btn btn-primary" id="buy">F2C</button>
             <br /><br />
@@ -163,26 +126,30 @@ function Receipt (props) {
                     createOrder={async () => {
                         let dataoptions = {
                             body: {
-                                amount: (props.subtotal/100000 * 1.36)
+                                amount: parseFloat(props.subtotal/100000 * 1.36).toFixed(2).toString()
                             }
                         }
                         return API.post('serverv2', "/create-paypal-order", dataoptions).then((order) => order.id);
                     }}
                     onApprove={async (data) => {
+                        
                         let dataoptions = {
                             body: {
                                 orderID: data.orderID,
-                                address: props.account, 
-                                amount: (props.subtotal/100000 * 1.36),
+                                address: props.account,
+                                amount: parseFloat(props.subtotal/100000 * 1.36).toFixed(2),
+                                itemId: parseInt(props.id), 
+                                key: props.pk,
                                 buying: true
                             }
                         }
                         return API.post('serverv2', "/capture-paypal-order", dataoptions).then((orderData) => {
                             console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
                             const transaction = orderData.purchase_units[0].payments.captures[0];
+                            props.purchase()
                             alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
 
-                            props.purchase()
+                            //props.purchase()
                         });
                     }}
                 />
@@ -190,7 +157,7 @@ function Receipt (props) {
             
             <br />
             <br />
-            <button onClick={props.cancel} type="button" class="btn btn-danger">Cancel</button></div> )} </div>) : (<PayItems pk={props.pk} total={props.total} fees={fees} account={props.account} purchase={props.purchase} amm={props.amm} cancel={props.cancel}/>)}
+            <button onClick={props.cancel} type="button" class="btn btn-danger">Cancel</button></div> )} </div>) : (<PayItems pk={props.pk} total={props.total} account={props.account} purchase={props.purchase} amm={props.amm} cancel={props.cancel}/>)}
 
         </div>
         

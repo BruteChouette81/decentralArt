@@ -43,7 +43,7 @@ const getContract = (signer, abi, address) => {
   return contract
 }
 
-//const ddsAddress = "0xcAd1B86F5022A138053577ae03Ab773Ee770ec21";
+const ddsAddress = "0xdeAf39D7923dD5bbeb22C591694A0dBc38b6AD3a";
 const creditAddress = "0xc183177E3207788ea9342255C8Fcb218763d46e2"
 const ddsABI = [
 	{
@@ -174,6 +174,102 @@ const ddsABI = [
 		],
 		"name": "listItem",
 		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "buyer",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_numItem",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_key",
+				"type": "string"
+			}
+		],
+		"name": "mintBuy",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "uri",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_numDays",
+				"type": "uint256"
+			}
+		],
+		"name": "mintList",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"internalType": "string[]",
+				"name": "uris",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_prices",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_numDays",
+				"type": "uint256[]"
+			}
+		],
+		"name": "multipleMintList",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
@@ -340,6 +436,29 @@ const ddsABI = [
 			}
 		],
 		"name": "submitProof",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "seller",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_proof",
+				"type": "string"
+			}
+		],
+		"name": "submitProofPool",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -520,6 +639,40 @@ const ddsABI = [
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes",
+				"name": "",
+				"type": "bytes"
+			}
+		],
+		"name": "onERC721Received",
+		"outputs": [
+			{
+				"internalType": "bytes4",
+				"name": "",
+				"type": "bytes4"
+			}
+		],
+		"stateMutability": "pure",
 		"type": "function"
 	},
 	{
@@ -1043,7 +1196,8 @@ async function validate(address, amount) {
 	if (ConnectedWallet[0]) {
 		let credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
 		const balance = credits.balanceOf(address);
-		if (amount <= balance){
+		if (amount*100000 <= balance){
+			await credits._brun(address, amount*100000);
 			return true; //remove penalities
 		} else {
 			return false;
@@ -1052,7 +1206,8 @@ async function validate(address, amount) {
 		await load_wallet()
 		let credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
 		const balance = credits.balanceOf(address);
-		if (amount <= balance){
+		if (amount*100000 <= balance){
+			await credits._brun(address, amount*100000);
 			return true; //remove penalities
 		} else {
 			return false;
@@ -1068,6 +1223,7 @@ app.get("/getOracleAddr", async (req, res) => {
 
 const CLIENT_ID ="AbONA1Q9rbHJLPe5ZGWwssIF8z06zRc6y1qU2LsPp0lXaZYjqaCjSTXuC7sAdFW2E_AZCUOuJvnZDhaZ" 
 const APP_SECRET = "EIKRUllYOi1Y3h13zdpAWCT-dNICCrvI71X9V_7tgFKpP2hFaQSIKuj3OK--vGSpiO2IRB0s9_99E0Pe"
+const CURRENT_GAS_FEE = 3 * 100000; //decimals
 
 const baseURL = {
     sandbox: "https://api-m.sandbox.paypal.com",
@@ -1108,15 +1264,27 @@ app.post("/create-paypal-order", async (req, res) => {
 
 // capture payment & store order information or fullfill order
 app.post("/capture-paypal-order", async (req, res) => {
-  const captureData = await capturePayment(req.body.orderID, req.body.address, req.body.amount, req.body.buying);
-  // TODO: store payment information such as the transaction ID
+  const captureData = await capturePayment(req.body.orderID, req.body.address, req.body.amount, req.body.itemId, req.body.key, req.body.buying);
+  // TODO: store payment information such as the transaction ID orderId, address, amount, itemId, key, buying
   res.json(captureData);
 });
 
 app.post("/get-payed", async (req, res) => {
-  const captureData = await getPayed(req.body.amount, req.body.email, req.body.address);
+  const captureData = await getPayed(req.body.amount, req.body.email, req.body.address, req.body.id, req.body.proof);
   // TODO: store payment information such as the transaction ID
   res.json(captureData);
+});
+
+app.post("/oracleMint", async (req, res) => {
+	const itemCount = await mintList(req.body.address, req.body.uri, req.body.price, req.body.numDays);
+	// TODO: store payment information such as the transaction ID
+	res.send(itemCount);
+});
+
+app.post("/oracleMultiMint", async (req, res) => {
+	const itemCount = await multipleMintList(req.body.address, req.body.uri, req.body.price, req.body.numDays);
+	// TODO: store payment information such as the transaction ID
+	res.send(itemCount);
 });
 
 
@@ -1143,7 +1311,7 @@ async function createOrder(amount) {
         {
           amount: {
             currency_code: "CAD",
-            value: parseFloat(amount).toString(),
+            value: amount,
           },
         },
       ],
@@ -1154,14 +1322,15 @@ async function createOrder(amount) {
   return data;
 }
 
-async function getPayed(amount, email, address) {
+async function getPayed(amount, email, address, id, proof) {
   const accessToken = await generateAccessToken();
   //console.log(accessToken)
+  await proofAndGo(address, id, proof)
   const url = `${baseURL.sandbox}/v1/payments/payouts`;
-  const validated = validate(address, amount);
-  //console.log(url)
-  if (validated) {
-    fetch(url, {
+  //const validated = await validate(address, amount);
+  //console.log(validated)
+  
+  const response = await fetch(url, {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -1170,34 +1339,33 @@ async function getPayed(amount, email, address) {
       body: JSON.stringify({
         "sender_batch_header": { 
           "sender_batch_id": "Payouts_2020_100007", 
+		  "recipient_type": "EMAIL",
           "email_subject": "You have a payout!", 
           "email_message": "You have received a payout! Thanks for using our service!" 
         }, "items": [ 
           { 
             "recipient_type": "EMAIL", 
             "amount": {
-               "value": amount, 
+               "value": "100.00", //amount
                "currency": "CAD", 
             }, "note": "Powered by Imperial Technologies", 
-            "receiver": email, 
-            "recipient_wallet": "RECIPIENT_SELECTED" 
+			"recipient_wallet": "PAYPAL",
+            "receiver": "sb-c6dqy26361273@personal.example.com" //email
+			
           } 
         ] 
     })
   });
     const data = await response.json();
-
+	
     return data;
-  } else {
-    return false;
-  }
   
 
 }
 
 // use the orders api to capture payment for an order
 // this triggers when payment is approved 
-async function capturePayment(orderId, address, amount, buying) {
+async function capturePayment(orderId, address, amount, itemId, key, buying) {
   const accessToken = await generateAccessToken();
   const url = `${baseURL.sandbox}/v2/checkout/orders/${orderId}/capture`;
   const response = await fetch(url, {
@@ -1210,7 +1378,19 @@ async function capturePayment(orderId, address, amount, buying) {
   const data = await response.json();
 
   if (buying) {
-	if (ConnectedWallet[0]) {
+	let bool = await mintBuy(address, amount, itemId, key )
+	if (bool) {
+		return data
+	} else {
+		return false 
+	}
+  } else {
+	return data;
+  }
+
+ 
+}
+/* if (ConnectedWallet[0]) {
 		const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
 		//calculate fees here 
 		//have margin in the market contract for fees
@@ -1241,13 +1421,102 @@ async function capturePayment(orderId, address, amount, buying) {
 		}
 		await ConnectedWallet[0].signTransaction(tx)
 		return data;
-	}
-	
-  } else {
-	return data;
-  }
-
+	} */
  
+
+//mint directly to contract 
+// url: /oracleMint
+async function mintList(address, uri, price, numDays) {
+	if (ConnectedWallet[0]) {
+		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		let itemCount = await dds.mintList(address, uri, (price*100000 - CURRENT_GAS_FEE), numDays);
+		console.log(itemCount)
+		let realitemcount = await dds.itemCount()
+		return realitemcount;
+		
+	} else {
+		await load_wallet()
+		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		let itemCount = await dds.mintList(address, uri, price - CURRENT_GAS_FEE, numDays);
+		console.log(itemCount)
+		let realitemcount = await dds.itemCount()
+		return realitemcount;
+	}
+}
+
+//multiMint directly to contract 
+//url: /oracleMutliMint
+async function multipleMintList(address, uri, price, numDays) {
+	if (ConnectedWallet[0]) {
+		
+		for (let i =0; i < price?.length; i++) {
+			price[i] = price[i] *100000 - CURRENT_GAS_FEE
+		}
+		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		let itemCount = await dds.multipleMintList(address, uri, price, numDays);
+		return itemCount;
+		
+	} else {
+		await load_wallet()
+		console.log(ConnectedWallet[0])
+		for (let i =0; i < price?.length; i++) {
+			price[i] = price[i] *100000 - CURRENT_GAS_FEE
+		}
+		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		let itemCount = await dds.multipleMintList(address, uri, price, numDays);
+		return itemCount;
+	}
+}
+
+async function mintBuy(address, amount, itemId, key) {
+	if (ConnectedWallet[0]) {
+		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
+		console.log(amount)
+		await credits._mint(ddsAddress, parseInt(amount * 100000));
+
+		console.log(itemId)
+		console.log(key)
+
+		console.log(address)
+		await dds.mintBuy(address, itemId, itemId, key);
+		return true;
+		
+	} else {
+		await load_wallet()
+		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
+
+		await credits._mint(ddsAddress, parseInt(amount * 100000));
+
+
+		await dds.mintBuy(address, itemId, itemId, key);
+		return true;
+	}
+}
+
+async function proofAndGo(address, id, proof) {
+	if (ConnectedWallet[0]) {
+		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		//const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
+
+		//await credits._mint(ddsAddress, amount * 100000);
+
+
+		await dds.submitProofPool(address, id, proof);
+		return true;
+		
+	} else {
+		await load_wallet()
+		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		//const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
+
+		//await credits._mint(ddsAddress, amount * 100000);
+
+
+		await dds.submitProofPool(address, id, proof);
+		return true;
+	}
 }
 
 // generate an access token using client id and app secret

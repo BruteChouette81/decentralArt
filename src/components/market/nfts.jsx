@@ -9,6 +9,11 @@ const marketdds = '0x1D1db5570832b24b91F4703A52f25D1422CA86de'
 
 const TicketAddress = '0x6CFADe18df81Cd9C41950FBDAcc53047EdB2e565'
 
+let USDollar = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+});
+
 function NftBox (props) {
     //see in bigger using modal
    
@@ -135,7 +140,7 @@ function NftBox (props) {
 
     const realPurchase = async () => {
         try {
-            setBuyloading(true)
+            //setBuyloading(true)
             const url = '/uploadFile';
             var config = {
                 body: {
@@ -144,17 +149,7 @@ function NftBox (props) {
 
                 }
             };
-            setS3Config("didtransfer", "public")
-
-            //await(await amm.paySeller((price))).wait()
-
-            await(await credits.approve(marketdds, (price))).wait() //give the contract the right of paying the seller
-            console.log("approved: + "+ (price) )
-            //IF THIS STEP IS NOT COMPLETE: THROW ERROR
-
-            // TRANSFER DIRECTLY INTO A SPECIAL WALLET FOR TAXES
-    
-            await (await dds.purchaseItem(id, id, pk)).wait() //actual purchase/transfer of the nft //pk
+            setS3Config("didtransfer", "public");
 
             API.put('serverv2', url, config).then((response) => {
                 console.log(response)
@@ -166,9 +161,9 @@ function NftBox (props) {
                 
             })
 
-            alert("Sucessfully bought NFT n." + id + " . Congrats :)")
+            //alert("Sucessfully bought NFT n." + id + " . Congrats :)")
         } catch (error){
-            setBuyloading(false)
+            //setBuyloading(false)
             alert("Unable to connect properly with the blockchain. Make sure your account is connected. Error code - 2")
             console.log(error)
             console.log(seller)
@@ -233,7 +228,7 @@ function NftBox (props) {
             <div class="nftbox">
                 <img src="" alt="" />
                 <h4><a href="">{props.name}</a></h4>
-                <h6>current bid: {props.price/10000} $CREDITS</h6>
+                <h6>current bid: {props.price/100000} $CREDITS</h6>
                 <p>seller: <a href="#">{props.seller.slice(0,7) + "..."}</a></p>
                 <p>description: {props.description}</p>
                 <button onClick={deleteItems} type="button" class="btn btn-secondary">Delete</button>
@@ -242,22 +237,24 @@ function NftBox (props) {
         )
 
     }
+    //<!--  -->
     else {
         return(
             <div>
                 { purchasing ? props.real ? (
-                    <Receipt quebec={quebec} state={state} subtotal={price} total={total} taxprice={taxprice} tax={tax} seller={seller} image={image} account={account} contract={credits} dds={dds} amm={amm} signer={signer} id={id} pay={pay} did={did} pk={pk} purchase={realPurchase} cancel={cancelPurchase} buyloading={buyloading} />
-                ) : ( <Receipt quebec={quebec} state={state} subtotal={price} total={total} taxprice={taxprice} tax={tax} seller={seller} image={image} account={account} contract={credits} market={market} amm={amm} signer={signer} id={id} pay={pay} did={did} pk={pk} purchase={purchase} cancel={cancelPurchase} /> ) : (
+                    <Receipt quebec={quebec} state={state} subtotal={price} total={price} taxprice={taxprice} tax={tax} seller={seller} image={image} account={account} contract={credits} dds={dds} amm={amm} signer={signer} id={id} pay={pay} did={did} pk={pk} purchase={realPurchase} cancel={cancelPurchase} buyloading={buyloading} />
+                ) : ( <Receipt quebec={quebec} state={state} subtotal={price} total={price} taxprice={taxprice} tax={tax} seller={seller} image={image} account={account} contract={credits} market={market} amm={amm} signer={signer} id={id} pay={pay} did={did} pk={pk} purchase={purchase} cancel={cancelPurchase} /> ) : (
                     <div class="col">
                         <div class="nftbox">
                             <img id='itemimg' src={image} alt="" />
                             <br />
                             <br />
                             <h4><a href={"/item/" + props.id}>{props.name}</a></h4>
-                            <h6>current Price: {currency == "CAD" ? props.price/100000 * 1.36 : props.price/100000 } {currency}</h6>
+                            <h6>current Price: {currency == "CAD" ? USDollar.format(props.price/100000 * 1.36) : USDollar.format(props.price/100000) } {currency}</h6>
                             <p>seller: <a href={`/Seller/${seller}`} >{props.seller?.slice(0,7) + "..."}</a></p>
                             <p>description: {props.description}</p>
-                            <button onClick={calculateTax} type="button" class="btn btn-secondary">Purchase</button>
+                            <button onClick={calculateTax} type="button" class="btn btn-secondary">Purchase</button>  
+                            
         
                         </div>
                     </div>

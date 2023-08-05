@@ -2,6 +2,8 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
+import "./Rnft.sol";
+
 /**
  * @title Imperial Credits
  * @dev create a Ownable and Mintable ERC 20 token
@@ -28,42 +30,7 @@ library SafeMath {
 }
 
 
-contract Ownable { 
-  // Variable that maintains 
-  // owner address
-  address private _owner;
-  
-  // Sets the original owner of 
-  // contract when it is deployed
-  constructor()
-  {
-    _owner = msg.sender;
-  }
-  
-  // Publicly exposes who is the
-  // owner of this contract
-  function owner() public view returns(address) 
-  {
-    return _owner;
-  }
-  
-  // onlyOwner modifier that validates only 
-  // if caller of function is contract owner, 
-  // otherwise not
-  modifier onlyOwner() 
-  {
-    require(isOwner(),
-    "Function accessible only by the owner !!");
-    _;
-  }
-  
-  // function for owners to verify their ownership. 
-  // Returns true for owners otherwise false
-  function isOwner() public view returns(bool) 
-  {
-    return msg.sender == _owner;
-  }
-}
+
 
 contract PoolOwnable is Ownable {
     address private _pool;
@@ -124,8 +91,8 @@ contract credit is IERC20, Ownable, PoolOwnable{
         //set info
         _name = "Imperial Credits";
         _symbol = "$CREDIT";
-        _decimals = 18;
-        _totalSupply = 1000000;
+        _decimals = 5;
+        _totalSupply = 2000000000 * 10**5;
         // give all of the credits to contract creator
         balances[msg.sender] = _totalSupply;
         emit Transfer(address(0), msg.sender, _totalSupply);

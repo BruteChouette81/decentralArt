@@ -3,68 +3,9 @@ pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
-import "../myCrypto/token.sol";
 import "./Rnft.sol";
+import "./credit.sol";
 
-contract Ownable { 
-  // Variable that maintains 
-  // owner address
-  address private _owner;
-  
-  // Sets the original owner of 
-  // contract when it is deployed
-  constructor()
-  {
-    _owner = msg.sender;
-  }
-  
-  // Publicly exposes who is the
-  // owner of this contract
-  function owner() public view returns(address) 
-  {
-    return _owner;
-  }
-  
-  // onlyOwner modifier that validates only 
-  // if caller of function is contract owner, 
-  // otherwise not
-  modifier onlyOwner() 
-  {
-    require(isOwner(),
-    "Function accessible only by the owner !!");
-    _;
-  }
-  
-  // function for owners to verify their ownership. 
-  // Returns true for owners otherwise false
-  function isOwner() public view returns(bool) 
-  {
-    return msg.sender == _owner;
-  }
-}
-
-contract PoolOwnable is Ownable {
-    address private _pool;
-  
-  // Sets the original owner of 
-  // contract when it is deployed
-
-  modifier onlyPool() 
-  {
-    require(isPool(),
-    "Function accessible only by the owner !!");
-    _;
-  }
-
-  function isPool() public view returns(bool) 
-  {
-    return msg.sender == _pool;
-  }
-
-    function setPool(address pool) public onlyOwner {
-        _pool = pool;
-    }
-}
 
 contract DDS is PoolOwnable {
     uint public itemCount; 
@@ -167,20 +108,19 @@ contract DDS is PoolOwnable {
         );
     }
 
-    function mintList(address account, string memory uri, uint _price, uint _numDays) public onlyPool() {
-       
+    function mintList(address account, string memory uri, uint _price, uint _numDays) public onlyPool() returns (uint) {
+        require(_numDays > 0, "Days must be greater than zero");
         require(_price > 0, "Price must be greater than zero");
         // increment itemCount
         itemCount ++;
 
-        // mint nft
-        
-        uint id = realItems.safeMint(account, uri);
+        // mint nft directly to the contract to avoid two transactions
+        uint id = realItems.safeMint(address(this), uri);
         // add new item to items mapping
         items[itemCount] = Item (
             itemCount,
-            _nft,
-            _tokenId,
+            realItems,
+            id,
             _price,
             address(account),
             false,
@@ -191,12 +131,51 @@ contract DDS is PoolOwnable {
         // emit Offered event
         emit Offered(
             itemCount,
-            address(_nft),
-            _tokenId,
+            address(realItems),
+            id,
             _price,
-            msg.sender
+            address(account)
         );
+
+        return itemCount;
     }
+
+    function multipleMintList(address account, string[] memory uris, uint[] memory _prices, uint[] memory _numDays) public onlyPool() returns (uint) {
+        require(_numDays.length == _prices.length, "must be the same number of items");
+
+
+        uint id = realItems.multipleMint(address(this), uris);
+
+        for (uint i = 0; i<_prices.length; i ++) {
+            // increment itemCount
+            itemCount ++;
+
+            // mint nft directly to the contract to avoid two transactions
+            
+            // add new item to items mapping
+            items[itemCount] = Item (
+                itemCount,
+                realItems,
+                (id - _prices.length + i + 1),
+                _prices[i],
+                address(account),
+                false,
+                false,
+                _numDays[i] * 5760,
+                0
+            );
+            // emit Offered event
+            emit Offered(
+                itemCount,
+                address(realItems),
+                (id - _prices.length + i + 1),
+                _prices[i],
+                address(account)
+            );
+        }
+        
+
+        return itemCount;
     }
 
     function deleteItem(uint _itemId) public {
@@ -255,10 +234,30 @@ contract DDS is PoolOwnable {
         );
     }
 
+    function submitProofPool (address seller, uint256 _id, string memory _proof) public onlyPool() { //https://www.canadapost-postescanada.ca/cpc/en/personal/sending/letters-mail/registered-mail.page
+        //_proof is the tracking code for internationnal USPS and Post canada
+        Item storage item = items[purchased[seller][_id]]; //item 
+
+        require(bytes(_proof).length == 13, "Need a Valid Tracking code"); //other requirement(poll an api to see if it exist)
+        require(item.prooved == false, "Already prooved or pass Time out");
+
+        credits.transfer(msg.sender, item.price); //pay seller
+
+        item.prooved = true;
+
+        emit Prooved(
+            item.itemId,
+            address(item.nft),
+            item.tokenId,
+            item.seller,
+            _proof
+        );
+    }
+
     function retrieveCredit(uint256 _itemId) public { //function to retrive cash if item not sent
         //5760 blocks by day
         Item storage item = items[_itemId];
-        require(item.sold == true, "need to be sold");
+        require(item.sold == true, "Already sold");
         require(item.prooved == false, "Item as been sent");
         require(item.nft.ownerOf(item.tokenId) == msg.sender, "You need to have this NFT");
 
@@ -298,6 +297,38 @@ contract DDS is PoolOwnable {
             item.price,
             item.seller,
             msg.sender
+        );
+    }
+
+    function mintBuy(address buyer, uint _itemId, uint256 _numItem, string memory _key) external onlyPool()  {
+
+        Item storage item = items[_itemId];
+        require(_itemId > 0 && _itemId <= itemCount, "item doesn't exist");
+        //require(msg.value >= _totalPrice, "not enough ether to cover item price and market fee");
+        require(!item.sold, "item already sold");
+        //require(credits.allowance(msg.sender, address(this)) == item.price, "Need to approove!");
+        // transfer credits to the contract and add the seller to the approval list
+        purchased[address(item.seller)][_numItem + 1] = _itemId;
+        infos[_itemId] = _key;
+
+        //credits stay in contract until payed
+        //credits already minted to the contract in oracle
+       // credits.transferFrom(msg.sender, address(this), item.price); //approve the contract
+        
+        item.sold = true;
+        item.startingBlock = block.number; //starting the countdown
+
+        item.nft.approve(buyer, item.tokenId);
+        item.nft.transferFrom(address(this), buyer, item.tokenId); //nft transfer 
+       
+        // emit Bought event
+        emit Bought(
+            _itemId,
+            address(item.nft),
+            item.tokenId,
+            item.price,
+            item.seller,
+            address(buyer)
         );
     }
 

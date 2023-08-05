@@ -48,7 +48,7 @@ function NewNavBar() {
               <a class="nav-link active" aria-current="page" href="/">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/About">About</a>
+              <a class="nav-link active" aria-current="page" href="/About" disabled>About</a>
             </li>
             <li class="nav-item">
               <a class="btn btn-outline-success me-2" type="button" href='/Market'>Gallery</a>
@@ -62,7 +62,7 @@ function NewNavBar() {
               </button>
               <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownMenuLink">
                 <li><button class="dropdown-item" onClick={onChangeSortedImp}> <div className="icon-2"><img src={logo2} alt="icon" /> </div> Imperial</button></li>
-                <li><button class="dropdown-item" onClick={onChangeSortedMeta}> <div className="icon-2"><img src={icon} alt="icon" /> </div> MetaMask</button></li>
+                <li><button class="dropdown-item" onClick={onChangeSortedMeta} disabled> <div className="icon-2"><img src={icon} alt="icon" /> </div> MetaMask</button></li>
               </ul>
             </li>
           </ul>

@@ -41,11 +41,12 @@ max amount 3$ --> be return minus penalities
 **didtransfer: seller _address/ buyer _address .txt 
 
 new contracts :
--credits: 0xc183177E3207788ea9342255C8Fcb218763d46e2
--Rnft same:0xbC1Fe9f6B298cCCd108604a0Cf140B2d277f624a
--dds: 0xcAd1B86F5022A138053577ae03Ab773Ee770ec21
+-credits: 0xc183177E3207788ea9342255C8Fcb218763d46e2 CONTRACT, ABI in ORACLE
+-Rnft : 0x666f393A06285c3Ec10895D4092d9Dc86aeFD45b ABI AND CONTRACT
+-dds: 0xdeAf39D7923dD5bbeb22C591694A0dBc38b6AD3a CONTRACT ABI in oracle AND site
 
 oracle PK: 0xbc2ba2203c4cc302fcfb2df6358d01f6a15bd0d363bb1cabd17aef51921d501b
+oracle address: 0x439da8962debe41408712dE41b6161B66349E250
 
 
 PAYPAL:
@@ -69,6 +70,7 @@ URLs:
     Exchanges:
         karken docs: https://docs.kraken.com/rest/#tag/User-Trading/operation/addOrder
         kraken withdraw: https://kraken.zendesk.com/hc/en-us/articles/360000423043-Cash-withdrawal-options-fees-minimums-and-processing-times-
+        kraken withdraw api: https://docs.kraken.com/rest/#tag/User-Funding/operation/withdrawFunds
         crypto.com docs: https://exchange-docs.crypto.com/exchange/v1/rest-ws/index.html#private-get-deposit-address
         bitbuy docs: https://bitbuy.ca/bitbuy-api
 
@@ -95,3 +97,56 @@ list of tests:
     - gas CALCULATING !!! tracking / penalities 
     - feed the oracle eth (2-3$ per items ) --> build a eth automatic buyer system -> for staking 
     - 
+
+PLAN + TEST:
+
+goal: test the app in its most primitive state
+
+things to do before test:
+
+- Mint / multiple Mint -> list on oracle (modify contracts) DONE ✔️
+
+- complete purchase on oracle DONE ✔️
+
+- complete retrival (submitProof and burning) DONE ✔️
+
+- retrieve cash with oracle
+
+class contracts to see which we need and add function and finish them
+
+make a archive file and remove every none-used functionnalities (metamask and ...)
+
+TEST:
+
+- mint real item DONE ✔️
+
+- multiMint real items DONE ✔️
+
+- database mint  OK ✔️
+
+- categories in market / my items
+
+- load did password / create account DONE ✔️
+//0x953888Ae66748E5732a95D65e9460724D56e8957 
+
+- load item market  DONE ✔️ + price without penalities
+
+- mintBuy DONE ✔️
+
+- did transfer  DONE ✔️
+
+- submitProof and go  DONE ✔️
+
+- way to add a paypal address DONE ✔️
+
+- retrieve funds
+
+- style
+
+- facebook
+
+- my items 
+
+
+
+
