@@ -13,6 +13,7 @@ See the License for the specific language governing permissions and limitations 
 const express = require('express')
 const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
+const crypto = require('crypto')
 const { ethers } = require("ethers")
 const fetch = require("node-fetch");
 const e = require('express');
@@ -43,7 +44,7 @@ const getContract = (signer, abi, address) => {
   return contract
 }
 
-const ddsAddress = "0xdeAf39D7923dD5bbeb22C591694A0dBc38b6AD3a";
+const ddsAddress = "0x2b7098E9F7181562e92E1938A4CF276b299B1a56";
 const creditAddress = "0xc183177E3207788ea9342255C8Fcb218763d46e2"
 const ddsABI = [
 	{
@@ -135,143 +136,6 @@ const ddsABI = [
 		],
 		"name": "Deleted",
 		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_itemId",
-				"type": "uint256"
-			}
-		],
-		"name": "deleteItem",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract IERC721",
-				"name": "_nft",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_tokenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_price",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_numDays",
-				"type": "uint256"
-			}
-		],
-		"name": "listItem",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "buyer",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_itemId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_numItem",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_key",
-				"type": "string"
-			}
-		],
-		"name": "mintBuy",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "uri",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_price",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_numDays",
-				"type": "uint256"
-			}
-		],
-		"name": "mintList",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			},
-			{
-				"internalType": "string[]",
-				"name": "uris",
-				"type": "string[]"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "_prices",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "_numDays",
-				"type": "uint256[]"
-			}
-		],
-		"name": "multipleMintList",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -367,116 +231,6 @@ const ddsABI = [
 		"type": "event"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_itemId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_numItem",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_key",
-				"type": "string"
-			}
-		],
-		"name": "purchaseItem",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_itemId",
-				"type": "uint256"
-			}
-		],
-		"name": "retrieveCredit",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "pool",
-				"type": "address"
-			}
-		],
-		"name": "setPool",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_id",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_proof",
-				"type": "string"
-			}
-		],
-		"name": "submitProof",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "seller",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_id",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_proof",
-				"type": "string"
-			}
-		],
-		"name": "submitProofPool",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "credits",
 		"outputs": [
@@ -487,6 +241,19 @@ const ddsABI = [
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			}
+		],
+		"name": "deleteItem",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -644,6 +411,130 @@ const ddsABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "contract IERC721",
+				"name": "_nft",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_numDays",
+				"type": "uint256"
+			}
+		],
+		"name": "listItem",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "buyer",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_numItem",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_key",
+				"type": "string"
+			}
+		],
+		"name": "mintBuy",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "uri",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_numDays",
+				"type": "uint256"
+			}
+		],
+		"name": "mintList",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"internalType": "string[]",
+				"name": "uris",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_prices",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_numDays",
+				"type": "uint256[]"
+			}
+		],
+		"name": "multipleMintList",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "",
 				"type": "address"
@@ -691,6 +582,29 @@ const ddsABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_numItem",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_key",
+				"type": "string"
+			}
+		],
+		"name": "purchaseItem",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "",
 				"type": "address"
@@ -723,6 +637,99 @@ const ddsABI = [
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			}
+		],
+		"name": "retrieveCredit",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "pool",
+				"type": "address"
+			}
+		],
+		"name": "setPool",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_proof",
+				"type": "string"
+			}
+		],
+		"name": "submitProof",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "seller",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_proof",
+				"type": "string"
+			}
+		],
+		"name": "submitProofPool",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ];
@@ -1216,14 +1223,20 @@ async function validate(address, amount) {
 }
 
 app.get("/getOracleAddr", async (req, res) => {
-  res.json({"pk": ConnectedWallet[0].privateKey, "address": ConnectedWallet[0].address}); //replace by address
+  //await load_wallet();
+  if (ConnectedWallet[0]) {
+  	res.json({"pk": ConnectedWallet[0].privateKey, "address": ConnectedWallet[0].address}); //replace by address
+  } else {
+	await load_wallet();
+	res.json({"pk": ConnectedWallet[0].privateKey, "address": ConnectedWallet[0].address});
+  } 
 })
 
 // plugin for paypal 
 
 const CLIENT_ID ="AbONA1Q9rbHJLPe5ZGWwssIF8z06zRc6y1qU2LsPp0lXaZYjqaCjSTXuC7sAdFW2E_AZCUOuJvnZDhaZ" 
 const APP_SECRET = "EIKRUllYOi1Y3h13zdpAWCT-dNICCrvI71X9V_7tgFKpP2hFaQSIKuj3OK--vGSpiO2IRB0s9_99E0Pe"
-const CURRENT_GAS_FEE = 3 * 100000; //decimals
+//const CURRENT_GAS_FEE = 3 * 100000; //decimals
 
 const baseURL = {
     sandbox: "https://api-m.sandbox.paypal.com",
@@ -1266,25 +1279,53 @@ app.post("/create-paypal-order", async (req, res) => {
 app.post("/capture-paypal-order", async (req, res) => {
   const captureData = await capturePayment(req.body.orderID, req.body.address, req.body.amount, req.body.itemId, req.body.key, req.body.buying);
   // TODO: store payment information such as the transaction ID orderId, address, amount, itemId, key, buying
-  res.json(captureData);
+  if (captureData) {
+	res.json(captureData);
+} else {
+	res.json({"status": 50})
+}
 });
 
 app.post("/get-payed", async (req, res) => {
   const captureData = await getPayed(req.body.amount, req.body.email, req.body.address, req.body.id, req.body.proof);
   // TODO: store payment information such as the transaction ID
-  res.json(captureData);
+  if (captureData) {
+	res.json(captureData);
+} else {
+	res.json({"status": 40})
+}
 });
 
-app.post("/oracleMint", async (req, res) => {
-	const itemCount = await mintList(req.body.address, req.body.uri, req.body.price, req.body.numDays);
+app.post("/get-refund", async (req, res) => {
+	const captureData = await getRefund(req.body.id, req.body.email);
 	// TODO: store payment information such as the transaction ID
-	res.send(itemCount);
+	if (captureData) {
+		res.json(captureData);
+	} else {
+		res.json({"status": 30})
+	}
+	
+  });
+
+app.post("/oracleMint", async (req, res) => {
+	const itemCount = await mintList(req.body.address, req.body.uri, req.body.MaxPrice, req.body.numDays); 
+	// TODO: store payment information such as the transaction ID
+	if (itemCount) {
+		res.send(itemCount);
+	} else {
+		res.json({"status": 10})
+	}
+	
 });
 
 app.post("/oracleMultiMint", async (req, res) => {
-	const itemCount = await multipleMintList(req.body.address, req.body.uri, req.body.price, req.body.numDays);
+	const itemCount = await multipleMintList(req.body.address, req.body.uri, req.body.MaxPrice, req.body.numDays);
 	// TODO: store payment information such as the transaction ID
-	res.send(itemCount);
+	if (itemCount) {
+		res.send(itemCount);
+	} else {
+		res.json({"status": 20})
+	}
 });
 
 
@@ -1322,43 +1363,95 @@ async function createOrder(amount) {
   return data;
 }
 
+
+async function getRefund(id, email) {
+	const accessToken = await generateAccessToken();
+	//console.log(accessToken)
+	const amount = await refundCredits(id)
+	const url = `${baseURL.sandbox}/v1/payments/payouts`;
+	//const validated = await validate(address, amount);
+	//console.log(validated)
+	if (amount) {
+			let transactionID = crypto.randomUUID();
+
+		  const response = await fetch(url, {
+		  method: 'POST',
+		  headers: {
+			  'Content-Type': 'application/json',
+			  Authorization: `Bearer ${accessToken}`,
+		  },
+		  body: JSON.stringify({
+			  "sender_batch_header": { 
+			  "sender_batch_id": transactionID, 
+			  "recipient_type": "EMAIL",
+			  "email_subject": "You have a payout!", 
+			  "email_message": "You have received a payout! Thanks for using our service!" 
+			  }, "items": [ 
+			  { 
+				  "recipient_type": "EMAIL", 
+				  "amount": {
+				  "value": (amount/100000).toFixed(2).toString(), //amount
+				  "currency": "CAD", 
+				  }, "note": "Powered by Imperial Technologies", 
+				  "recipient_wallet": "PAYPAL",
+				  "receiver": email //email
+				  
+			  } 
+			  ] 
+		  })
+	  });
+		  const data = await response.json();
+		  
+		  return data;
+	  } else {
+		  return false;
+	  }
+
+}
+
+
+
 async function getPayed(amount, email, address, id, proof) {
   const accessToken = await generateAccessToken();
   //console.log(accessToken)
-  await proofAndGo(address, id, proof)
+  const validation = await proofAndGo(address, id, proof)
   const url = `${baseURL.sandbox}/v1/payments/payouts`;
   //const validated = await validate(address, amount);
   //console.log(validated)
-  
-  const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({
-        "sender_batch_header": { 
-          "sender_batch_id": "Payouts_2020_100007", 
-		  "recipient_type": "EMAIL",
-          "email_subject": "You have a payout!", 
-          "email_message": "You have received a payout! Thanks for using our service!" 
-        }, "items": [ 
-          { 
-            "recipient_type": "EMAIL", 
-            "amount": {
-               "value": "100.00", //amount
-               "currency": "CAD", 
-            }, "note": "Powered by Imperial Technologies", 
-			"recipient_wallet": "PAYPAL",
-            "receiver": "sb-c6dqy26361273@personal.example.com" //email
-			
-          } 
-        ] 
-    })
-  });
-    const data = await response.json();
-	
-    return data;
+  if (validation) {
+	    let transactionID = crypto.randomUUID();
+		const response = await fetch(url, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${accessToken}`,
+		},
+		body: JSON.stringify({
+			"sender_batch_header": { 
+			"sender_batch_id": transactionID,
+			"recipient_type": "EMAIL",
+			"email_subject": "You have a payout!", 
+			"email_message": "You have received a payout! Thanks for using our service!" 
+			}, "items": [ 
+			{ 
+				"recipient_type": "EMAIL", 
+				"amount": {
+				"value": amount, //amount
+				"currency": "CAD", 
+				}, "note": "Powered by Imperial Technologies", 
+				"recipient_wallet": "PAYPAL",
+				"receiver": email //email
+				
+			} 
+			] 
+		})
+	});
+		const data = await response.json();
+		
+		return data;
+	} else {
+		return false;
+	}
   
 
 }
@@ -1429,18 +1522,34 @@ async function capturePayment(orderId, address, amount, itemId, key, buying) {
 async function mintList(address, uri, price, numDays) {
 	if (ConnectedWallet[0]) {
 		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
-		let itemCount = await dds.mintList(address, uri, (price*100000 - CURRENT_GAS_FEE), numDays);
-		console.log(itemCount)
-		let realitemcount = await dds.itemCount()
-		return realitemcount;
+		console.log(parseInt(price*100000))
+		//console.log(address)
+		//console.log(uri)
+		//console.log(numDays)
+		//console.log(dds)
+		try {
+			await dds.mintList(address, uri, parseInt(price*100000), numDays); //max price mintList(address,string,uint256,uint256)
+			//console.log(itemCount)
+			let realitemcount = await dds.itemCount()
+			return realitemcount;
+		} catch (e) {
+			console.log(e)
+			return false;
+		}
 		
 	} else {
 		await load_wallet()
+		//console.log(price*100000)
 		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
-		let itemCount = await dds.mintList(address, uri, price - CURRENT_GAS_FEE, numDays);
-		console.log(itemCount)
-		let realitemcount = await dds.itemCount()
-		return realitemcount;
+		try {
+			await dds.mintList(address, uri, parseInt(price*100000), numDays); //max price mintList(address,string,uint256,uint256)
+			//console.log(itemCount)
+			let realitemcount = await dds.itemCount()
+			return realitemcount;
+		} catch (e) {
+			console.log(e)
+			return false;
+		}
 	}
 }
 
@@ -1450,72 +1559,112 @@ async function multipleMintList(address, uri, price, numDays) {
 	if (ConnectedWallet[0]) {
 		
 		for (let i =0; i < price?.length; i++) {
-			price[i] = price[i] *100000 - CURRENT_GAS_FEE
+			price[i] = parseInt(price[i] *100000) //maxprice
 		}
 		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
-		let itemCount = await dds.multipleMintList(address, uri, price, numDays);
-		return itemCount;
+		try {
+			let itemCount = await dds.multipleMintList(address, uri, price, numDays);
+			return itemCount;
+		} catch (e) {
+			console.log(e);
+			return false;
+		}
 		
 	} else {
 		await load_wallet()
 		console.log(ConnectedWallet[0])
 		for (let i =0; i < price?.length; i++) {
-			price[i] = price[i] *100000 - CURRENT_GAS_FEE
+			price[i] = price[i] *100000
 		}
 		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
-		let itemCount = await dds.multipleMintList(address, uri, price, numDays);
-		return itemCount;
+		try {
+			let itemCount = await dds.multipleMintList(address, uri, price, numDays);
+			return itemCount;
+		} catch (e) {
+			console.log(e);
+			return false;
+		}
 	}
 }
 
+//mint -> maxprice
 async function mintBuy(address, amount, itemId, key) {
 	if (ConnectedWallet[0]) {
 		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
 		const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
-		console.log(amount)
-		await credits._mint(ddsAddress, parseInt(amount * 100000));
-
-		console.log(itemId)
-		console.log(key)
-
-		console.log(address)
-		await dds.mintBuy(address, itemId, itemId, key);
-		return true;
+		//console.log(amount)
+		try {
+			await credits._mint(ddsAddress, parseInt(amount * 100000));
+			await dds.mintBuy(address, itemId, itemId, key);
+			return true;
+		
+		} catch (e) {
+			console.log(e);
+			return false;
+		}
 		
 	} else {
 		await load_wallet()
 		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
 		const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
 
-		await credits._mint(ddsAddress, parseInt(amount * 100000));
-
-
-		await dds.mintBuy(address, itemId, itemId, key);
-		return true;
+		try {
+			await credits._mint(ddsAddress, parseInt(amount * 100000));
+			await dds.mintBuy(address, itemId, itemId, key);
+			return true;
+		
+		} catch (e) {
+			console.log(e);
+			return false;
+		}
 	}
+}
+
+async function refundCredits(id) {
+	//retrieveCredit(uint256 _itemId)
+	if (ConnectedWallet[0]) {
+		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		try {
+			const amount = await dds.retrieveCredit(id);
+			return amount;
+		} catch (e) {
+			return false;
+		}
+		
+		
+		
+	} else {
+		await load_wallet()
+		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		try {
+			const amount = await dds.retrieveCredit(id);
+			return amount;
+		} catch (e) {
+			return false;
+		}
+	}
+
 }
 
 async function proofAndGo(address, id, proof) {
 	if (ConnectedWallet[0]) {
 		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
-		//const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
-
-		//await credits._mint(ddsAddress, amount * 100000);
-
-
-		await dds.submitProofPool(address, id, proof);
-		return true;
-		
+		try {
+			await dds.submitProofPool(address, id, proof);
+			return true;
+		} catch (e) {
+			return false;
+		}
+			
 	} else {
 		await load_wallet()
 		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
-		//const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
-
-		//await credits._mint(ddsAddress, amount * 100000);
-
-
-		await dds.submitProofPool(address, id, proof);
-		return true;
+		try {
+			await dds.submitProofPool(address, id, proof);
+			return true;
+		} catch (e) {
+			return false;
+		}
 	}
 }
 

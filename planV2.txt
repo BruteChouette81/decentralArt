@@ -43,7 +43,7 @@ max amount 3$ --> be return minus penalities
 new contracts :
 -credits: 0xc183177E3207788ea9342255C8Fcb218763d46e2 CONTRACT, ABI in ORACLE
 -Rnft : 0x666f393A06285c3Ec10895D4092d9Dc86aeFD45b ABI AND CONTRACT
--dds: 0xdeAf39D7923dD5bbeb22C591694A0dBc38b6AD3a CONTRACT ABI in oracle AND site
+-dds: 0xdeAf39D7923dD5bbeb22C591694A0dBc38b6AD3a -> 0x2b7098E9F7181562e92E1938A4CF276b299B1a56 CONTRACT ABI in oracle AND site
 
 oracle PK: 0xbc2ba2203c4cc302fcfb2df6358d01f6a15bd0d363bb1cabd17aef51921d501b
 oracle address: 0x439da8962debe41408712dE41b6161B66349E250
@@ -118,34 +118,56 @@ make a archive file and remove every none-used functionnalities (metamask and ..
 
 TEST:
 
-- mint real item DONE ✔️
+- mint real item DONE ✔️ EC: 10
 
-- multiMint real items DONE ✔️
+- multiMint real items DONE ✔️ EC: 20
 
 - database mint  OK ✔️
 
-- categories in market / my items
-
 - load did password / create account DONE ✔️
+- load did market DONE ✔️
 //0x953888Ae66748E5732a95D65e9460724D56e8957 
+// laptop: 0x19CcD7690B3a9e57225F041DB28705F9E9Ec9153
 
-- load item market  DONE ✔️ + price without penalities
+- load item market  DONE ✔️ 
+- calculate good fees / penalities on market (2.9% for paypal + 4$ for our fees) ==> in console.jsx and nfts.jsx DONE ✔️ 
+- all in canadian DONE ✔️ check to be sure
+- ensure that bytes are chill (underflow/overflow: reduce to two decimals points) ==> prices are offset by one in the item list (good in contract) DONE ✔️ 
 
-- mintBuy DONE ✔️
+BEFORE RELEASE:
+- clean cpl app.js
+- check feeding (amount of gas in cpl)
+- check underflow (bytes)
+- check any other error that we might enconter using the market (exception reverted)
+-> error system to handle all errors DONE ✔️
+
+- calculate fees in form and add staking program oportunity DONE ✔️
+- no more bug for nft owner ==> nft receiver (DONE ✔️)
+
+- mintBuy DONE ✔️ EC: 50
 
 - did transfer  DONE ✔️
 
-- submitProof and go  DONE ✔️
+- submitProof and go  DONE ✔️ EC: 40
 
 - way to add a paypal address DONE ✔️
 
-- retrieve funds
+- refunds test + new market payout DONE ✔️ EC: 30
 
 - style
 
 - facebook
 
-- my items 
+- my items in market
+
+- categories in market / my items
+
+- individual items link (facebook)
+
+- load item in chunk (quicker) + delete db and get infos from uri
+
+- more cpl documentation + public ledger using uuid ID's and block scan for transactions database
+
 
 
 

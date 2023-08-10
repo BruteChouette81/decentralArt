@@ -203,7 +203,7 @@ function ImperialProfile() {
     const connectUsingPassword = async (e) => {
         e.preventDefault()
         
-
+        console.log(password)
         const hasWallet = window.localStorage.getItem("hasWallet")
         //setAddress(window.localStorage.getItem("walletAddress"))
         await connection(hasWallet);
@@ -216,9 +216,9 @@ function ImperialProfile() {
                 <p>IMPORTANT: once you setup a password: you can't change it without loosing your account !</p>
                 <br />
                 <div class="mb-3 row">
-                    <label for="inputPassword" class="col-sm-2 col-form-label" onChange={changePass}>Password</label>
+                    <label for="inputPassword" class="col-sm-2 col-form-label" >Password</label>
                     <div class="col-sm-10">
-                        <input type="password" class="form-control" id="inputPassword"/>
+                        <input type="password" class="form-control" id="inputPassword" onChange={changePass}/>
                     </div>
                 </div>
                 <br />
@@ -352,6 +352,8 @@ function ImperialProfile() {
                 if (res.pk) {
                     getPrivateKey(window.localStorage.getItem("walletAddress"), res.pk)
                     setNeedPassword(false)
+                } else {
+                    alert("wrong password")
                 }
             } catch(e) {
                 alert("wrong password");
@@ -399,7 +401,7 @@ function ImperialProfile() {
                     <ShowBalance account={signer?.address} credits={credit} dds={amm} />
                 </div>
                 <br />
-                {signer?.address ? (<DisplayActions balance={balance} livePrice={money} request={request} friendList={friendList} signer={signer} account={signer?.address} pay={pay}  did={did} realPurchase={realPurchase} level={level} amm={amm} password={password}/>) : ""}
+                {signer?.address && password ? (<DisplayActions balance={balance} livePrice={money} request={request} friendList={friendList} signer={signer} account={signer?.address} pay={pay}  did={did} realPurchase={realPurchase} level={level} amm={amm} password={password}/>) : ""}
 
                 
             </div>
@@ -426,7 +428,7 @@ function ImperialProfile() {
                     
                 </div>
                 <br />
-                {signer?.address ? (<DisplayActions balance={balance} livePrice={money} request={request} friendList={friendList} signer={signer} account={signer?.address} pay={pay}  did={did} realPurchase={realPurchase} level={level} amm={amm} password={password}/>) : ""}
+                {signer?.address && password ? (<DisplayActions balance={balance} livePrice={money} request={request} friendList={friendList} signer={signer} account={signer?.address} pay={pay}  did={did} realPurchase={realPurchase} level={level} amm={amm} password={password}/>) : ""}
 
                 
             </div>

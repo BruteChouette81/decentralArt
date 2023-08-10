@@ -147,6 +147,13 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/get-refund": {
+      "name": "/get-refund",
+      "lambdaFunction": "paypalHandler",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }

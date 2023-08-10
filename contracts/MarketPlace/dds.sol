@@ -241,7 +241,7 @@ contract DDS is PoolOwnable {
         require(bytes(_proof).length == 13, "Need a Valid Tracking code"); //other requirement(poll an api to see if it exist)
         require(item.prooved == false, "Already prooved or pass Time out");
 
-        credits.transfer(msg.sender, item.price); //pay seller
+        credits.transfer(seller, item.price); //pay seller
 
         item.prooved = true;
 
@@ -254,7 +254,7 @@ contract DDS is PoolOwnable {
         );
     }
 
-    function retrieveCredit(uint256 _itemId) public { //function to retrive cash if item not sent
+    function retrieveCredit(uint256 _itemId) public returns(uint) { //function to retrive cash if item not sent
         //5760 blocks by day
         Item storage item = items[_itemId];
         require(item.sold == true, "Already sold");
@@ -265,6 +265,7 @@ contract DDS is PoolOwnable {
 
         //if the delay is completed
         credits.transfer(msg.sender, item.price); //regive the $credit to the buyer
+        return item.price;
     }
 
     

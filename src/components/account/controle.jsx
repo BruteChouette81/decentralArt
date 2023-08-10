@@ -35,7 +35,7 @@ const secret = "718da1ac14dfcf25c336bfea241e38563e5f2c9cc8bd77bcde1a5968ad8ebf6a
 const apikey = "681fa3fe8fcbfe2992fe"
 const key = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJmNjhjNmRmZi1mOGRmLTQzNzUtYjA5Ny1mMTNmNDk0OTk3ODIiLCJlbWFpbCI6ImhiYXJpbDFAaWNsb3VkLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI2ODFmYTNmZThmY2JmZTI5OTJmZSIsInNjb3BlZEtleVNlY3JldCI6IjcxOGRhMWFjMTRkZmNmMjVjMzM2YmZlYTI0MWUzODU2M2U1ZjJjOWNjOGJkNzdiY2RlMWE1OTY4YWQ4ZWJmNmEiLCJpYXQiOjE2ODUyODk0NDZ9.dheuwiicVcI3mM7yMo9voga4Bis7nDu7g5TJocC_xkc"
 const MarketAddress = '0x710005797eFf093Fa95Ce9a703Da9f0162A6916C'; //goerli test contract for listing from account
-const DDSAddress = '0xdeAf39D7923dD5bbeb22C591694A0dBc38b6AD3a' //gas contract: 0x14b92ddc0e26C0Cf0E7b17Fe742361B8cd1D95e1, Real: 0x1D1db5570832b24b91F4703A52f25D1422CA86de
+const DDSAddress = '0x2b7098E9F7181562e92E1938A4CF276b299B1a56' //gas contract: 0x14b92ddc0e26C0Cf0E7b17Fe742361B8cd1D95e1, Real: 0x1D1db5570832b24b91F4703A52f25D1422CA86de
 const NftAddress = '0x3d275ed3B0B42a7A3fCAA33458C34C0b5dA8Cc3A';
 const TicketAddress = '0x6CFADe18df81Cd9C41950FBDAcc53047EdB2e565' //goerli test contract
 const ImperialRealAddress = "0x666f393A06285c3Ec10895D4092d9Dc86aeFD45b"
@@ -233,6 +233,7 @@ function DisplayActions(props) {
     const [nftname, setNftname] = useState("")
     const [description, setDescription] = useState("")
     const [itemPrice, setItemPrice] = useState(0)
+    const [itemFee, setItemFee] = useState(0)
     const [itemDays, setItemDays] = useState(0)
     const [tags, setTags] = useState([])
     //const [price2, setPrice2] = useState(0)
@@ -619,7 +620,7 @@ function DisplayActions(props) {
                     descriptions2.push(description)
                     setDescriptions(descriptions2)
                     let itemsprices2 = itemPrices;
-                    itemsprices2.push(itemPrice)
+                    itemsprices2.push(itemPrice - itemFee)
                     setItemPrices(itemsprices2)
                     let itemsdays2 = itemsDays;
                     itemsdays2.push(itemDays)
@@ -640,48 +641,59 @@ function DisplayActions(props) {
                 //mint using oracle
                 try {
                         
-                        console.log(props.signer.address)
+                        console.log(itemPrice - itemFee)
                         //await mintReal(props.account, "https://ipfs.io/ipfs/" + cid, props.signer)
                         var data = {
                             body: {
                                 address: props.signer.address,
                                 uri: "https://ipfs.io/ipfs/" + cid,
-                                price: itemPrice,
-                                numDays: itemDays
+                                MaxPrice: (itemPrice - itemFee).toFixed(2), //Minimum price for item without fees
+                                numDays: parseInt(itemDays)
                             }
                             
                         }
+
+                        console.log(data)
             
                         var url = "/oracleMint"
                             
                         
                         API.post('serverv2', url, data).then((response) => {
                             console.log(parseInt(response.hex))
-                            var data = {
-                                body: {
-                                    address: props.signer.address.toLowerCase(),
-                                    itemid: parseInt(response.hex), //market item id
-                                    name: nftname, //get the name in the form
-                                    score: 0, //set score to zero
-                                    tag: tag, //"real" 
-                                    description: description,
-                                    image: "https://ipfs.io/ipfs/" + cid
+                            if (response.status === 10) {
+                                alert("Error code 10, Mint error")
+                            } else {
+                                var data = {
+                                    body: {
+                                        address: props.signer.address.toLowerCase(),
+                                        itemid: parseInt(response.hex), //market item id
+                                        name: nftname, //get the name in the form
+                                        score: 0, //set score to zero
+                                        tag: tag, //"real" 
+                                        description: description,
+                                        image: "https://ipfs.io/ipfs/" + cid
+                                    }
+                                    
                                 }
-                                
+                    
+                                var url = "/listItem"
+                    
+                                API.post('serverv2', url, data).then((response) => {
+                                    console.log(response)
+                                    setCreateLoading(false)
+                                    alert("Your Item is Created and Listed")
+                                })
                             }
-                
-                            var url = "/listItem"
-                
-                            API.post('serverv2', url, data).then((response) => {
-                                console.log(response)
-                                setCreateLoading(false)
-                                alert("Your Item is Created and Listed")
-                            })
                             
                            
+                        }).catch((e) => {
+                            setCreateLoading(false)
+                            alert("Error while creating the Item... check console for more. Error code: 10")
+                            console.log(e)
                         })
 
-            } catch (e) {
+            } catch(e) {
+                setCreateLoading(false)
                 alert("Unable to create, check console for more informations");
                 console.log(e)
             }
@@ -697,14 +709,14 @@ function DisplayActions(props) {
         try {        
             console.log(props.signer)
             //await mintReal(props.account, "https://ipfs.io/ipfs/" + cid, props.signer)
-            console.log(tokenuri)
-            console.log(itemPrices)
-            console.log(itemsDays)
+            //console.log(tokenuri)
+            //console.log(itemPrices)
+            //console.log(itemsDays)
             var data = {
                 body: {
                     address: props.signer.address,
                     uri: tokenuri,
-                    price: itemPrices,
+                    MaxPrice: itemPrices,
                     numDays: itemsDays
                 }
                 
@@ -714,33 +726,41 @@ function DisplayActions(props) {
             
             API.post('serverv2', url, data).then((response) => {
                 console.log(response)
-                for(let i=0; i<tokenuri?.length; i++) {
-                    var data = {
-                        body: {
-                            address: props.signer.address.toLowerCase(),
-                            itemid: (parseInt(response) - tokenuri?.length + i + 1), //market item id
-                            name: nftnames[i], //get the name in the form
-                            score: 0, //set score to zero
-                            tag: tags[i], //"real" 
-                            description: descriptions[i],
-                            image: tokenuri[i]
+                if (response.status === 20) {
+                    alert("Error status: 20")
+                } else {
+                    for(let i=0; i<tokenuri?.length; i++) {
+                        var data = {
+                            body: {
+                                address: props.signer.address.toLowerCase(),
+                                itemid: (parseInt(response) - tokenuri?.length + i + 1), //market item id
+                                name: nftnames[i], //get the name in the form
+                                score: 0, //set score to zero
+                                tag: tags[i], //"real" 
+                                description: descriptions[i],
+                                image: tokenuri[i]
+                            }
+                            
                         }
-                        
-                    }
-        
-                    var url = "/listItem"
-                    API.post('serverv2', url, data).then((response) => {
-                        console.log(response)
-                        
-                    })
+            
+                        var url = "/listItem"
+                        API.post('serverv2', url, data).then((response) => {
+                            console.log(response)
+                            
+                        })
 
+                    }
+                    setCreateLoading(false)
+                    alert("Your Item is Created and Listed")
                 }
 
-                setCreateLoading(false)
-                alert("Your Item is Created and Listed")
-            })
+                
+            }).catch((e) => {
+                alert("Error while Multi-creation. Error code 20")
+                console.log(e)
+            } )
 
-        } catch (e) {
+        } catch(e) {
             alert("Unable to create, check console for more informations");
             console.log(e)
         }
@@ -796,6 +816,9 @@ function DisplayActions(props) {
     }
     const onItemPriceChange = (event) => {
         setItemPrice(event.target.value)
+        //fee policy: 2.9% + 0.6$ + 4$(blockchain fee)
+        let quickFee = (event.target.value * 0.029 + 4.6)
+        setItemFee(quickFee);
     }
     const onItemDaysChange = (event) => {
         setItemDays(event.target.value)
@@ -888,9 +911,10 @@ function DisplayActions(props) {
             setMetaPasswordSetting(true)
         }
         else {
+            console.log(props.signer)
             const data = {
                 address: props.signer.address,
-                pk: props.signer.privatekey,
+                pk: props.signer.privateKey,
                 first_name: fname,
                 last_name: lname,
                 email: email,
@@ -908,7 +932,7 @@ function DisplayActions(props) {
             let stringdata = JSON.stringify(data)
             //let bytedata = ethers.utils.toUtf8Bytes(stringdata)
     
-            //console.log(props.signer.privateKey)
+            console.log(props)
     
             var encrypted = AES.encrypt(stringdata, props.password)
             //hash the data object and store it in user storage
@@ -1023,7 +1047,29 @@ function DisplayActions(props) {
                 if(props.realPurchase[i][0] === props.tokenid) { //if we match nft token id
                     try {
                         //gas price must be included in first transaction
-                        await dds.retrieveCredit(parseInt(props.realPurchase[i][1]))
+                        //await dds.retrieveCredit()
+                        
+                            //await dds.submitProof(orderID, proof)
+                            //let item = await dds.items(orderID-1);
+                            //console.log(parseFloat()
+                            
+                            let data = {
+                                body: {
+                                    id: parseInt(props.realPurchase[i][1]),
+                                    email: window.localStorage.getItem("MoneyAddress")
+                                }
+                            
+                            }
+                
+                            var url = "/get-refund"
+                        
+                            API.post('serverv2', url, data).then((response) => {
+                                console.log(response)
+                                alert("successfully refunded at your withdraw address! You will receive a Payout soon!")
+                                setSubmitLoading(false)
+                            })
+                            
+                        
                     } catch(e) {
                         console.log(e)
                         alert("Item is prooved ! It will arrive soon at your location !")
@@ -1402,25 +1448,33 @@ function DisplayActions(props) {
         try {
             //await dds.submitProof(orderID, proof)
             let item = await dds.items(orderID-1);
-            //console.log(parseFloat()
+            //console.log((item.price/100000 * 1.36).toFixed(2).toString())
             
             let data = {
                 body: {
                     address: props.signer.address,
-                    amount: (item.price/100000 * 1.36).toFixed(2),
-                    email: window.localStorage.getItem("moneyAddress"),
+                    amount: (item.price/100000 * 1.36).toFixed(2).toString(),
+                    email: window.localStorage.getItem("MoneyAddress"),
                     id: orderID,
                     proof: proof
                 }
             
             }
+            //console.log(data)
 
             var url = "/get-payed"
         
             API.post('serverv2', url, data).then((response) => {
                 console.log(response)
-                alert("successfully submited proof!")
-                setSubmitLoading(false)
+                if (response.status === 40) {
+                    alert("Error while submitting proof. Error code 40")
+                } else {
+                    alert("successfully submited proof!")
+                    setSubmitLoading(false)
+                }
+            }).catch((e) => {
+                alert("Error while submitting proof. Error code 40")
+                console.log(e)
             })
             
         } catch (error) {
@@ -1434,10 +1488,10 @@ function DisplayActions(props) {
     const saveId = async(event) => {
         event.preventDefault()
         //create a user ID. For now it will be IdCount
-        const id = parseInt( await props.did.idCount()) + 1
-        let key = Math.floor(Math.random() * 10000001); //0-10,000,000
-        window.localStorage.setItem("key", key)
-        window.localStorage.setItem("id", parseInt(id))
+        //const id = parseInt( await props.did.idCount()) + 1
+        //let key = Math.floor(Math.random() * 10000001); //0-10,000,000
+        //window.localStorage.setItem("key", key)
+        //window.localStorage.setItem("id", parseInt(id))
         //console.log(parseInt(id), 1, city, state, code, country, street, phone, email, fname, lname)
         //params: uint id, uint _key, string memory _city, string memory _state, string memory _postalCode, string memory _country, string memory _street1, string memory _phone, string memory _email, string memory _name, string memory _lastname
         if (city !== "" && state !== "" && code !== "" && country !== "" && street !== "" && phone !== "" && email !== "" && fname !== "" && lname !== "") {
@@ -1517,7 +1571,7 @@ function DisplayActions(props) {
 
         return ( 
             <div class="sellersetup">
-                <h2>Seller Dashboard</h2>
+                {props.level==5 ?(<h2>Seller Dashboard</h2>) : (<h2>Refund Dashboard</h2>)}
                 {window.localStorage.getItem("MoneyAddress") ? (<h5>Withdraw email address connected: <strong>{window.localStorage.getItem("MoneyAddress")}</strong></h5>) : ( <h5>No connected address... please, connect one in order to get payed! </h5> )}
             </div> 
         )
@@ -1632,6 +1686,10 @@ function DisplayActions(props) {
     }               { props.level != 5 ?
                     (<li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-ynft-tab" data-bs-toggle="pill" data-bs-target="#pill-ynft" type="button" role="tab" aria-controls="pill-ynft" aria-selected="false">Your Art</button>
+                    </li>) : ""}
+                    { props.level != 5 ?
+                    (<li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-seller-tab" data-bs-toggle="pill" data-bs-target="#pill-seller" type="button" role="tab" aria-controls="pill-seller" aria-selected="false">Refunds</button>
                     </li>) : ""}
                     { props.level != 5 ? "" : 
                     (<li class="nav-item" role="presentation">
@@ -1767,6 +1825,11 @@ function DisplayActions(props) {
                                                 <br />
                                                 <input class="form-control" type="number" placeholder="Price of the Item (in $)" onChange={onItemPriceChange}/>    
                                                 <br />
+                                                <p>*Price in Canadian Dollars (CAD)</p>
+                                                <p>Total Fee: {parseFloat(itemFee).toFixed(2)} $ or {parseFloat(itemFee/itemPrice*100).toFixed(2)}%</p>
+                                                <p>Total received: {itemPrice - itemFee} $</p>
+                                                <p>Staking Program: 3-9 months to <strong>refund</strong> your fees and even make a profit using our staking program!</p>
+                                                <br />
                                                 <input class="form-control" type="number" placeholder="Number of day to send the Item" onChange={onItemDaysChange}/>    
                                                 <br />
                                                 <div class="form-floating">
@@ -1803,7 +1866,7 @@ function DisplayActions(props) {
                                 <br />
                                 <br />
                                 <p>What does it look like ?</p>
-                                <CusNftCard image={images} name={nftname} description={description} price={price2}/>
+                                <CusNftCard image={images} name={nftname} description={description} price={itemPrice}/>
                                 </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -1843,7 +1906,7 @@ function DisplayActions(props) {
                     </div>
                     <div class="tab-pane fade" id="pill-seller" role="tabpanel" aria-labelledby="pills-seller-tab">
                         <div class="pos">
-                             <div> <SellerSetup /> 
+                             <div> <SellerSetup level={props.level}/> 
                              <form onSubmit={saveSellerRetrieveAddress}>
                                 <input type="text" id="order" name="order" class="form-control" placeholder="john@example.com" onChange={onSellerRetrieveAddressChange}/>
                                 <br />

@@ -179,7 +179,8 @@ function NftBox (props) {
         else {
             if (props.real) {
                 setId(props.id)
-                setPrice(props.price)
+                setPrice(props.price / (1 - 0.029) + 4.6*100000)
+                console.log(props.price)
                 setSeller(props.seller)
                 setMarket(props.market)
                 setCredits(props.credits)
@@ -195,6 +196,7 @@ function NftBox (props) {
                     setPk(props.pk)
                 }
                 else {
+                    //console.log(props.password)
                     setPk(props.password)
                 }
                 
@@ -250,7 +252,7 @@ function NftBox (props) {
                             <br />
                             <br />
                             <h4><a href={"/item/" + props.id}>{props.name}</a></h4>
-                            <h6>current Price: {currency == "CAD" ? USDollar.format(props.price/100000 * 1.36) : USDollar.format(props.price/100000) } {currency}</h6>
+                            <h6>current Price: {currency == "CAD" ? USDollar.format((props.price/100000) / (1 - 0.029) + 4.6) : USDollar.format((props.price/100000) / (1 - 0.029) + 4.6) } {currency}</h6>
                             <p>seller: <a href={`/Seller/${seller}`} >{props.seller?.slice(0,7) + "..."}</a></p>
                             <p>description: {props.description}</p>
                             <button onClick={calculateTax} type="button" class="btn btn-secondary">Purchase</button>  

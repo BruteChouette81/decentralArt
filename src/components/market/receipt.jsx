@@ -114,10 +114,10 @@ function Receipt (props) {
             <img id='itemimg' src={props.image} alt="" />
             <br />
             <br />
-            <h4>subtotal: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.subtotal/100000 * 1.36)) : USDollar.format((props.subtotal/100000))}  {window.localStorage.getItem("currency")}</h4>
+            <h4>subtotal: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.subtotal/100000)) : USDollar.format((props.subtotal/100000))}  {window.localStorage.getItem("currency")}</h4>
             
             
-            <h5> Total: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.total/100000 * 1.36)) : USDollar.format((props.total/100000))} {window.localStorage.getItem("currency")}</h5>
+            <h5> Total: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.total/100000)) : USDollar.format((props.total/100000))} {window.localStorage.getItem("currency")}</h5>
             <button onClick={props.purchase} type="button" class="btn btn-secondary" id="buy">Buy</button>
             <button onClick={loadOrder} type="button" class="btn btn-primary" id="buy">F2C</button>
             <br /><br />
@@ -126,7 +126,7 @@ function Receipt (props) {
                     createOrder={async () => {
                         let dataoptions = {
                             body: {
-                                amount: parseFloat(props.subtotal/100000 * 1.36).toFixed(2).toString()
+                                amount: parseFloat(props.subtotal/100000).toFixed(2).toString()
                             }
                         }
                         return API.post('serverv2', "/create-paypal-order", dataoptions).then((order) => order.id);
@@ -137,19 +137,26 @@ function Receipt (props) {
                             body: {
                                 orderID: data.orderID,
                                 address: props.account,
-                                amount: parseFloat(props.subtotal/100000 * 1.36).toFixed(2),
+                                amount: parseFloat(props.subtotal/100000).toFixed(2),
                                 itemId: parseInt(props.id), 
-                                key: props.pk,
+                                key: props.pk, //is password
                                 buying: true
                             }
                         }
                         return API.post('serverv2', "/capture-paypal-order", dataoptions).then((orderData) => {
                             console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-                            const transaction = orderData.purchase_units[0].payments.captures[0];
-                            props.purchase()
-                            alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+                            if (orderData.status === 50) {
+                                alert("Error while buying. Error code: 50")
+                            } else {
+                                const transaction = orderData.purchase_units[0].payments.captures[0];
+                                props.purchase()
+                                alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+                            }
 
                             //props.purchase()
+                        }).catch((e) => {
+                            alert("Error while buying. Error code: 50")
+                            console.log(e)
                         });
                     }}
                 />
