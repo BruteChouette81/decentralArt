@@ -236,6 +236,7 @@ function DisplayActions(props) {
     const [itemFee, setItemFee] = useState(0)
     const [itemDays, setItemDays] = useState(0)
     const [tags, setTags] = useState([])
+    const [itemLink, setItemLink] = useState([])
     //const [price2, setPrice2] = useState(0)
     const [nftnames, setNftnames] = useState([])
     const [descriptions, setDescriptions] = useState([])
@@ -682,6 +683,7 @@ function DisplayActions(props) {
                                     console.log(response)
                                     setCreateLoading(false)
                                     alert("Your Item is Created and Listed")
+                                    setItemLink(["/item/" +  data.body.itemid])
                                 })
                             }
                             
@@ -746,6 +748,9 @@ function DisplayActions(props) {
                         var url = "/listItem"
                         API.post('serverv2', url, data).then((response) => {
                             console.log(response)
+                            let itemlink2 = itemLink;
+                            itemlink2.push("/item/" +  data.body.itemid)
+                            setItemsDays(itemlink2)
                             
                         })
 
@@ -833,7 +838,13 @@ function DisplayActions(props) {
                 <br />
                 <h5>Items ready to be publish: {tokenuri ? tokenuri?.length : "0"}</h5>
                 {tokenuri?.length > 0 ?<button onClick={multipleMint} class="btn btn-warning">Publish all my items !</button> : ""}
+                <h5>Links: </h5>
+                {itemLink?.length > 0 ? itemLink.map((item) => (<div><a href={item}> atelierdesimon.net{item}</a>                 <div class="fb-share-button" data-href={"https://atelierdesimon.net" + item} data-layout="" data-size=""><a target="_blank" href={"https://www.facebook.com/sharer/sharer.php?u=https://atelierdesimon.net" + item} class="fb-xfbml-parse-ignore">Share !</a></div>
+</div>))  : ( <p>No Links</p> )}
                 <p>For more informations, contact our team</p>
+                <div id="fb-root">
+                <script async defer crossorigin="anonymous" src="https://connect.facebook.net/fr_CA/sdk.js#xfbml=1&version=v17.0&appId=282027027782089&autoLogAppEvents=1" nonce="wycPHG6a"></script>
+                </div>
                
                 
             </div>
@@ -1683,7 +1694,11 @@ function DisplayActions(props) {
                     (<li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-create-tab" data-bs-toggle="pill" data-bs-target="#pill-create" type="button" role="tab" aria-controls="pill-create" aria-selected="false">Create !</button>
                     </li>)
-    }               { props.level != 5 ?
+    }            { props.level == 5 ? "" : 
+                    (<li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-partner-tab" data-bs-toggle="pill" data-bs-target="#pill-partner" type="button" role="tab" aria-controls="pill-partner" aria-selected="false">Become a Seller</button>
+                    </li>)
+                }{ props.level != 5 ?
                     (<li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-ynft-tab" data-bs-toggle="pill" data-bs-target="#pill-ynft" type="button" role="tab" aria-controls="pill-ynft" aria-selected="false">Your Art</button>
                     </li>) : ""}
@@ -1700,7 +1715,16 @@ function DisplayActions(props) {
                     (<li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-seller-tab" data-bs-toggle="pill" data-bs-target="#pill-seller" type="button" role="tab" aria-controls="pill-seller" aria-selected="false">Seller money</button>
                     </li>)
-    }
+    }               { props.level != 5 ? "" : 
+                        (<li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-pos-tab" data-bs-toggle="pill" data-bs-target="#pill-pos" type="button" role="tab" aria-controls="pill-pos" aria-selected="false" disabled>Social Connection</button>
+                        </li>)
+                    } 
+                     { props.level != 5 ? "" : 
+                    (<li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-pos-tab" data-bs-toggle="pill" data-bs-target="#pill-pos" type="button" role="tab" aria-controls="pill-pos" aria-selected="false" disabled>Staking</button>
+                    </li>)
+                    }
                             
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
@@ -1879,6 +1903,14 @@ function DisplayActions(props) {
         height={200} width={200} /><h5>{step} loading...</h5></div>)) : usdprice > 0 ? (<PayGas account={props.account} total={usdprice} nft={nft} metadata={metadata} pk={props.signer.privateKey} cancel={cancelPayGas} tokenuri={tokenuri} /> ) : (<DisplayCreate />)  }
                         
                     </div>
+                    <div class="tab-pane fade" id="pill-partner" role="tabpanel" aria-labelledby="pills-partner-tab"> 
+                        <div class="create" >
+                            <h3>Apply to our partnership program in order to become a seller !</h3>
+                            <p>Becoming a partner is 100% free and offer more than competitives advantages such as: very low fee (0% in certain cases), access to an "UnHackable" market, access to our sellers tools and much more! </p>
+                            <h4>Contact: <strong>thomasberthiaume183@gmail.com</strong> for applications or questions.</h4>
+                        </div>
+                    </div>
+
                     <div class="tab-pane fade" id="pill-ynft" role="tabpanel" aria-labelledby="pills-ynft-tab">
                         <DisplayYnft />
                     </div>

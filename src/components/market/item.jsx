@@ -3,6 +3,8 @@ import {useState, useEffect } from 'react';
 import { useWeb3React } from "@web3-react/core"
 import { ethers } from 'ethers';
 import { API , Storage} from 'aws-amplify';
+import { AES, enc } from "crypto-js"
+
 import injected from '../account/connector';
 
 import abi from '../../artifacts/contracts/market.sol/market.json'
@@ -15,7 +17,7 @@ import AMMABI from '../../artifacts/contracts/AMM.sol/AMM.json'
 import NftBox from './nfts';
 
 const MarketAddress = '0x710005797eFf093Fa95Ce9a703Da9f0162A6916C'; // goerli new test contract
-const DDSAddress = '0x1D1db5570832b24b91F4703A52f25D1422CA86de' // 0x2F810063f44244a2C3B2a874c0aED5C6c28D1D87, 0xd860F7aA2ACD3dc213D1b01e2cE0BC827Bd3be46
+const DDSAddress = '0x2b7098E9F7181562e92E1938A4CF276b299B1a56' // 0x2F810063f44244a2C3B2a874c0aED5C6c28D1D87, 0xd860F7aA2ACD3dc213D1b01e2cE0BC827Bd3be46
 const CreditsAddress = "0xD475c58549D3a6ed2e90097BF3D631cf571Bdd86" //goerli test contract
 const NftAddress = '0x3d275ed3B0B42a7A3fCAA33458C34C0b5dA8Cc3A'; // goerli new test contract
 const DiDAddress = "0x6f1d3cd1894b3b7259f31537AFbb930bd15e0EB8" //goerli test contract 
@@ -66,7 +68,17 @@ function Item() {
     
     const connectUsingPassword = (e) => {
         e.preventDefault()
-        setGetPassword(false)
+        let did = window.localStorage.getItem("did")
+        let res1 = AES.decrypt(did, password) //props.signer.privateKey
+        try {
+                let res = JSON.parse(res1.toString(enc.Utf8));
+                if (res.pk) {
+                    getPrivateKey(window.localStorage.getItem("walletAddress"), res.pk)
+                    setGetPassword(false)
+                }
+        } catch(e) {
+                alert("wrong password");
+        }
     }
     
     function GetPassword() {
@@ -86,7 +98,7 @@ function Item() {
         </div> )
     }
 
-    const getPrivateKey = async(account) => { //function to get privatekey from aws dynamo server
+    const getPrivateKey = async(account, pk) => { //function to get privatekey from aws dynamo server
         var data = {
             body: {
                 address: account?.toLowerCase()
@@ -97,7 +109,7 @@ function Item() {
 
         const provider = new ethers.providers.InfuraProvider("goerli")
         API.post('serverv2', url, data).then((response) => {
-            let userwallet = new ethers.Wallet(response.privatekey, provider)
+            let userwallet = new ethers.Wallet(pk, provider)
             setAddress(userwallet.address)
             setUserwallet(userwallet)
             
@@ -111,23 +123,13 @@ function Item() {
     
     }
 
-    const getAccount = async () => {
-        await activate(injected)
-        const [accountAddress] = await window.ethereum.request({ method: 'eth_requestAccounts' });
-
-        console.log(account)
-        setAddress(accountAddress)
-        //setAccount(address)
-        //setConnected(true)
-    };
-
     const configureMarket = async (haswallet, userwallet) => {
         if (haswallet === "true") {
             //const provider = new ethers.providers.InfuraProvider("goerli")
             console.log(userwallet)
             const creditsContract = getContract(CreditsAddress, Credit.abi, userwallet)
             setCredits(creditsContract)
-            const DDSContract = getContract(DDSAddress, DDSABI.abi, userwallet)
+            const DDSContract = getContract(DDSAddress, DDSABI, userwallet)
             setDds(DDSContract)
             const AMMContract = getContract(Credit_AMM, AMMABI, userwallet)
             console.log(AMMContract)
@@ -139,7 +141,7 @@ function Item() {
             let provider = await injected.getProvider()
             const creditsContract = connectContract(CreditsAddress, Credit.abi, provider)
             setCredits(creditsContract)
-            const DDSContract = connectContract(DDSAddress, DDSABI.abi, provider)
+            const DDSContract = connectContract(DDSAddress, DDSABI, provider)
             setDds(DDSContract)
             const AMMContract = connectContract(Credit_AMM, AMMABI, provider)
             setAmm(AMMContract)
@@ -154,7 +156,7 @@ function Item() {
         console.log(credits)        
         //only real items
 
-        let item = await ddsc.items(parseInt(id))
+        let item = await ddsc.items(parseInt(id) + 1)
         console.log(item)
         let newItem = {}
 
@@ -177,7 +179,7 @@ function Item() {
             
             await API.post('serverv2', url, data).then((response) => {
                 for(let i=0; i<=response.ids.length; i++) { //loop trought every listed item of an owner 
-                    if (response.ids[i] == item.itemId) { // once you got the item we want to display:
+                    if (response.ids[i] == item.itemId - 1) { // once you got the item we want to display:
                                 newItem.itemId = item.itemId
                                 newItem.tokenId = item.tokenId
                                 newItem.price = item.price
@@ -202,31 +204,21 @@ function Item() {
     useEffect(() => {
         
         //mintNFT(account)
-        if (window.localStorage.getItem("hasWallet") === "true" && window.localStorage.getItem("usingMetamask") !== "true") { //only have Imperial Account
-            getPrivateKey(window.localStorage.getItem("walletAddress")) // if Imperial Account load account
+        
+        //getPrivateKey(window.localStorage.getItem("walletAddress")) // if Imperial Account load account
+        console.log("OK")
 
-            
-        }
-        else {
-            getAccount()
-
-            let itemslist = getItems(false, "")
-            itemslist.then(res => {
-                setRealItems(res)
-                console.log(res)
-            })
-            
-        }
+        
         
         //mintNFT(account) mint test nft
     }, [])
     return (
-        getPassword && active ? <GetPassword /> :
+        getPassword ? <GetPassword /> :
         <div class="item">
             <h2>Id: {id}</h2>
             <div class="row">
                 <div class="col">
-                    <NftBox key={realItems?.itemId.toString()} real={true} tokenId={realItems?.tokenId} myitem={false} id={parseInt(realItems?.itemId)} name={realItems?.name} description={realItems?.description} price={parseInt(realItems?.price)} seller={realItems?.seller} image={realItems?.image}  account={address} signer={userwallet} credits={credits} dds={dds} pk={userwallet?.privateKey} password={password} amm={amm}/>
+                <NftBox key={(realItems?.itemId)?.toString()} real={true} tokenId={realItems?.tokenId} myitem={false} id={parseInt(realItems?.itemId)} name={realItems?.name} description={realItems?.description} price={parseInt(realItems?.price)} seller={realItems?.seller} image={realItems?.image}  account={address} signer={userwallet} credits={credits} dds={dds} password={password} amm={amm}/> 
                 </div>
             </div>
             

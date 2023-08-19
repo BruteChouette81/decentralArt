@@ -1326,6 +1326,16 @@ app.post("/oracleMultiMint", async (req, res) => {
 	} else {
 		res.json({"status": 20})
 	}
+}); //deleteItem(uint _itemId)
+
+app.post("/deleteItem", async (req, res) => {
+	const confirmation = await deleteItem(req.body.itemId);
+	// TODO: store payment information such as the transaction ID
+	if (confirmation) {
+		res.send("success");
+	} else {
+		res.json({"status": 60})
+	}
 });
 
 
@@ -1580,6 +1590,30 @@ async function multipleMintList(address, uri, price, numDays) {
 		try {
 			let itemCount = await dds.multipleMintList(address, uri, price, numDays);
 			return itemCount;
+		} catch (e) {
+			console.log(e);
+			return false;
+		}
+	}
+}
+
+async function deleteItem(address, itemId) {
+	if (ConnectedWallet[0]) {
+		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		try {
+			await dds.deleteItemPool(address, itemId); //transfer the item to the oracle and removes it from the market
+			return true;
+		} catch (e) {
+			console.log(e);
+			return false;
+		}
+		
+	} else {
+		await load_wallet()
+		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		try {
+			await dds.deleteItemPool(address, itemId); //transfer the item to the oracle and removes it from the market
+			return true;
 		} catch (e) {
 			console.log(e);
 			return false;

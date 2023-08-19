@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./css/nftbox.css"
 
 import {ethers} from 'ethers'
 
@@ -16,6 +17,10 @@ import ReactLoading from "react-loading";
 
 import DDSABI from '../../artifacts/contracts/DDS.sol/DDS.json'
 import { API } from "aws-amplify";
+
+import lock from "./css/png-lock-picture-2-lock-png-400.png"
+import cpl from "./css/fontbolt.png"
+
 const DDSGasContract = '0x14b92ddc0e26C0Cf0E7b17Fe742361B8cd1D95e1'
 
 let USDollar = new Intl.NumberFormat('en-US', {
@@ -118,8 +123,6 @@ function Receipt (props) {
             
             
             <h5> Total: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.total/100000)) : USDollar.format((props.total/100000))} {window.localStorage.getItem("currency")}</h5>
-            <button onClick={props.purchase} type="button" class="btn btn-secondary" id="buy">Buy</button>
-            <button onClick={loadOrder} type="button" class="btn btn-primary" id="buy">F2C</button>
             <br /><br />
             <PayPalScriptProvider options={{ clientId: "AbONA1Q9rbHJLPe5ZGWwssIF8z06zRc6y1qU2LsPp0lXaZYjqaCjSTXuC7sAdFW2E_AZCUOuJvnZDhaZ", currency: "CAD" }}>
                 <PayPalButtons
@@ -161,9 +164,12 @@ function Receipt (props) {
                     }}
                 />
             </PayPalScriptProvider>
+            <button type="button" class="btn btn-default" id="buy" disabled> <img src={lock} id="lock-img" />Crypto Payment</button>
+
             
             <br />
             <br />
+            <p>Powered by <img src={cpl} id="cpl-img" alt="" /></p>
             <button onClick={props.cancel} type="button" class="btn btn-danger">Cancel</button></div> )} </div>) : (<PayItems pk={props.pk} total={props.total} account={props.account} purchase={props.purchase} amm={props.amm} cancel={props.cancel}/>)}
 
         </div>
@@ -175,7 +181,8 @@ function Receipt (props) {
 
 export default Receipt;
 
-
+//<button onClick={props.purchase} type="button" class="btn btn-secondary" id="buy">Buy</button>
+//<button onClick={loadOrder} type="button" class="btn btn-primary" id="buy">F2C</button>
 /*
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{color:"black"}}>
                 <div class="modal-dialog">

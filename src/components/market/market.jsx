@@ -3,6 +3,8 @@ import { useWeb3React } from "@web3-react/core"
 import { ethers } from 'ethers';
 import { API , Storage} from 'aws-amplify';
 import { AES, enc } from "crypto-js"
+import ReactLoading from "react-loading";
+
 
 import injected from '../account/connector';
 import default_profile from "./profile_pics/default_profile.png"
@@ -244,6 +246,12 @@ function Market() {
     const [password, setPassword] = useState()
     const [getPassword, setGetPassword] = useState(true)
 
+    const types = "spin"
+    const color = "#0000FF"
+
+    //loading
+    const [stillLoading, setStillLoading] = useState(true)
+
     const changePass = (event) => {
         setPassword(event.target.value)
     }
@@ -318,13 +326,15 @@ function Market() {
                 
                 //console.log(newitemslist)
 
-                setRealItems(res)
+                //setRealItems(res)
                 let newReal = res;
                 //console.log(itemslist)
                 console.log(realItems)
 
                 let newreallist = scoreQuickSort(newReal)
                 setRealSorted(newreallist)
+                setStillLoading(false)
+
                 
                 //console.log(newitemslist)
             })
@@ -506,9 +516,14 @@ function Market() {
                             }
                         }
                     })
+
                     console.log(parseInt(newItem.price))
                     realList.push(newItem)
                     
+                }
+                //each five items, we push to items in order to load more smoothly
+                if (Number.isInteger((i+1)/2)) {
+                    setRealItems(realList)
                 }
                 
             }
@@ -605,15 +620,16 @@ function Market() {
     //{items.map((item) => (<NftBox key={parseInt(item.itemId)} myitem={false} id={parseInt(item.itemId)} name={item.name} price={parseInt(item.price)} seller={item.seller.slice(0,7) + "..."} market={market} credits={credits}/> ))}
 
     return(
-        getPassword ? <GetPassword /> :
+        getPassword ? <GetPassword /> : 
         <div class="market">
             <div class="account">
                {userwallet ? (<RenderImage account={userwallet?.address} />) :  active ? (<RenderImage account={account} />) : ( <img src={default_profile} alt="" id='profilepic' /> )} {userwallet ? (<h6 id='account'>account: {userwallet?.address.slice(0,10) + "..."}</h6>) : (<h6 id='account'>account: {account?.slice(0,10) + "..."}</h6>)}
                {userwallet ? (<p id='connected' style={{color: "green"}}>connected</p>) : active ? (<p id='connected' style={{color: "green"}}>connected</p>) : (<p id='connected' style={{color: "red"}}>disconnected</p>)}
                
             </div>              
-
-            <div class="nft">
+            {!userwallet ? (<div style={{paddingLeft: 40 + "%"}}><ReactLoading type={types} color={color}
+            height={200} width={200} /><h5>Connecting Account...</h5></div>) :
+            (<div class="nft">
                 <nav class="nav">
                     <ul class="nav nav-pills" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -624,6 +640,9 @@ function Market() {
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="vp-tab" data-bs-toggle="tab" data-bs-target="#vp" type="button" role="tab" aria-controls="vp" aria-selected="false">Realisme</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="onfts-tab" data-bs-toggle="tab" data-bs-target="#onfts" type="button" role="tab" aria-controls="onfts" aria-selected="false">My Items</button>
                         </li>
                        
 
@@ -670,6 +689,9 @@ function Market() {
 
                                     </div>
                                 </div>
+                                {stillLoading ? (<div style={{paddingLeft: 40 + "%"}}><ReactLoading type={types} color={color}
+                                    height={200} width={200} /><h5>Still loading items...</h5></div>) : ""
+                                }
                                 
                             
                             </div>
@@ -699,7 +721,9 @@ function Market() {
 
                                     </div>
                                 </div>
-                                
+                                {stillLoading ? (<div style={{paddingLeft: 40 + "%"}}><ReactLoading type={types} color={color}
+                                    height={200} width={200} /><h5>Still loading items...</h5></div>) : ""
+                                }
                             
                             </div>
                         </div>
@@ -727,18 +751,23 @@ function Market() {
 
                                     </div>
                                 </div>
-                                
+                                {stillLoading ? (<div style={{paddingLeft: 40 + "%"}}><ReactLoading type={types} color={color}
+                                    height={200} width={200} /><h5>Still loading items...</h5></div>) : ""
+                                }
                             
                             </div>
                         </div>
                         <div class="tab-pane fade" id="onfts" role="tabpanel" aria-labelledby="onfts-tab">
                                 <div className='row'>
-                                    {items.map((item) => 
-                                            item.seller===account ? (<NftBox key={parseInt(item.itemId)} myitem={true} name={item.name} description={item.description} id={parseInt(item.itemId)} price={parseInt(item.price)} seller={item.seller?.slice(0,7) + "..."} market={market} credits={credits} setHaveItem={setHaveItem}/> ) : "" 
+                                    {realItems.map((item) => 
+                                            item.seller===address ? (<NftBox key={parseInt(item.itemId)} myitem={true} real={true} name={item.name} description={item.description} id={parseInt(item.itemId)} price={parseInt(item.price)} image={item.image} seller={item.seller?.slice(0,7) + "..."} market={market} credits={credits} setHaveItem={setHaveItem}/> ) : "" 
                                     )}
 
                                     {haveItem===false ? ( <div><p>You are currenlty selling no items</p></div> ) : "" }
                                 </div>
+                                {stillLoading ? (<div style={{paddingLeft: 40 + "%"}}><ReactLoading type={types} color={color}
+                                    height={200} width={200} /><h5>Still loading items...</h5></div>) : ""
+                                }
 
                         </div>
                         <div class="tab-pane fade" id="real" role="tabpanel" aria-labelledby="real-tab">
@@ -765,12 +794,15 @@ function Market() {
                                         
                                     </div>
                                 </div>
+                                {stillLoading ? (<div style={{paddingLeft: 40 + "%"}}><ReactLoading type={types} color={color}
+                                    height={200} width={200} /><h5>Still loading items...</h5></div>) : ""
+                                }
                                 
                             
                             </div>
                         </div>
                     </div>
-            </div>
+            </div>)}
         </div>
     )
 }

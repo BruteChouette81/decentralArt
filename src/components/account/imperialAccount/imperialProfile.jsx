@@ -4,6 +4,8 @@ import { API, Storage } from 'aws-amplify';
 import { AES, enc } from "crypto-js"
 
 import default_profile from "../profile_pics/default_profile.png"
+import ReactLoading from "react-loading";
+
 
 import Credit from '../../../artifacts/contracts/credits2.sol/credits2.json';
 import DiD from '../../../artifacts/contracts/DiD.sol/DiD.json';
@@ -179,6 +181,7 @@ function ImperialProfile() {
     //const [address, setAddress] = useState()
     const [privatekey, setPrivatekey] = useState()
     const [ needPassword, setNeedPassword ] = useState(true)
+    const [ profileLoading, setProfileLoading ] = useState(true)
     const [password, setPassword] = useState("")
 
     const [back, setBack] = useState('white')
@@ -195,6 +198,8 @@ function ImperialProfile() {
     const [realPurchase, setRealPurchase] = useState()
     const [level, setLevel] = useState(0)
     const [signer, setSigner] = useState()
+    const type = "spin"
+    const color = "#0000FF"
 
     const changePass = (event) => {
         setPassword(event.target.value)
@@ -266,6 +271,8 @@ function ImperialProfile() {
 
         API.post('serverv2', url, data).then((response) => {
            console.log(response)
+           setProfileLoading(false)
+
         })
     }
 
@@ -310,6 +317,8 @@ function ImperialProfile() {
 
             let AMMContract = getContract(userwallet, DDSABI, DDSADDr)
             setAmm(AMMContract)
+            setProfileLoading(false)
+
             //let test = await AMMContract.isPool();
 
             //gas tests:
@@ -352,6 +361,7 @@ function ImperialProfile() {
                 if (res.pk) {
                     getPrivateKey(window.localStorage.getItem("walletAddress"), res.pk)
                     setNeedPassword(false)
+
                 } else {
                     alert("wrong password")
                 }
@@ -368,7 +378,7 @@ function ImperialProfile() {
     useEffect(() => {
         
         async function boot() {
-            console.log("test")
+            console.log("OK")
             
         }
         boot()
@@ -384,6 +394,8 @@ function ImperialProfile() {
         // 
         return(
             needPassword ? <GetPassword /> :
+            profileLoading ? (<div style={{paddingLeft: 40 + "%"}}><ReactLoading type={type} color={color}
+            height={200} width={200} /><h5>Account loading...</h5></div>) :
             <div class='profile'>
                 <div class='settingdiv'>
                 </div>
@@ -411,6 +423,8 @@ function ImperialProfile() {
     else {
         return(
             needPassword ? <GetPassword /> :
+            profileLoading ? (<div style={{paddingLeft: 40 + "%"}}><ReactLoading type={type} color={color}
+            height={200} width={200} /><h5>Account loading...</h5></div>) :
             <div class='profile'>
                 <div class='settingdiv'>
                 </div>

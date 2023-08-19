@@ -24,6 +24,7 @@
     "connect-busboy": "^1.0.0",
     "crypto-js": "^4.1.1",
     "ethers": "^5.6.7",
+    "fb": "^2.0.0",
     "ipfs-core": "^0.18.0",
     "js-base64": "^3.7.5",
     "jscharting": "^3.3.1",
@@ -66,5 +67,8 @@
       "last 1 safari version",
       "last 1 edge version"
     ]
+  },
+  "devDependencies": {
+    "@types/fb": "^0.0.28"
   }
 }

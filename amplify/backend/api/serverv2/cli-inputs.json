@@ -154,6 +154,13 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/deleteItem": {
+      "name": "/deleteItem",
+      "lambdaFunction": "paypalHandler",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }

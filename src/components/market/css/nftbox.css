@@ -27,3 +27,28 @@
     border-radius: 12px;
     border-style: solid;
 }
+
+#buy {
+    width: 100%;
+    font-size: larger;
+    color: white;
+    font-weight:500;
+    height: auto;
+    text-align: center;
+    border-radius: 5px;
+    background-color: green;
+}
+#lock-img {
+    height: 30px;
+    width: auto;
+}
+#cpl-img {
+    height: 30px;
+    width: auto;
+    border-radius: 10px;
+}
+
+.paypal-powered-by {
+    color: black;
+    
+}

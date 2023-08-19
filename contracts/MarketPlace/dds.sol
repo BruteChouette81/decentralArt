@@ -197,6 +197,25 @@ contract DDS is PoolOwnable {
         );
     }
 
+    function deleteItemPool(address _itemOwner, uint _itemId) public onlyPool {
+        Item storage item = items[_itemId];
+        require(_itemId > 0 && _itemId <= itemCount, "item doesn't exist");
+        require(item.seller == _itemOwner, "you need to be the owner of the item");
+        require(!item.sold, "item already sold");
+
+        item.sold = true;
+        item.nft.approve(item.seller, item.tokenId);
+        item.nft.transferFrom(address(this), item.seller, item.tokenId);
+
+        emit Deleted(
+            _itemId,
+            address(item.nft),
+            item.tokenId,
+            item.seller
+
+        );
+    }
+
     function getPurchased(address _seller, uint256 _id) public view returns( uint256 itemId) { //see item purchased that you need to provide 
         return purchased[_seller][_id];
     }

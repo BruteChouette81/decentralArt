@@ -49,12 +49,29 @@ function NftBox (props) {
          //connect to market inside the function to save time 
         //const marketContract = connectContract(MarketAddress, abi.abi)
         try {
-            console.log(market.address)
-            await(await market.deleteItem(id)).wait()
-            alert("Item: " + id + " has been sucessfully deleted!")
+            var config = {
+                body: {
+                    itemId: id,
+                }
+            };
+            var url = "/deleteItem"
+
+            API.post('serverv2', url, config).then((response) => {
+                console.log(response)
+                if (response.status === 60) {
+                    alert("Unable to delete Item (" + id + "). Error code - 60")
+                } else {
+                    alert("Item: " + id + " has been sucessfully deleted!")
+                }
+            }).catch((e) => {
+                alert("Unable to delete Item (" + id + "). Error code - 60")
+                console.log(e)
+            })
+
+            
         }
         catch(error) {
-            alert("Unable to delete Item (" + id + "). Error code - 3")
+            alert("Unable to delete Item (" + id + "). Error code - 60")
             console.log(error)
         }
     }
@@ -228,7 +245,7 @@ function NftBox (props) {
     if(props.myitem) {
         return(
             <div class="nftbox">
-                <img src="" alt="" />
+                <img id='itemimg' src={props.image} alt="" />
                 <h4><a href="">{props.name}</a></h4>
                 <h6>current bid: {props.price/100000} $CREDITS</h6>
                 <p>seller: <a href="#">{props.seller.slice(0,7) + "..."}</a></p>
