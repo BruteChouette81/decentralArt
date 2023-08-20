@@ -60,16 +60,18 @@ function Item() {
 
     //password getting 
     const [password, setPassword] = useState()
+    let passwordInp = ""
     const [getPassword, setGetPassword] = useState(true)
 
     const changePass = (event) => {
-        setPassword(event.target.value)
+        passwordInp = event.target.value;
     }
     
     const connectUsingPassword = (e) => {
         e.preventDefault()
+        setPassword(passwordInp)
         let did = window.localStorage.getItem("did")
-        let res1 = AES.decrypt(did, password) //props.signer.privateKey
+        let res1 = AES.decrypt(did, passwordInp) //props.signer.privateKey
         try {
                 let res = JSON.parse(res1.toString(enc.Utf8));
                 if (res.pk) {

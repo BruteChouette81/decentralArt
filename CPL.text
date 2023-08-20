@@ -1,0 +1,111 @@
+CPL::::
+The CPL (Centralized Payment Ledger) is a public ledger that allow fiat and crypto payments to be process by a secure 
+and decentralized system. This system also allow an adjustable payment processing system that offer fees as low as 0%. 
+
+Payment processing:
+
+The payment processing system is divided in two categories: Fiat and Crypto. 
+
+For Fiat: for Fiat currencies (such as CAD or USD), it is a classic 
+payment process (using scalable tools such as Paypal or LightSpeed payment gateways). The payment gateway 
+is connected to an Oracle that safely manage the cash in a Fiat Pool. This allow the payment to be confirmed and secured by blockchain, but executed
+in the centralized world. 
+
+Scheme: 
+
+Cash $$ === Transfer ===> Oracle Cash Pool ===          Waiting...                        >>>> Cash Transfer to seller (validated using POS)
+                                            ----> Confirm by BlockChain Smart Contract ---|
+
+For Crypto: The cryto-currencies can be exchanged in our custom AMM that allow them to be safely stored by the system 
+until the payment is complete. 
+
+Scheme: 
+
+Crypto (ETH, BTC, USDT) === Transfer ===> AMM Crypto Pool ----> Confirm by BlockChain Smart Contract ----> crypto Transfer to seller (validated using POS)
+                                            
+
+Fee Policy:
+
+For our fee policy, we apply a 10% (all included fee) at the start of a sell. Our profit margin can be calculated with this equation: 
+P = p * (10 - f / 100) - k
+
+where: P = Profit, p = price of the item, f = payment processing (usually 2.9% for fiat and 1%-0% for crypto) and k = the constant price (usually 4.6$)
+
+For example: a 1000$ item bought with fiat currency. 
+P = 1000 * (10 - 2.9 / 100) - 4.6 = 66.4 or 6.6% of profit over transactions
+
+We choose this 10% policy for two main reasons:
+1- we can have a profit (even if the cut is less than most platforms) over sellers who doesn't wish to stake their crypto
+2- we gain a bigger marge in order to avoid friction in gas fees
+
+This fee can be diluted down to 0% using our 0% fee option
+
+
+0%:
+
+the 0% fee protocol is a flexible plan that we propose to sellers who doesn't want to pay the 10% fee. 
+
+We have 3 levels of sellers. each of them have their plans. The higher you are, the more flexible and fast the plans are.
+
+in order to repay their fee, they must gain at lease 3% over their staked amount, but we get a certain amount (witch become extremely interesting when we compound it)
+
+
+Our way pf making rapid gains: 
+- decentralized fiat mining pools -> Compound vaults 5%
+- centralized stable lending (12% - 20% apy) -> if more than 4 mounths: get 0% else get half
+- centralized pools  -> custom vaults (redistribute to liquidity providers for custom currencies (high fees))
+
+Decentralized Pools policy:
+- <6 : get half depending of the level: just fee reduction 
+- >6 : get 0% + profit depending on the level
+- flexible: idle, planset: 0% insure
+
+Centralized Ledger Pools: 
+function: different markets can mint/use their own tokens in our cash pool
+
+Usefullness: every currencies put in vaults have some pool (principle of buy in what you want and sell in what you want). 
+using this principle every currency has a pool of stored (secured) token. Collaterals are in the pool you stake on, but always the ratio 1:1 (+fees).
+Example: USD to CAD. Someone paying in CAD will store is cad and receive USD from liquidity Providers. Can use commun pools for not used currencies. 
+Also, acumulated stablecoins can be used for staking (evite some buying using CEX)
+
+--> must have flexibility  ( vaults while idleing )
+scheme:
+
+Sellers/markets ===> setup a new pool (Trasnfer coin or existing crypto (stable else use already existing pool)) ===> preserve fee from buyers and sellers 
+====> high level sellers collect those fee (being liquidity providers)
+
+
+
+-> cash flow (stake half) --> more time, but get more (5-6%/year)
+
+Blockchain/oracle:
+
+security:
+
+use cases:
+
+- liquidity staking (risky) NO ==> later when colaterals
+
+Examples: Fix fee VS Interest generator:
+
+1 year scenario:
+T= transaction
+all currencies are in $
+
+Same amount of T:
+
+1,000 T/mounth
+12,000 T/year
+Avg T volume: 1000 $
+
+12,000,000 $ volume / Y
+
+Fix Fee: 
+10% fee: 1,200,000 $ / Y
+
+Interest generator:
+25% stake, 75% 10% fee
+75%: 900,000 $
+25%: 3,000 T = 250 T/mounth 
+first 6 mounth completed with 8% +/- in (not compounding) = 120,000 completed and 120,000 not completed
+by year 2: 10% using compouding funds 

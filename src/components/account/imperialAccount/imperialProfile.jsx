@@ -183,6 +183,8 @@ function ImperialProfile() {
     const [ needPassword, setNeedPassword ] = useState(true)
     const [ profileLoading, setProfileLoading ] = useState(true)
     const [password, setPassword] = useState("")
+    let passwordInp = ""
+
 
     const [back, setBack] = useState('white')
     const [img, setImg] = useState('white')
@@ -202,13 +204,15 @@ function ImperialProfile() {
     const color = "#0000FF"
 
     const changePass = (event) => {
-        setPassword(event.target.value)
+        //setPassword(event.target.value)
+        passwordInp = event.target.value;
     }
 
     const connectUsingPassword = async (e) => {
         e.preventDefault()
         
-        console.log(password)
+        console.log(passwordInp)
+        setPassword(passwordInp)
         const hasWallet = window.localStorage.getItem("hasWallet")
         //setAddress(window.localStorage.getItem("walletAddress"))
         await connection(hasWallet);
@@ -255,7 +259,7 @@ function ImperialProfile() {
         }
 
         let stringdata = JSON.stringify(did_data)
-        var encrypted = AES.encrypt(stringdata, password)
+        var encrypted = AES.encrypt(stringdata, passwordInp)
         window.localStorage.setItem("did", encrypted);
 
 
@@ -355,7 +359,7 @@ function ImperialProfile() {
         else {
             window.localStorage.setItem("usingMetamask", false)
             let did = window.localStorage.getItem("did")
-            let res1 = AES.decrypt(did, password) //props.signer.privateKey
+            let res1 = AES.decrypt(did, passwordInp) //props.signer.privateKey
             try {
                 let res = JSON.parse(res1.toString(enc.Utf8));
                 if (res.pk) {
