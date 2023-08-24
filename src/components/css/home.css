@@ -1,6 +1,6 @@
 .main {
     color: black;
-    background-image: url(../logo/art2.png);
+    background-image: url(../logo/IMG_5569.jpg);
     background-repeat: no-repeat;
     background-size: 60%, 100%;
     background-position-x: 100%;
@@ -31,6 +31,11 @@
 
 #uniimg {
     height: 200px;
+}
+
+.update {
+    margin-left: 100px;
+    margin-right: 100px;
 }
 
 

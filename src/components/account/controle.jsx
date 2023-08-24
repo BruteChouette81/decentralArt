@@ -35,7 +35,7 @@ const secret = "718da1ac14dfcf25c336bfea241e38563e5f2c9cc8bd77bcde1a5968ad8ebf6a
 const apikey = "681fa3fe8fcbfe2992fe"
 const key = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJmNjhjNmRmZi1mOGRmLTQzNzUtYjA5Ny1mMTNmNDk0OTk3ODIiLCJlbWFpbCI6ImhiYXJpbDFAaWNsb3VkLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI2ODFmYTNmZThmY2JmZTI5OTJmZSIsInNjb3BlZEtleVNlY3JldCI6IjcxOGRhMWFjMTRkZmNmMjVjMzM2YmZlYTI0MWUzODU2M2U1ZjJjOWNjOGJkNzdiY2RlMWE1OTY4YWQ4ZWJmNmEiLCJpYXQiOjE2ODUyODk0NDZ9.dheuwiicVcI3mM7yMo9voga4Bis7nDu7g5TJocC_xkc"
 const MarketAddress = '0x710005797eFf093Fa95Ce9a703Da9f0162A6916C'; //goerli test contract for listing from account
-const DDSAddress = '0x2b7098E9F7181562e92E1938A4CF276b299B1a56' //gas contract: 0x14b92ddc0e26C0Cf0E7b17Fe742361B8cd1D95e1, Real: 0x1D1db5570832b24b91F4703A52f25D1422CA86de
+const DDSAddress = '0x15399E8a3EA9781EAA3bb1e6375AA51320D12Aea' //gas contract: 0x14b92ddc0e26C0Cf0E7b17Fe742361B8cd1D95e1, Real: 0x1D1db5570832b24b91F4703A52f25D1422CA86de
 const NftAddress = '0x3d275ed3B0B42a7A3fCAA33458C34C0b5dA8Cc3A';
 const TicketAddress = '0x6CFADe18df81Cd9C41950FBDAcc53047EdB2e565' //goerli test contract
 const ImperialRealAddress = "0x666f393A06285c3Ec10895D4092d9Dc86aeFD45b"
@@ -860,21 +860,23 @@ function DisplayActions(props) {
         else {
             did = window.localStorage.getItem("did")
         }
+        let res1 = AES.decrypt(did, props.password)
+        let res = JSON.parse(res1.toString(enc.Utf8));
         return (
             <div class="did">
-                <h4>Decentralized Identification: </h4>
+                <h4>Identitée Décentralizée: </h4>
                 <p>
                     <a class="btn btn-info" data-bs-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false" aria-controls="collapseExample1">
-                        Learn more about DiD
+                        En savoir plus
                     </a>
                 </p>
                 <div class="collapse" id="collapseExample1">
                     <div class="card card-body" style={{color: "black"}}>
-                        DiD stands for Decentralized IDentification. All of your information are securly stored in a program in order for them to stay private and decentralized.
+                        La technologie DiD (Decentralized IDentification) a été developper par Imperial Technologies. Le DiD permet de garder vos informations personnelles de façon à ce qu'elles ne puissent pas être compromise.
                     </div>
                 </div>
                 <br />
-                {did ? ( <div><button onClick={getdId} data-bs-toggle="modal" data-bs-target="#staticBackdrop3" class="btn btn-primary" >See ID</button> <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" >Change ID</button></div> ) : (<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" >Add ID</button>) }
+                {res.email ? ( <div><button onClick={getdId} data-bs-toggle="modal" data-bs-target="#staticBackdrop3" class="btn btn-primary" >Voir mon ID</button> <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" >Changer mon ID</button></div> ) : (<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" >Créer mon ID</button>) }
             </div>
         )
     }
@@ -1148,126 +1150,167 @@ function DisplayActions(props) {
         )
     }
 
-    
+    const loadNft = async() => {
+        //get nft using moralis
+        
+        /*
+        let data = {
+            body: {
+                address: "0x7675CF4abb1A19F7Bd5Ed23d132F9dFfA0C9587D"
+            }
+        }
+        let url ="/nftbyaddress"
+        API.post('server', url, data).then((response) => {
+            console.log(response[0])
+            //setYnft(response)
+        })
+
+         let nftlist = {
+            name: "Marco final boss",
+            tokenAddress: "0xbC1Fe9f6B298cCCd108604a0Cf140B2d277f624a",
+            tokenId: 12, //put to int
+            metadata: {
+                description: "Marco le boss",
+                tag: "Imperssionisme",
+                image: "https://ipfs.io/ipfs/QmSytTBU74r5HRxAsm2GiqsQyXDccq4Ng7YSSvstSbyipN"
+            }
+        }
+        */
+
+        
+        const web3ApiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6ImUxYTlmOGQ4LWYwNGUtNGY5Yi1hYjBkLWEwNTZlZTc5NzNjNSIsIm9yZ0lkIjoiMjI3NTYzIiwidXNlcklkIjoiMjI4MDc5IiwidHlwZUlkIjoiNzFhYWJmNjEtMzNjMi00MjMxLTgwMzAtOGQxZDA0OWMzMmVkIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE2ODg1NzkyMDQsImV4cCI6NDg0NDMzOTIwNH0.nBgu238SNYZ3XvLwpKkTIoM6qZ5ZLj4LtomEr03tHro"
+        const options = {
+          method: 'GET',
+          headers: {
+            accept: 'application/json',
+            'X-API-Key': web3ApiKey
+          }
+        };
+        let address = '0xBBeC2e9aFF367008F4A234B241AcB9bCd73013a9'
+        let nftlist = []
+       
+        
+        fetch('https://deep-index.moralis.io/api/v2/'+ address + '/nft?chain=goerli&format=decimal&media_items=false', options) //chain to arbitrum
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data.result)
+            if (!ynft) {
+            for (let i=0; i<data?.result.length; i++) {
+                if (data.result[i].token_address == ImperialRealAddress.toLowerCase()){
+                    let metadata = data.result[i].token_uri
+                    
+
+                    console.log("CID: " + metadata?.replace("https://ipfs.moralis.io:2053/ipfs/", "") )
+
+                    //'https://api.pinata.cloud/data/pinList?status=pinned&pinSizeMin=100' \--header 'Authorization: Bearer PINATA JWT'
+
+                    const options2 = {
+                        method: 'GET',
+                        headers: {
+                        accept: 'application/json',
+                        Authorization: key
+                        }
+                    };
+        
+                    fetch('https://api.pinata.cloud/data/pinList?status=pinned&hashContains=' + metadata?.replace("https://ipfs.moralis.io:2053/ipfs/", ""), options2).then((res2) => res2.json()
+                    ).then((data2) => {
+                        
+                        console.log(data2?.rows[0])
+                        
+                        //let ynftlist = ynft;
+
+                        setYnft(nftlist)
+                        //console.log(ynftlist)
+                        
+                        
+                        nftlist.push({
+                            name: data2?.rows[0]?.metadata.name,
+                            tokenAddress: data.result[i].token_address,
+                            tokenId: data.result[i].token_id, //put to int
+                            metadata: {
+                                description: data2?.rows[0]?.metadata.keyvalues?.description,
+                                tag: data2?.rows[0]?.metadata.keyvalues?.tag,
+                                image: metadata
+                            }
+                        })
+                    })
+                }
+            }
+            
+        } else {
+                let ynftlist = ynft;
+
+                setYnft(ynftlist)
+                console.log(ynftlist)
+            }
+            //return nftlist
+            
+        })
+        .catch((error)=>console.log(error));
+
+        /* if (ynft) {
+                            let ynftlist = ynft;
+
+                            setYnft(ynftlist)
+                            console.log(ynftlist)
+                        }
+        .then((ynftlist) => {
+        
+            console.log(ynftlist)
+            setYnft(ynftlist)
+            
+        }) 
+        .then(() => {
+            if (!pushed) {
+                //AutoRefresh(3000)
+                console.log(ynft)
+                pushed = true;
+            }
+            
+        })
+        */
+
+        
+
+       
+
+        //load DDS contract 
+        if (window.localStorage.getItem("usingMetamask") === "true") {
+            let provider = await injected.getProvider()
+            const contract = connectContract(DDSAddress, DDSABI, provider)
+            setDds(contract)
+        } else {
+            //const provider  = new ethers.providers.InfuraProvider("goerli")
+            const contract = getContract(DDSAddress, DDSABI, props.signer)
+            setDds(contract)
+        }
+       
+    }
 
     function DisplayYnft () {
-        //const [ynft, setYnft] = useState()
-        const loadNft = async() => {
-            //get nft using moralis
-            
-            /*
-            let data = {
-                body: {
-                    address: "0x7675CF4abb1A19F7Bd5Ed23d132F9dFfA0C9587D"
-                }
-            }
-            let url ="/nftbyaddress"
-            API.post('server', url, data).then((response) => {
-                console.log(response[0])
-                //setYnft(response)
-            })
-
-             let nftlist = {
-                name: "Marco final boss",
-                tokenAddress: "0xbC1Fe9f6B298cCCd108604a0Cf140B2d277f624a",
-                tokenId: 12, //put to int
-                metadata: {
-                    description: "Marco le boss",
-                    tag: "Imperssionisme",
-                    image: "https://ipfs.io/ipfs/QmSytTBU74r5HRxAsm2GiqsQyXDccq4Ng7YSSvstSbyipN"
-                }
-            }
-            */
-
-            
-            const web3ApiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6ImUxYTlmOGQ4LWYwNGUtNGY5Yi1hYjBkLWEwNTZlZTc5NzNjNSIsIm9yZ0lkIjoiMjI3NTYzIiwidXNlcklkIjoiMjI4MDc5IiwidHlwZUlkIjoiNzFhYWJmNjEtMzNjMi00MjMxLTgwMzAtOGQxZDA0OWMzMmVkIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE2ODg1NzkyMDQsImV4cCI6NDg0NDMzOTIwNH0.nBgu238SNYZ3XvLwpKkTIoM6qZ5ZLj4LtomEr03tHro"
-            const options = {
-              method: 'GET',
-              headers: {
-                accept: 'application/json',
-                'X-API-Key': web3ApiKey
-              }
-            };
-            let address = '0x953888Ae66748E5732a95D65e9460724D56e8957'
-            let nftlist = []
-            
-            fetch('https://deep-index.moralis.io/api/v2/'+ address + '/nft?chain=goerli&format=decimal&media_items=false', options) //chain to arbitrum
-              .then((res) => res.json())
-              .then((data) => {
-                console.log(data.result)
-                for (let i=0; i<data?.result.length; i++) {
-                    if (data.result[i].token_address == ImperialRealAddress.toLowerCase()){
-                        let metadata = data.result[i].token_uri
-                        
-
-                        console.log("CID: " + metadata?.replace("https://ipfs.moralis.io:2053/ipfs/", "") )
-
-                        //'https://api.pinata.cloud/data/pinList?status=pinned&pinSizeMin=100' \--header 'Authorization: Bearer PINATA JWT'
-
-                        const options2 = {
-                            method: 'GET',
-                            headers: {
-                            accept: 'application/json',
-                            Authorization: key
-                            }
-                        };
-            
-                        fetch('https://api.pinata.cloud/data/pinList?status=pinned&hashContains=' + metadata?.replace("https://ipfs.moralis.io:2053/ipfs/", ""), options2).then((res2) => res2.json()
-                        ).then((data2) => {
-                            
-                            console.log(data2?.rows[0])
-                            if (ynft) {
-                                let ynftlist = ynft;
-
-                                setYnft(ynftlist)
-                                console.log(ynftlist)
-                            }
-                            
-                            nftlist.push({
-                                name: data2?.rows[0]?.metadata.name,
-                                tokenAddress: data.result[i].token_address,
-                                tokenId: data.result[i].token_id, //put to int
-                                metadata: {
-                                    description: data2?.rows[0]?.metadata.keyvalues?.description,
-                                    tag: data2?.rows[0]?.metadata.keyvalues?.tag,
-                                    image: metadata
-                                }
-                            })
-                        })
-                    }
-                }
-                return nftlist
-                
-            }).then((ynftlist) => {
-            
-                console.log(ynftlist)
-                setYnft(ynftlist)
-                
-            })
-            .catch((error)=>console.log(error));
-
-           
-
-            //load DDS contract 
-            if (window.localStorage.getItem("usingMetamask") === "true") {
-                let provider = await injected.getProvider()
-                const contract = connectContract(DDSAddress, DDSABI, provider)
-                setDds(contract)
-            } else {
-                //const provider  = new ethers.providers.InfuraProvider("goerli")
-                const contract = getContract(DDSAddress, DDSABI, props.signer)
-                setDds(contract)
-            }
-           
+        /*
+        let pushed = false;
+        function AutoRefresh( t ) {
+            setTimeout(loadUpdate, t);
+            console.log(ynft)
         }
+        //const [ynft, setYnft] = useState()
+        const loadUpdate = async() => {
+            let ynftlist = ynft;
+
+            setYnft(ynftlist)
+            console.log(ynftlist)
+        }*/
+        
 
         return (
             <div class="ynft">
-                <h1>See your orders!</h1>
+                <h1 style={{"color": "black"}}>Voir vos achats!</h1>
                 <br />
-                <ListYnftCard ynft={ynft} level={props.level} signer={props.signer} account={props.account} did={props.did} pay={props.pay} realPurchase={props.realPurchase}/>
+                {ynft ? <ListYnftCard ynft={ynft} level={props.level} signer={props.signer} account={props.account} did={props.did} pay={props.pay} realPurchase={props.realPurchase}/> : ""}
+                
 
-                <button class="btn btn-primary" onClick={loadNft}>Scan your account!</button>
+                <button class="btn btn-primary" onClick={loadNft}>Scanner le compte</button>
             </div>
         )
     }
@@ -1675,6 +1718,9 @@ function DisplayActions(props) {
         console.log(props)
 
     }, [])
+    /* <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-info-tab" data-bs-toggle="pill" data-bs-target="#pill-info" type="button" role="tab" aria-controls="pill-info" aria-selected="true">Info</button>
+                    </li> */
 
     if (props.balance === 0) { // >
     
@@ -1683,28 +1729,22 @@ function DisplayActions(props) {
             <div class="control-panel">
                 <ul class="nav nav-pills" id="pills-tab" role="tablist">
     
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pills-info-tab" data-bs-toggle="pill" data-bs-target="#pill-info" type="button" role="tab" aria-controls="pill-info" aria-selected="true">Info</button>
-                    </li>
+                    
 
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-pay-tab" data-bs-toggle="pill" data-bs-target="#pill-pay" type="button" role="tab" aria-controls="pill-pay" aria-selected="false">Decentralized ID</button>
+                        <button class="nav-link active" id="pills-pay-tab" data-bs-toggle="pill" data-bs-target="#pill-pay" type="button" role="tab" aria-controls="pill-pay" aria-selected="true">Identitée Décentralizée</button>
                     </li>
                     { props.level != 5 ? "" : 
                     (<li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-create-tab" data-bs-toggle="pill" data-bs-target="#pill-create" type="button" role="tab" aria-controls="pill-create" aria-selected="false">Create !</button>
                     </li>)
-    }            { props.level == 5 ? "" : 
+    }            { props.level != 5 ?
                     (<li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-partner-tab" data-bs-toggle="pill" data-bs-target="#pill-partner" type="button" role="tab" aria-controls="pill-partner" aria-selected="false">Become a Seller</button>
-                    </li>)
-                }{ props.level != 5 ?
-                    (<li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-ynft-tab" data-bs-toggle="pill" data-bs-target="#pill-ynft" type="button" role="tab" aria-controls="pill-ynft" aria-selected="false">Your Art</button>
+                        <button class="nav-link" id="pills-ynft-tab" data-bs-toggle="pill" data-bs-target="#pill-ynft" type="button" role="tab" aria-controls="pill-ynft" aria-selected="false" onClick={loadNft}>Votre panier</button>
                     </li>) : ""}
                     { props.level != 5 ?
                     (<li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-seller-tab" data-bs-toggle="pill" data-bs-target="#pill-seller" type="button" role="tab" aria-controls="pill-seller" aria-selected="false">Refunds</button>
+                        <button class="nav-link" id="pills-seller-tab" data-bs-toggle="pill" data-bs-target="#pill-seller" type="button" role="tab" aria-controls="pill-seller" aria-selected="false">Remboursement</button>
                     </li>) : ""}
                     { props.level != 5 ? "" : 
                     (<li class="nav-item" role="presentation">
@@ -1724,14 +1764,18 @@ function DisplayActions(props) {
                     (<li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-pos-tab" data-bs-toggle="pill" data-bs-target="#pill-pos" type="button" role="tab" aria-controls="pill-pos" aria-selected="false" disabled>Staking</button>
                     </li>)
-                    }
+                    } { props.level == 5 ? "" : 
+                    (<li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-partner-tab" data-bs-toggle="pill" data-bs-target="#pill-partner" type="button" role="tab" aria-controls="pill-partner" aria-selected="false" disabled>Devenir vendeur</button>
+                    </li>)
+                }
                             
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
-                    <div class="tab-pane fade show active" id="pill-info" role="tabpanel" aria-labelledby="pills-info-tab">
+                    <div class="tab-pane fade " id="pill-info" role="tabpanel" aria-labelledby="pills-info-tab">
                         <DisplayInfo numtrans={numtrans} numdays={numdays} profit={profit} color={colors}/>
                     </div>
-                    <div class="tab-pane fade" id="pill-pay" role="tabpanel" aria-labelledby="pills-pay-tab">
+                    <div class="tab-pane fade show active" id="pill-pay" role="tabpanel" aria-labelledby="pills-pay-tab">
                     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" style={{color:"black"}}>
                     <div class="modal-dialog">
                         <div class="modal-content">

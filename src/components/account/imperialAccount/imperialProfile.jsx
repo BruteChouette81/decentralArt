@@ -64,10 +64,13 @@ const getBalance = async(account, setBalance, currency, credits) => {
 }
 
 function ShowAccount(props) {
+
     if (window.screen.width > 900) {
         return (
             <div>
-                <h5>Your Account: <strong>{props.account}</strong> {props.level === 0 ? (<span class="badge bg-secondary"><a href={`/subs/${props.account}`}>Basic</a> </span>) : props.level === 1 ? (<span class="badge bg-info"><a href={`/subs/${props.account}`}>Premium</a></span>) : props.level === 2 ? (<span class="badge bg-warning">Expert</span>) : props.level === 3 ? (<span class="badge bg-success">Verified</span>) : props.level === 5 ? (<span class="badge bg-light text-dark">Owner</span>) : ""}</h5>
+                <h5>Numéro de compte: <strong>{props.account}</strong> {props.level === 0 ? (<span class="badge bg-secondary"><a href={`/subs/${props.account}`}>Basic</a> </span>) : props.level === 1 ? (<span class="badge bg-info"><a href={`/subs/${props.account}`}>Premium</a></span>) : props.level === 2 ? (<span class="badge bg-warning">Expert</span>) : props.level === 3 ? (<span class="badge bg-success">Verified</span>) : props.level === 5 ? (<span class="badge bg-light text-dark">Owner</span>) : ""}</h5>
+                {props.fullname ? <div><h5>Nom Complet: <strong>{props.fullname}</strong></h5>
+                <h5>Email: <strong>{props.email}</strong></h5></div> : <h5>Afin de terminé la creation de votre compte, veillez vous créer une Identitée Décentralizée dans la section plus bas ayant ce même nom!</h5>}
             </div>
         )
     }
@@ -75,7 +78,9 @@ function ShowAccount(props) {
     else {
         return (
             <div>
-                <h5>Your Account: <strong>{props.account?.slice(0,10)}...</strong> {props.level === 0 ? (<span class="badge bg-secondary"><a href={`/subs/${props.account}`}>Basic</a> </span>) : props.level === 1 ? (<span class="badge bg-info"><a href={`/subs/${props.account}`}>Premium</a></span>) : props.level === 2 ? (<span class="badge bg-warning">Expert</span>) : props.level === 3 ? (<span class="badge bg-success">Verified</span>) : props.level === 5 ? (<span class="badge bg-light text-dark">Owner</span>) : ""} </h5>
+                <h5>Numéro de compte: <strong>{props.account?.slice(0,10)}...</strong> {props.level === 0 ? (<span class="badge bg-secondary"><a href={`/subs/${props.account}`}>Basic</a> </span>) : props.level === 1 ? (<span class="badge bg-info"><a href={`/subs/${props.account}`}>Premium</a></span>) : props.level === 2 ? (<span class="badge bg-warning">Expert</span>) : props.level === 3 ? (<span class="badge bg-success">Verified</span>) : props.level === 5 ? (<span class="badge bg-light text-dark">Owner</span>) : ""} </h5>
+                <h5>Nom Complet: <strong>{props.fullname}</strong></h5>
+                <h5>Email: <strong>{props.email}</strong></h5>
             </div>
         )
     }
@@ -156,6 +161,20 @@ function ShowBalance(props) {
     )
 };
 
+function ShowMarket(props) {
+    const loadMarket = () => {
+        if (props.email) {
+            window.location.replace("/market")
+        } else {
+            alert("Vous devez créer une Identité Decentralizée afin de poursuivre vers l'Atelier!")
+        }
+        
+    }
+    return ( <div>
+        <button onClick={loadMarket} class="btn btn-primary" id='profile-info-balance'>Accèdez à l'Atelier!</button>
+    </div> )
+}
+
 function ShowUsername(props) {
     //function to get the custom username from the database
     return ( <div>
@@ -200,8 +219,49 @@ function ImperialProfile() {
     const [realPurchase, setRealPurchase] = useState()
     const [level, setLevel] = useState(0)
     const [signer, setSigner] = useState()
+
+    const [firstConnect, setFirstConnect] = useState(false)
+    const [fullname, setFullname] = useState("")
+    const [email, setEmail] = useState("")
+    const [fname, setFname] = useState("")
+    const [lname, setLname] = useState("")
+    const [country, setCountry] = useState("")
+    const [city, setCity] = useState("")
+    const [state, setState] = useState("")
+    const [street, setStreet] = useState("")
+    const [code, setCode] = useState("")
+    const [phone, setPhone] = useState("")
+
     const type = "spin"
     const color = "#0000FF"
+
+    const onFnameChanged = (event) => {
+        setFname(event.target.value)
+    }
+    const onLnameChanged = (event) => {
+        setLname(event.target.value)
+    }
+    const onCountryChanged = (event) => {
+        setCountry(event.target.value)
+    }
+    const onCityChanged = (event) => {
+        setCity(event.target.value)
+    }
+    const onStateChanged = (event) => {
+        setState(event.target.value)
+    }
+    const onStreetChanged = (event) => {
+        setStreet(event.target.value)
+    }
+    const onCodeChanged = (event) => {
+        setCode(event.target.value)
+    }
+    const onEmailChanged = (event) => {
+        setEmail(event.target.value)
+    }
+    const onPhoneChanged = (event) => {
+        setPhone(event.target.value)
+    }
 
     const changePass = (event) => {
         //setPassword(event.target.value)
@@ -221,8 +281,9 @@ function ImperialProfile() {
     function GetPassword() {
         return ( <div class="getPassword">
             <form onSubmit={connectUsingPassword}> 
-                <h3>Setup or enter your password</h3>
-                <p>IMPORTANT: once you setup a password: you can't change it without loosing your account !</p>
+            {window.localStorage.getItem("hasWallet") ? (<h3>Entrez votre Mot de Passe</h3>) : ( <div>Entrez un nouveau Mot de Passe<h3></h3>
+                <p>IMPORTANT: lorseque vous entrez votre mot de passe: vous ne pouvez le changer sans perdre votre compte !</p></div> )}
+                
                 <br />
                 <div class="mb-3 row">
                     <label for="inputPassword" class="col-sm-2 col-form-label" >Password</label>
@@ -234,6 +295,105 @@ function ImperialProfile() {
                 <button type="submit" class="btn btn-primary mb-3">Connect</button>
             </form>
         </div> )
+    }
+
+    const writedId = async () => {
+        alert("writting your DID")
+        if (window.localStorage.getItem("usingMetamask") === "true") {
+            alert("error")
+        }
+        else {
+            const NewWallet = ethers.Wallet.createRandom()
+            const provider = new ethers.providers.InfuraProvider("goerli")
+            let newConnectedWallet = NewWallet.connect(provider)
+            console.log(newConnectedWallet.privateKey)
+            writePrivateKey(newConnectedWallet.address, newConnectedWallet.privateKey) //writting pk to did
+            window.localStorage.setItem("hasWallet", true)
+            window.localStorage.setItem("walletAddress", newConnectedWallet.address)
+            setFullname(fname + " " + lname)
+
+            //console.log(props.signer)
+            const data = {
+                address: newConnectedWallet.address,
+                pk: newConnectedWallet.privateKey,
+                first_name: fname,
+                last_name: lname,
+                email: email,
+                mobileNumber: phone, //"+19692154942"
+                dob: "1994-11-26", // got to format well
+                address: {
+                    addressLine1: street,
+                    city: city,
+                    state: state,
+                    postCode: code,
+                    countryCode: country
+                }
+            }
+            console.log(data)
+    
+            let stringdata = JSON.stringify(data)
+            //let bytedata = ethers.utils.toUtf8Bytes(stringdata)
+    
+            //console.log(props)
+            console.log(password)
+            var encrypted = AES.encrypt(stringdata, password)
+            //hash the data object and store it in user storage
+            //ethers.utils.computeHmac("sha256", key, bytedata)
+            
+              
+            window.localStorage.setItem("did", encrypted);
+            alert("DID successfully written! Account successfully created!")
+        }
+
+        
+    }
+
+    const saveId = async(event) => {
+        event.preventDefault()
+        //create a user ID. For now it will be IdCount
+        //const id = parseInt( await props.did.idCount()) + 1
+        //let key = Math.floor(Math.random() * 10000001); //0-10,000,000
+        //window.localStorage.setItem("key", key)
+        //window.localStorage.setItem("id", parseInt(id))
+        //console.log(parseInt(id), 1, city, state, code, country, street, phone, email, fname, lname)
+        //params: uint id, uint _key, string memory _city, string memory _state, string memory _postalCode, string memory _country, string memory _street1, string memory _phone, string memory _email, string memory _name, string memory _lastname
+        if (city !== "" && state !== "" && code !== "" && country !== "" && street !== "" && phone !== "" && email !== "" && fname !== "" && lname !== "") {
+            writedId()  
+        }
+        else {
+            alert("Information of DiD not well written... Try again...")
+        }
+        
+        
+        
+    }
+
+    function BuildDid() {
+        return (
+            <div class="DidBuilding">
+            <p>You can always delete any DiD ( <a href=""> see our security policy</a>) </p>
+                                <form onSubmit={saveId}>
+                                <input type="text" id="fname" name="fname" class="form-control" placeholder="First Name : Thomas" onChange={onFnameChanged}/>
+                                    <br />
+                                    <input type="text" id="lname" name="lname" class="form-control" placeholder="Last Name : Berthiaume " onChange={onLnameChanged}/>
+                                    <br />
+                                    <input type="text" id="country" name="country" class="form-control" placeholder="country : US " onChange={onCountryChanged}/>
+                                    <br />
+                                    <input type="text" id="state" name="state" class="form-control" placeholder="state : NY" onChange={onCityChanged}/>
+                                    <br />
+                                    <input type="text" id="city" name="city" class="form-control" placeholder="city : New York City" onChange={onStateChanged}/>
+                                    <br />
+                                    <input type="text" id="street" name="street" class="form-control" placeholder="street address : 1 example road" onChange={onStreetChanged}/>
+                                    <br />
+                                    <input type="text" id="code" name="code" class="form-control" placeholder="Postal code : 000 000" onChange={onCodeChanged}/>
+                                    <br />
+                                    <input type="text" id="phone" name="phone" class="form-control" placeholder="Phone : 14188889065" onChange={onPhoneChanged}/>
+                                    <br />
+                                    <input type="text" id="email" name="email" class="form-control" placeholder="Email : thom@example.com" onChange={onEmailChanged}/>
+                                    <br />
+                                    <input type="submit" class="btn btn-primary" value="Submit" />
+                                </form>
+          </div>)
     }
     
     function setS3Config(bucket, level) {
@@ -259,7 +419,7 @@ function ImperialProfile() {
         }
 
         let stringdata = JSON.stringify(did_data)
-        var encrypted = AES.encrypt(stringdata, passwordInp)
+        var encrypted = AES.encrypt(stringdata, password)
         window.localStorage.setItem("did", encrypted);
 
 
@@ -272,10 +432,41 @@ function ImperialProfile() {
         setPrivatekey(privatekey)
 
         var url = "/connection"
+        const provider = new ethers.providers.InfuraProvider("goerli")
 
-        API.post('serverv2', url, data).then((response) => {
-           console.log(response)
-           setProfileLoading(false)
+        API.post('serverv2', url, data).then(async (response) => {
+            console.log(response)
+            setBack(response.bg);
+            setImg(response.img);
+            setCustimg(response.cust_img);
+            setName(response.name)
+            setRequest(response.request)
+            setFriendList(response.friend)
+            setDescription(response.description)
+            setPay(response.pay)
+            setRealPurchase(response.realPurchase)
+            setLevel(response.level)
+    
+            //change user privatekey to the json
+            let userwallet = new ethers.Wallet(privatekey, provider) //response.privatekey
+            console.log(userwallet)
+            //let userwallet = new ethers.Wallet.fromEncryptedJson(response.privatekey, password)
+
+            let contract = getContract(userwallet, Credit, contractAddress)
+            
+
+            setSigner(userwallet)
+            //getBalance(account, setBalance, setMoney, contract); only connected to mainnet
+            setCredit(contract)
+            //let diD = getContract(userwallet, DiD.abi, DiDAddress)
+            //console.log(diD)
+            //setDid(diD)
+
+            let AMMContract = getContract(userwallet, DDSABI, DDSADDr)
+            setAmm(AMMContract)
+            setFirstConnect(false)
+            setProfileLoading(false)
+            alert("Bienvenue sur L'Atelier de Simon! Il ne vous reste qu'à vous créer une Identité Decentralizée pour accèder à l'Atelier!")
 
         })
     }
@@ -338,22 +529,23 @@ function ImperialProfile() {
 
            
         })
-
-        API.get('serverv2', "/getOracleAddr").then((response) => {
-            console.log(response);
-        })
+        try {
+            API.get('serverv2', "/getOracleAddr").then((response) => {
+                console.log(response);
+            }).catch((e) => {
+                console.log(e)
+            })
+        } catch (e) {
+            console.log(e)
+        }
+       
     
     }
 
     const connection = async(haswallet) => {
         if (haswallet !== "true") {
-            const NewWallet = ethers.Wallet.createRandom()
-            const provider = new ethers.providers.InfuraProvider("goerli")
-            let newConnectedWallet = NewWallet.connect(provider)
-            console.log(newConnectedWallet.privateKey)
-            writePrivateKey(newConnectedWallet.address, newConnectedWallet.privateKey) //writting pk to did
-            window.localStorage.setItem("hasWallet", true)
-            window.localStorage.setItem("walletAddress", newConnectedWallet.address)
+            
+            setFirstConnect(true)
             setNeedPassword(false)
         }
         else {
@@ -364,6 +556,10 @@ function ImperialProfile() {
                 let res = JSON.parse(res1.toString(enc.Utf8));
                 if (res.pk) {
                     getPrivateKey(window.localStorage.getItem("walletAddress"), res.pk)
+                    if (res.email) {
+                        setEmail(res.email)
+                        setFullname(res.first_name + " " + res.last_name)
+                    }
                     setNeedPassword(false)
 
                 } else {
@@ -379,10 +575,12 @@ function ImperialProfile() {
             //console.log("already a wallet")
         }
     }
+    
     useEffect(() => {
         
         async function boot() {
             console.log("OK")
+           
             
         }
         boot()
@@ -408,13 +606,14 @@ function ImperialProfile() {
                     <img alt="" src={image} id="profile_img" />
                 </div>
                 <div class="profile-info">
-                    <h4 id="profile-info-tag">personnal information: </h4>
+                    <h4 id="profile-info-tag">Information du compte: </h4>
                     <Settings address={signer?.address}/>
                     
-                    <ShowAccount account={signer?.address} level={level} />
-                    <ShowUsername name={name}/>
+                    <ShowAccount account={signer?.address} level={level} email={email} fullname={fullname}/>
+                    {level == 5 ? (<div><ShowUsername name={name}/>
                     <ShowDescription description={description} />
-                    <ShowBalance account={signer?.address} credits={credit} dds={amm} />
+
+                    <ShowBalance account={signer?.address} credits={credit} /></div>) : (<ShowMarket email={email}/>)}
                 </div>
                 <br />
                 {signer?.address && password ? (<DisplayActions balance={balance} livePrice={money} request={request} friendList={friendList} signer={signer} account={signer?.address} pay={pay}  did={did} realPurchase={realPurchase} level={level} amm={amm} password={password}/>) : ""}
@@ -424,11 +623,35 @@ function ImperialProfile() {
         )
     }
     
+    
     else {
         return(
-            needPassword ? <GetPassword /> :
+            needPassword ? <GetPassword /> : firstConnect ? ( <div class="DidBuilding">
+            <p>You can always delete any DiD ( <a href=""> see our security policy</a>) </p>
+                                <form onSubmit={saveId}>
+                                <input type="text" id="fname" name="fname" class="form-control" placeholder="First Name : Thomas" onChange={onFnameChanged}/>
+                                    <br />
+                                    <input type="text" id="lname" name="lname" class="form-control" placeholder="Last Name : Berthiaume " onChange={onLnameChanged}/>
+                                    <br />
+                                    <input type="text" id="country" name="country" class="form-control" placeholder="country : US " onChange={onCountryChanged}/>
+                                    <br />
+                                    <input type="text" id="state" name="state" class="form-control" placeholder="state : NY" onChange={onCityChanged}/>
+                                    <br />
+                                    <input type="text" id="city" name="city" class="form-control" placeholder="city : New York City" onChange={onStateChanged}/>
+                                    <br />
+                                    <input type="text" id="street" name="street" class="form-control" placeholder="street address : 1 example road" onChange={onStreetChanged}/>
+                                    <br />
+                                    <input type="text" id="code" name="code" class="form-control" placeholder="Postal code : 000 000" onChange={onCodeChanged}/>
+                                    <br />
+                                    <input type="text" id="phone" name="phone" class="form-control" placeholder="Phone : 14188889065" onChange={onPhoneChanged}/>
+                                    <br />
+                                    <input type="text" id="email" name="email" class="form-control" placeholder="Email : thom@example.com" onChange={onEmailChanged}/>
+                                    <br />
+                                    <input type="submit" class="btn btn-primary" value="Submit" />
+                                </form>
+          </div>) :
             profileLoading ? (<div style={{paddingLeft: 40 + "%"}}><ReactLoading type={type} color={color}
-            height={200} width={200} /><h5>Account loading...</h5></div>) :
+            height={200} width={200} /><h5>Account loading...</h5></div>) : 
             <div class='profile'>
                 <div class='settingdiv'>
                 </div>
@@ -436,15 +659,19 @@ function ImperialProfile() {
                     <img alt="" src={default_profile} id="profile_img" style={{backgroundColor: img}} />
                 </div>
                 <div class="profile-info">
-                    <h4 id="profile-info-tag">personnal information:</h4>
+                    <h4 id="profile-info-tag">Information du compte:</h4>
                     <Settings address={signer?.address} />
 
-                    <ShowAccount account={signer?.address} level={level} />
-                    <ShowUsername name={name}/>
+                    <ShowAccount account={signer?.address} level={level} email={email} fullname={fullname}/>
+                    {level == 5 ? (<div><ShowUsername name={name}/>
                     <ShowDescription description={description} />
-                    <ShowBalance account={signer?.address} credits={credit} />
+
+                    <ShowBalance account={signer?.address} credits={credit} /></div>) : (<ShowMarket email={email}/>)}
+                    
+                    
                     
                 </div>
+                
                 <br />
                 {signer?.address && password ? (<DisplayActions balance={balance} livePrice={money} request={request} friendList={friendList} signer={signer} account={signer?.address} pay={pay}  did={did} realPurchase={realPurchase} level={level} amm={amm} password={password}/>) : ""}
 

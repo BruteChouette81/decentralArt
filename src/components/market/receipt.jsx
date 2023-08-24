@@ -116,7 +116,7 @@ function Receipt (props) {
             {props.buyloading ? (<div class="ynftcard" ><ReactLoading type={type} color={color}
             height={200} width={200} /><h5>Buying Item loading...</h5></div>) : (
                 <div>
-            <img id='itemimg' src={props.image} alt="" />
+            <img id='itemimg2' src={props.image} alt="" />
             <br />
             <br />
             <h4>subtotal: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.subtotal/100000)) : USDollar.format((props.subtotal/100000))}  {window.localStorage.getItem("currency")}</h4>

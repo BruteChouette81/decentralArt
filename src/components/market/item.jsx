@@ -17,7 +17,7 @@ import AMMABI from '../../artifacts/contracts/AMM.sol/AMM.json'
 import NftBox from './nfts';
 
 const MarketAddress = '0x710005797eFf093Fa95Ce9a703Da9f0162A6916C'; // goerli new test contract
-const DDSAddress = '0x2b7098E9F7181562e92E1938A4CF276b299B1a56' // 0x2F810063f44244a2C3B2a874c0aED5C6c28D1D87, 0xd860F7aA2ACD3dc213D1b01e2cE0BC827Bd3be46
+const DDSAddress = '0x15399E8a3EA9781EAA3bb1e6375AA51320D12Aea' // 0x2F810063f44244a2C3B2a874c0aED5C6c28D1D87, 0xd860F7aA2ACD3dc213D1b01e2cE0BC827Bd3be46
 const CreditsAddress = "0xD475c58549D3a6ed2e90097BF3D631cf571Bdd86" //goerli test contract
 const NftAddress = '0x3d275ed3B0B42a7A3fCAA33458C34C0b5dA8Cc3A'; // goerli new test contract
 const DiDAddress = "0x6f1d3cd1894b3b7259f31537AFbb930bd15e0EB8" //goerli test contract 
@@ -74,6 +74,10 @@ function Item() {
         let res1 = AES.decrypt(did, passwordInp) //props.signer.privateKey
         try {
                 let res = JSON.parse(res1.toString(enc.Utf8));
+                if (!res.email) {
+                    alert("Vous devez créer une Identitée Décentralizée avant d'accèder à l'Atelier")
+                    window.location.replace("/")
+                }
                 if (res.pk) {
                     getPrivateKey(window.localStorage.getItem("walletAddress"), res.pk)
                     setGetPassword(false)
@@ -86,7 +90,7 @@ function Item() {
     function GetPassword() {
         return ( <div class="getPassword">
             <form onSubmit={connectUsingPassword}> 
-                <h3>Setup or enter your password</h3>
+            <h3>Entrez votre mot de passe</h3>
                 <br />
                 <div class="mb-3 row">
                     <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
@@ -208,6 +212,10 @@ function Item() {
         //mintNFT(account)
         
         //getPrivateKey(window.localStorage.getItem("walletAddress")) // if Imperial Account load account
+        if (window.localStorage.getItem("hasWallet") !== "true") {
+            alert("Vous devez créer un compte avant d'accèder à l'Atelier")
+            window.location.replace("/")
+        }
         console.log("OK")
 
         

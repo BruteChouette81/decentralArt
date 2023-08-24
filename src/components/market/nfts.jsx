@@ -51,7 +51,8 @@ function NftBox (props) {
         try {
             var config = {
                 body: {
-                    itemId: id,
+                    owner: seller,
+                    itemId: id
                 }
             };
             var url = "/deleteItem"
@@ -191,6 +192,7 @@ function NftBox (props) {
         if (props.myitem) {
             setId(props.id)
             setMarket(props.market)
+            setSeller(props.seller)
             props.setHaveItem(true)
         }
         else {

@@ -24,6 +24,7 @@
     padding-right: 50px;
     padding-bottom: 50px;
     color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .create {
@@ -90,6 +91,7 @@
     padding-right: 50px;
     padding-bottom: 50px;
     color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .paymentinfo {
@@ -115,12 +117,13 @@
 .ynftcard {
     margin: 20px;
     padding: 10px;
-    width: 250px;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.573), rgba(45, 45, 51, 0.573));
-    border-style: solid;
-    color: white;
-    border-radius: 15px;
+    width: 350px;
+    background-color: white;
+    
+    color: black;
+    border-radius: 6px;
     float: left;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .ordercard {
@@ -153,10 +156,12 @@
 }
 
 #cardimg {
-    width: 200px;
-    height: 200px;
-    border-radius: 12px;
+    width: 330px;
+    height: 300px;
+    border-radius: 6px;
     border-style: solid;
+    border-width: 2px;
+    color: grey;
 }
 
 .Staking-Program {
