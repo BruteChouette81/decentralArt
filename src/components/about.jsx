@@ -34,13 +34,13 @@ function About() {
                         
                     </div>
                     <div className="why-account">
-                        <h3>Pourquoi les comptes ?</h3>
+                        <h3>Votre sécurité, notre priorité</h3>
                         <h5>
                             
                         </h5>
                     </div>
                     <div className="why-account">
-                        <h3>Comment fonctionne le marché ?</h3>
+                        <h3>Pourquoi un compte</h3>
                         <h5>
                            
     
@@ -48,23 +48,7 @@ function About() {
                         
                     </div>
                     <div className="why-account">
-                        <h3>Securite</h3>
-                        <h5>
-                           
-    
-                        </h5>
-                        
-                    </div>
-                    <div className="why-account">
-                        <h3>Confiance</h3>
-                        <h5>
-                           
-    
-                        </h5>
-                        
-                    </div>
-                    <div className="why-account">
-                        <h3>Profitabilite</h3>
+                        <h3>Profitabilité</h3>
                         <h5>
                            
     

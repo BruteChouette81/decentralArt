@@ -20,7 +20,7 @@ function EndOfPage() {
                     <li><a href="/market">Atelier</a></li>
                    
                     
-                    <li><a href="https://imperialdao.net">Imperial Technologies</a></li>
+                    <li><a href="https://imperialdao.net">CPL - Technologies</a></li>
                     
                     
                     <li><a href="">Facebook</a></li>

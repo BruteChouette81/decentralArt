@@ -94,7 +94,7 @@ function Update() {
     return(
     <section class="update">
         <h1>Comment ça marche ?</h1>
-        <h4>Afin d'améliorer votre expérience, voici un guide en 3 étapes faciles afin d'acceder au plein potentiel de notre platforme!</h4>
+        <h4>Afin d'améliorer votre expérience, voici un guide en 2 étapes faciles afin d'accèder au plein potentiel de notre platforme!</h4>
         <br />
         <div class="accordion" id="accordionExample">
         <div class="accordion-item">
@@ -105,31 +105,19 @@ function Update() {
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
             <div class="accordion-body">
-                <h5>La première étape est la création du compte. Celui-ci vous permet d'accèder à l'Atelier en ligne afin de pouvoir explorer et acheter. La création du compte est 100% gratuite et ne prend que quelques instants. De plus elle ne requière aucune information personnelle. Pour commencer, clickez <a href="/account">ici!</a></h5>
-            </div>
-            </div>
-        </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingTwo">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-            <h4><strong>2: Créer votre Identité</strong></h4>
-            </button>
-            </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-            <div class="accordion-body">
-                <h5>La deuxième étape est la creation d'une Identitée Décentralisée. Celle-ci permet de securizé vos informations personnelles (comme votre nom ou votre addresse). C'est grâce à cette identité virtuelle que nous pouvons vous envoyez vos commandes. Pour commencé, allez dans l'onglet Identitée Décentralizée lorsque cous êtes connecter à votre compte et créez une nouvelle identité. </h5>
+                <h5>La première étape est la création du compte. Celui-ci vous permet d'accèder à l'Atelier en ligne afin de pouvoir explorer et acheter. La création du compte est 100% gratuite et ne prend que quelques instants. Vous n'avez qu'a rentrer un mot de passe et vos informations de livraison ( <a href="/about">en savoir plus sur nos mesures de sécurité</a>) et vous y êtes deja! Pour commencer, clickez <a href="/account">ici!</a></h5>
             </div>
             </div>
         </div>
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingThree">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                <h4><strong>3: Explorer!</strong></h4>
+                <h4><strong>2: Explorer!</strong></h4>
             </button>
             </h2>
             <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
             <div class="accordion-body">
-                <h5>Une fois ces deux étapes complété, vous pouvez accèder à l'Atelier à partir de votre compte, ou en cliquant sur ce <a href="/market">lien</a>. Bonne exploration!</h5>
+                <h5>Une fois le compte créé, vous pouvez accèder à l'entièreté de l'Atelier à partir de votre compte, ou en cliquant sur ce <a href="/market">lien</a>. Bonne exploration!</h5>
             </div>
             </div>
         </div>

@@ -174,4 +174,6 @@ BEFORE RELEASE:
 
 - more cpl documentation + public ledger using uuid ID's and block scan for transactions database
 
+- reopen cpl technology site: cpltechnology.net w/ new design / whitepaper
+
 
