@@ -509,7 +509,7 @@ function Market() {
             
                     await API.post('serverv2', url, data).then((response) => {
                         for(let i=0; i<=response.ids.length; i++) { //loop trought every listed item of an owner 
-                            if (response.ids[i] == item.itemId) { // once you got the item we want to display:
+                            if (response.ids[i] == item.itemId - 1) { // once you got the item we want to display:
                                 newItem.itemId = item.itemId
                                 newItem.tokenId = item.tokenId
                                 newItem.price = item.price
@@ -524,6 +524,8 @@ function Market() {
                     })
                     if (i === numReal) {
                         console.log(newItem)
+                        realList.push(newItem)
+                        setRealItems(realList)
                     }
 
                     
@@ -597,6 +599,7 @@ function Market() {
             
         }
         else {
+            /*
             getAccount()
 
             let itemslist = getItems(false, "")
@@ -625,6 +628,8 @@ function Market() {
                 
                 console.log(items)
             })
+            */ 
+           console.log("Not OK")
             
         }
         

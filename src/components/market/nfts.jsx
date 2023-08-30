@@ -274,7 +274,7 @@ function NftBox (props) {
                             <h6>current Price: {currency == "CAD" ? USDollar.format((props.price/100000) / (1 - 0.029) + 4.6) : USDollar.format((props.price/100000) / (1 - 0.029) + 4.6) } {currency}</h6>
                             <p>seller: <a href={`/Seller/${seller}`} >{props.seller?.slice(0,7) + "..."}</a></p>
                             <p>description: {props.description}</p>
-                            <button onClick={calculateTax} type="button" class="btn btn-secondary">Purchase</button>  
+                            {props.displayItem ? (<button onClick={()=>{alert("Vous devez créer votre compte afin de pouvoir acheter un item!")}} type="button" class="btn btn-secondary" >Purchase</button>) : (<button onClick={calculateTax} type="button" class="btn btn-secondary">Purchase</button>)}
                             
         
                         </div>

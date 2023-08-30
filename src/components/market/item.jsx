@@ -45,8 +45,18 @@ const getContract = (address, abi, signer ) => { //for Imperial Account
     return contract
 }
 
+const getContractDisplay = () => { //for Imperial Account
+    // get the end user
+    //console.log(signer)
+    // get the smart contract
+    const provider = new ethers.providers.InfuraProvider("goerli")
+    const contract = new ethers.Contract(DDSAddress, DDSABI, provider);
+    return contract
+}
+
 function Item() {
     const { id } = useParams();
+    const [displayItem, setDisplayItem] = useState(false)
 
     const [credits, setCredits] = useState();
     const [dds, setDds] = useState()
@@ -61,7 +71,7 @@ function Item() {
     //password getting 
     const [password, setPassword] = useState()
     let passwordInp = ""
-    const [getPassword, setGetPassword] = useState(true)
+    const [getPassword, setGetPassword] = useState(false)
 
     const changePass = (event) => {
         passwordInp = event.target.value;
@@ -213,8 +223,63 @@ function Item() {
         
         //getPrivateKey(window.localStorage.getItem("walletAddress")) // if Imperial Account load account
         if (window.localStorage.getItem("hasWallet") !== "true") {
-            alert("Vous devez créer un compte avant d'accèder à l'Atelier")
-            window.location.replace("/")
+
+            setDisplayItem(true)
+
+            const ddsc = getContractDisplay()
+
+            const loadInstaItems = async() => {
+                let item = await ddsc.items(parseInt(id) + 1)
+                console.log(item)
+                let newItem = {}
+
+                if(item.sold) {
+                    alert("item already sold, redirecting to market!")
+                    window.location.replace("/market")
+                }
+
+                else {
+                    var data = {
+                        body: {
+                            address: item.seller.toLowerCase(),
+                        }
+                    }
+
+                    var url = "/getItems"
+
+                    //console.log(typeof(item))
+                    //console.log(item)
+                    
+                    await API.post('serverv2', url, data).then((response) => {
+                        for(let i=0; i<=response.ids.length; i++) { //loop trought every listed item of an owner 
+                            if (response.ids[i] == item.itemId - 1) { // once you got the item we want to display:
+                                        newItem.itemId = item.itemId
+                                        newItem.tokenId = item.tokenId
+                                        newItem.price = item.price
+                                        newItem.seller = item.seller
+                                        newItem.name = response.names[i] //get the corresponding name
+                                        newItem.score = response.scores[i] //get the corresponding score
+                                        newItem.tag = response.tags[i] //get the corresponding tag
+                                        newItem.description = response.descriptions[i]
+                                        newItem.image = response.image[i]
+                            }
+                        }
+                    })
+
+                    
+                }
+                
+                return newItem
+            }
+            const listofDis = loadInstaItems()
+            listofDis.then(res => {
+                setRealItems(res)
+            })
+           
+            //alert("Vous devez créer un compte avant d'accèder à l'Atelier")
+            //window.location.replace("/")
+        } else {
+            setGetPassword(true)
         }
         console.log("OK")
 
@@ -228,7 +293,7 @@ function Item() {
             <h2>Id: {id}</h2>
             <div class="row">
                 <div class="col">
-                <NftBox key={(realItems?.itemId)?.toString()} real={true} tokenId={realItems?.tokenId} myitem={false} id={parseInt(realItems?.itemId)} name={realItems?.name} description={realItems?.description} price={parseInt(realItems?.price)} seller={realItems?.seller} image={realItems?.image}  account={address} signer={userwallet} credits={credits} dds={dds} password={password} amm={amm}/> 
+                <NftBox key={(realItems?.itemId)?.toString()} real={true} tokenId={realItems?.tokenId} myitem={false} id={parseInt(realItems?.itemId)} name={realItems?.name} description={realItems?.description} price={parseInt(realItems?.price)} seller={realItems?.seller} image={realItems?.image}  displayItem={displayItem} account={address} signer={userwallet} credits={credits} dds={dds} password={password} amm={amm}/> 
                 </div>
             </div>
             

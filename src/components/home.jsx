@@ -1,12 +1,26 @@
 import React, { useEffect, useState} from 'react'
+import { ethers } from 'ethers'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './css/intro.css'
 import './css/home.css'
 import './css/idea.css'
 import './css/faq.css'
 import { API } from 'aws-amplify';
+import DDSABI from '../artifacts/contracts/DDS.sol/DDS.json'
+
+import NftBox from './market/nfts'
+
+const DDSAddress = '0x15399E8a3EA9781EAA3bb1e6375AA51320D12Aea'
 
 
+const getContract = () => { //for Imperial Account
+    // get the end user
+    //console.log(signer)
+    // get the smart contract
+    const provider = new ethers.providers.InfuraProvider("goerli")
+    const contract = new ethers.Contract(DDSAddress, DDSABI, provider);
+    return contract
+}
 
 function BuyCredit() {
     // put buy logic here with wyre api
@@ -128,6 +142,88 @@ function Update() {
     )
 }
 
+//return a carousel view of items in the shop
+function InstaView() {
+    const [realItems, setRealItems] = useState([]);
+
+    useEffect(() => {
+        const ddsc = getContract()
+
+        const loadInstaItems = async() => {
+            let realList = []
+            const numReal = await ddsc?.functions.itemCount()
+            for( let i = 1; i<=numReal; i++) {
+                let item = await ddsc.items(i)
+                console.log(item)
+                let newItem = {}
+    
+                if(item.sold) {
+                    continue
+                }
+    
+                else {
+                    var data = {
+                        body: {
+                            address: item.seller.toLowerCase(),
+                        }
+                    }
+    
+                    var url = "/getItems"
+    
+                    //console.log(typeof(item))
+                    //console.log(item)
+            
+                    await API.post('serverv2', url, data).then((response) => {
+                        for(let i=0; i<=response.ids.length; i++) { //loop trought every listed item of an owner 
+                            if (response.ids[i] == item.itemId) { // once you got the item we want to display:
+                                newItem.itemId = item.itemId
+                                newItem.tokenId = item.tokenId
+                                newItem.price = item.price
+                                newItem.seller = item.seller
+                                newItem.name = response.names[i] //get the corresponding name
+                                newItem.score = response.scores[i] //get the corresponding score
+                                newItem.tag = response.tags[i] //get the corresponding tag
+                                newItem.description = response.descriptions[i]
+                                newItem.image = response.image[i]
+                            }
+                        }
+                    })
+                    if (i === numReal) {
+                        console.log(newItem)
+                    }
+    
+                    
+                    realList.push(newItem)
+                    console.log(realList)
+    
+                   
+                }
+                //each five items, we push to items in order to load more smoothly
+                if (Number.isInteger(i/2)) {
+                    setRealItems(realList)
+                }
+                
+                
+                
+            }
+            return realList;
+        }
+        const listofDis = loadInstaItems()
+        setRealItems(listofDis)
+        
+    }, [setRealItems])
+    return (
+        <div class="instaView">
+            <h1>Notre collection:</h1>
+            <h5>Afin d'en apprendre plus sur une toile ou pour acheter, <a href="/Account">Connectez-vous</a>!</h5>
+            <div class="row">
+                <div class="col">
+            { realItems.length > 0 ? realItems?.map((item) => (<NftBox key={(item.itemId)?.toString()} real={true} tokenId={item.tokenId} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image} displayItem={true}/> )): ""}
+            </div>
+            </div>
+        </div>
+    );
+}
 
 function Q() {
     return (
@@ -143,6 +239,9 @@ function Home() {
     return(
         <div class="main">
             <Intro />
+            <br />
+            <InstaView />
+            <br />
             <br />
             <Update/>
             <br />
