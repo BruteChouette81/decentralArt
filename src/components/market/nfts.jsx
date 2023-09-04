@@ -33,16 +33,74 @@ function NftBox (props) {
     const [pay, setPay] = useState()
     const [did, setDid] =useState()
     const [image, setImage] = useState()
+    const [tokenId, setTokenId] = useState()
     const [signer, setSigner] = useState()
     const [currency, setCurrency] = useState()
     const [pk, setPk] = useState()
     const [buyloading, setBuyloading] = useState(false)
+    const [itemSold, setItemSold] = useState(false)
+    const [marketLoaded, setMarketLoaded] = useState(false)
+    const [marketLoadedItem, setMarketLoadedItem] = useState({})
     
 
     const [purchasing, setPurchasing] = useState(false)
 
     const cancelPurchase = () => {
         setPurchasing(false)
+    }
+
+
+    const getItem = async () => {
+        //const ddsc = await configureMarket(haswallet, wallet)
+    
+        //let credits = await ddsc?.credits()
+        //console.log(credits)        
+        //only real items
+
+        let item = await props.dds.items(parseInt(props.id + 1))
+        console.log(item)
+        let newItem = {}
+
+        if(item.sold) {
+            console.log("SOLD")
+            setItemSold(true)
+            //alert("item already sold, redirecting to market!")
+            //window.location.replace("/market")
+        }
+
+        else {
+            var data = {
+                body: {
+                    address: item.seller.toLowerCase(),
+                }
+            }
+
+            var url = "/getItems"
+
+            //console.log(typeof(item))
+            //console.log(item)
+            
+            await API.post('serverv2', url, data).then((response) => {
+                for(let i=0; i<=response.ids.length; i++) { //loop trought every listed item of an owner 
+                    if (response.ids[i] == item.itemId - 1) { // once you got the item we want to display:
+                                newItem.itemId = item.itemId
+                                newItem.tokenId = item.tokenId
+                                newItem.price = item.price
+                                newItem.seller = item.seller
+                                newItem.name = response.names[i] //get the corresponding name
+                                newItem.score = response.scores[i] //get the corresponding score
+                                newItem.tag = response.tags[i] //get the corresponding tag
+                                newItem.description = response.descriptions[i]
+                                newItem.image = response.image[i]
+                    }
+                }
+            })
+
+            
+        }
+        
+        return newItem
+    
     }
 
     const deleteItems = async () => {
@@ -163,7 +221,7 @@ function NftBox (props) {
             var config = {
                 body: {
                     account: account.toLowerCase(),
-                    realPurchase: [parseInt(props.tokenId), id]
+                    realPurchase: [parseInt(tokenId), id]
 
                 }
             };
@@ -196,11 +254,32 @@ function NftBox (props) {
             props.setHaveItem(true)
         }
         else {
-            if (props.real) {
+            if(props.isMarket) {
+                setMarketLoaded(true)
+                setId(props.id + 1)
+                console.log(props.id)
+                if (!props.displayItem) {
+                    setPk(props.password)
+                    setAccount(props.account)
+                }
+                
+                const newItem = getItem()
+                newItem.then((res) => {
+                    setTokenId(res.tokenId)
+                    setSeller(res.seller)
+                    setPrice(res.price)
+                    setImage(res.image)
+                    setMarketLoadedItem(res)
+                })
+            }
+
+            else {
+                
                 setId(props.id)
                 setPrice(props.price / (1 - 0.029) + 4.6*100000)
                 console.log(props.price)
                 setSeller(props.seller)
+                setTokenId(props.tokenId)
                 setMarket(props.market)
                 setCredits(props.credits)
                 setDds(props.dds)
@@ -220,8 +299,9 @@ function NftBox (props) {
                 }
                 
                 setAmm(props.amm)
+            }
                 
-            } else {
+            /*if (props.real) {} else {
                 setId(props.id)
                 setPrice(props.price)
                 setSeller(props.seller)
@@ -237,7 +317,7 @@ function NftBox (props) {
                 setPk(props.pk)
                 setAmm(props.amm)
 
-            }
+            }*/
             
             
 
@@ -264,7 +344,21 @@ function NftBox (props) {
             <div>
                 { purchasing ? props.real ? (
                     <Receipt quebec={quebec} state={state} subtotal={price} total={price} taxprice={taxprice} tax={tax} seller={seller} image={image} account={account} contract={credits} dds={dds} amm={amm} signer={signer} id={id} pay={pay} did={did} pk={pk} purchase={realPurchase} cancel={cancelPurchase} buyloading={buyloading} />
-                ) : ( <Receipt quebec={quebec} state={state} subtotal={price} total={price} taxprice={taxprice} tax={tax} seller={seller} image={image} account={account} contract={credits} market={market} amm={amm} signer={signer} id={id} pay={pay} did={did} pk={pk} purchase={purchase} cancel={cancelPurchase} /> ) : (
+                ) : ( <Receipt quebec={quebec} state={state} subtotal={price} total={price} taxprice={taxprice} tax={tax} seller={seller} image={image} account={account} contract={credits} market={market} amm={amm} signer={signer} id={id} pay={pay} did={did} pk={pk} purchase={purchase} cancel={cancelPurchase} /> ) : 
+                itemSold ? "" : marketLoaded ? (<div class="col">
+                <div class="nftbox">
+                    <img id='itemimg' src={marketLoadedItem?.image} alt="" />
+                    <br />
+                    <br />
+                    <h4><a href={"/item/" + id}>{marketLoadedItem?.name}</a></h4>
+                    <h6>current Price: {currency == "CAD" ? USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.6) : USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.6) } {currency}</h6>
+                    <p>seller: <a href={`/Seller/${marketLoadedItem?.seller}`} >{marketLoadedItem?.seller?.slice(0,7) + "..."}</a></p>
+                    <p>description: {marketLoadedItem?.description}</p>
+                    {props.displayItem ? window.localStorage.getItem("hasWallet") ? (<button onClick={()=>{window.location.replace("/item/" + (id - 1))}} type="button" class="btn btn-secondary" >Purchase</button>) : (<button onClick={()=>{alert("Vous devez créer votre compte afin de pouvoir acheter un item!")}} type="button" class="btn btn-secondary" >Purchase</button>) : (<button onClick={calculateTax} type="button" class="btn btn-secondary">Purchase</button>)}
+                    
+
+                </div>
+            </div>) : (
                     <div class="col">
                         <div class="nftbox">
                             <img id='itemimg' src={image} alt="" />

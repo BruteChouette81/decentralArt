@@ -69,7 +69,7 @@ function Idea() {
     return(
         <div class="idea">
             <h3>L'idée: </h3> 
-            <h5>L'Atelier de Simon est un marché en ligne basé sur de nouvelles technologies qui a pour but de permettre la vente de l'art avec une approche plus securitaire et moins dispendieuse. </h5>
+            <h5>Que vous soyez commerçant, collectionneur ou simplement amateur d’art, la plateforme présente les oeuvres que vous pouvez facilement vous procurer de façon simple et sécuritaire. </h5>
             <button onClick={learn} class="btn btn-primary btn-lg">Savoir plus</button>
         </div>
     )
@@ -82,8 +82,8 @@ function Intro() {
         //future of decentralization
         //for movie fans
         <section class="intro">
-            <h2>Bienvenue sur L'Atelier De Simon </h2>
-            <h3><i>Connecter art et technologie</i></h3>
+            <h2>L'Atelier De Simon </h2>
+            <h3><i>Bienvenue dans l’univers de l’artiste Simon Berthiaume (Bertio)!</i></h3>
             <BuyCredit />
             <Idea />
         </section>
@@ -144,14 +144,18 @@ function Update() {
 
 //return a carousel view of items in the shop
 function InstaView() {
-    const [realItems, setRealItems] = useState([]);
+    const [numrealItems, setNumRealItems] = useState(0);
+    const [dds, setDds] = useState();
 
     useEffect(() => {
         const ddsc = getContract()
+        setDds(ddsc)
 
         const loadInstaItems = async() => {
-            let realList = []
+            //let realList = []
             const numReal = await ddsc?.functions.itemCount()
+            setNumRealItems(numReal)
+            /*
             for( let i = 1; i<=numReal; i++) {
                 let item = await ddsc.items(i)
                 console.log(item)
@@ -207,18 +211,21 @@ function InstaView() {
                 
             }
             return realList;
+            */
         }
-        const listofDis = loadInstaItems()
-        setRealItems(listofDis)
+        loadInstaItems().then(() => {
+            console.log("Done")
+        })
+        //setRealItems(listofDis)
         
-    }, [setRealItems])
+    }, [])
     return (
         <div class="instaView">
             <h1>Notre collection:</h1>
             <h5>Afin d'en apprendre plus sur une toile ou pour acheter, <a href="/Account">Connectez-vous</a>!</h5>
             <div class="row">
                 <div class="col">
-            { realItems.length > 0 ? realItems?.map((item) => (<NftBox key={(item.itemId)?.toString()} real={true} tokenId={item.tokenId} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image} displayItem={true}/> )): ""}
+            { numrealItems > 0 ? Array.from({ length: numrealItems }, (_, k) => (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> )): ""}
             </div>
             </div>
         </div>

@@ -247,6 +247,8 @@ function Market() {
     let passwordInp = ""
     const [getPassword, setGetPassword] = useState(true)
 
+    const [numreal, setNumreal] = useState(0)
+
     const types = "spin"
     const color = "#0000FF"
 
@@ -478,6 +480,7 @@ function Market() {
 
         let realList = []
         const numReal = await ddsc?.functions.itemCount()
+        setNumreal(numReal)
         console.log(parseInt(numReal))
         //console.log(parseInt(numItems))
         //console.log("numitems: " + numItems)
@@ -706,6 +709,8 @@ function Market() {
                                         )  : items.map((item) => 
                                             item.name.includes(search)===true ? (<NftBox key={item.itemId.toString()} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image} account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} pk={userwallet?.privateKey} password={password} amm={amm}/> ) : ""
                                         )}
+
+                                        { Array.from({ length: numreal }, (_, k) => (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password}/> )) }
                                         
                                        
 

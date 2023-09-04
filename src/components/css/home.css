@@ -47,11 +47,21 @@
 @media screen and (max-width:700px) {
     .main {
         color: black;
-        background-image: url(../logo/art2.png);
+        background-image: url(../logo/IMG_5569.jpg);
         background-repeat: no-repeat;
         background-size: 100%, 100%;
         background-position-x: 100%;
         background-position-y: 5% ;
+    }
+    .instaView {
+        margin-left: 10px;
+        margin-right: 100px;
+
+    }
+
+    .update {
+        margin-left: 10px;
+        margin-right: 0px;
     }
     #metaimg {
         height: 100px;
