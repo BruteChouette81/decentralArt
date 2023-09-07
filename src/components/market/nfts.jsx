@@ -350,7 +350,7 @@ function NftBox (props) {
                     <img id='itemimg' src={marketLoadedItem?.image} alt="" />
                     <br />
                     <br />
-                    <h4><a href={"/item/" + id}>{marketLoadedItem?.name}</a></h4>
+                    <h4><a href={"/item/" + (id - 1)}>{marketLoadedItem?.name}</a></h4>
                     <h6>current Price: {currency == "CAD" ? USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.6) : USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.6) } {currency}</h6>
                     <p>seller: <a href={`/Seller/${marketLoadedItem?.seller}`} >{marketLoadedItem?.seller?.slice(0,7) + "..."}</a></p>
                     <p>description: {marketLoadedItem?.description}</p>
@@ -364,7 +364,7 @@ function NftBox (props) {
                             <img id='itemimg' src={image} alt="" />
                             <br />
                             <br />
-                            <h4><a href={"/item/" + props.id}>{props.name}</a></h4>
+                            <h4><a href={"/item/" + (props.id -1)}>{props.name}</a></h4>
                             <h6>current Price: {currency == "CAD" ? USDollar.format((props.price/100000) / (1 - 0.029) + 4.6) : USDollar.format((props.price/100000) / (1 - 0.029) + 4.6) } {currency}</h6>
                             <p>seller: <a href={`/Seller/${seller}`} >{props.seller?.slice(0,7) + "..."}</a></p>
                             <p>description: {props.description}</p>
