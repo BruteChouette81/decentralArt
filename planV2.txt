@@ -172,7 +172,9 @@ BEFORE RELEASE:
 
 - load item in chunk (quicker) DONE ✔️ + delete db and get infos from uri + fast search (from indexing)
 
-- relocate loading item in nftbox ==> load every singular items one by one
+- relocate loading item in nftbox ==> load every singular items one by one DONE ✔️
+
+- fix multiMint error (get ids of items from contract before) DONE ✔️ ==> test
 
 - more cpl documentation + public ledger using uuid ID's and block scan for transactions database
 

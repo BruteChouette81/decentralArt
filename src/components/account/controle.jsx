@@ -707,7 +707,7 @@ function DisplayActions(props) {
         }
     }
 
-    function multipleMint() {
+    async function multipleMint() {
         try {        
             console.log(props.signer)
             //await mintReal(props.account, "https://ipfs.io/ipfs/" + cid, props.signer)
@@ -725,6 +725,8 @@ function DisplayActions(props) {
             }
 
             var url = "/oracleMultiMint"
+
+            const numItemBefore = await dds?.functions.itemCount()
             
             API.post('serverv2', url, data).then((response) => {
                 console.log(response)
@@ -735,7 +737,7 @@ function DisplayActions(props) {
                         var data = {
                             body: {
                                 address: props.signer.address.toLowerCase(),
-                                itemid: (parseInt(response) - tokenuri?.length + i + 1), //market item id
+                                itemid: numItemBefore + tokenuri?.length - i, // (parseInt(response) - tokenuri?.length + i + 1), //market item id
                                 name: nftnames[i], //get the name in the form
                                 score: 0, //set score to zero
                                 tag: tags[i], //"real" 
