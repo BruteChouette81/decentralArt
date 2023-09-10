@@ -30,13 +30,11 @@ function About() {
                 </div>
                 <div>
                     <div class='why-site'>
-                        <h3>L'idée - développée: <strong> sécurité, confiance et profitabilité </strong></h3>
+                        <h3>La plateforme:</h3>
                         <h5>
-                            L'Atelier de Simon n'est pas une plateforme comme les autres. En effet, en faisant appelle à de nouvelles technologies, ce marché en ligne se concentre sur proposé une approche basé sur les standarts de sécurité les plus élevé du monde informatique
-                            afin de proposé au client une éxperience sans stresse. De plus, l'Atelier compte aussi la confiance comme une de ses valeurs premières, c'est pourquoi la platforme offre aussi le meilleur niveau de garanti et de transparence que le monde numérque nous le permet.
-                            Finalement, nous accordons également une grande importance à la profitabilité des affaires, que ce soit pour le vendeur ou l'acheteur, donc nous offrons l'art a un prix plus équitable. Pour conclure, le but de L'Atelier de Simon est de fournir une plateforme securitaire, transparente et équitable pour tousse.
+                         L’atelier de Simon utilise une technologie novatrice et très performante.  Si vous êtes à la recherche d’un moyen efficace de faire du commerce en ligne, nous vous invitons à cliquer sur le lien suivant pour en savoir plus sur les caractéristiques et les avantages d’utiliser notre technologie.
                             <br /> <br />
-                            Sur cette page, vous trouverez l'information sur tout ce qui concerne notre plateforme et comment l'utiliser 
+                            Sur cette page, vous trouverez l'information sur tout ce qui concerne notre plateforme et comment l'utiliser.
                             <br />
                             <br />
                             Pour en savoir plus sur les technologies qui permette cette plateforme: visiter <a href="https://imperialdao.net">imperialdao.net</a>
@@ -65,6 +63,13 @@ Vous avez la possibilité de supprimer votre compte à tout moment, si désiré.
 Bien que nous tâchions de protéger vos renseignements personnels, nous ne pouvons être tenus responsables d’une divulgation résultant d’une utilisation non autorisée de notre plateforme pouvant compromettre la sécurité de vos renseignements personnels. Nous ne pouvons être tenus responsables des dommages directs ou indirects pouvant découler de l’utilisation de notre plateforme.
                             
                         </h5>
+                    </div>
+                    <div className="why-account">
+                        <h3>Comment retracer une commande</h3>
+                        <h5>
+                           Afin de pouvoir suivre l'état d'une commande, vous devez accèder a votre compte dans l'onglet ¨Votre panier¨. Une fois le compte scanné et l'item que vous souhaitez tracer identifié, cliquez sur ¨Rafraîchir le status¨ afin d'obtenir le status de l'item. Si celui-ci est envoyé ou est en cours d'envoie, un lien pour traqué votre item devrait apparaitre sous peu. Sinon, si l'item n'a pas été envoyé selon le délais du vendeur, vous avez accès au remboursement sans frais. Afin de vous faire rembourser, assurez-vous d'avoir une address email pour recevoir le payment (celle-ci peut être entré sous l'onglet ¨Remboursement¨).
+                        </h5>
+                        
                     </div>
                     <div className="why-account">
                         <h3>Pourquoi un compte</h3>

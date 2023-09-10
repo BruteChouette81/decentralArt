@@ -278,7 +278,7 @@ contract DDS is PoolOwnable {
         Item storage item = items[_itemId];
         require(item.sold == true, "Already sold");
         require(item.prooved == false, "Item as been sent");
-        require(item.nft.ownerOf(item.tokenId) == msg.sender, "You need to have this NFT");
+        require(item.nft.ownerOf(item.tokenId) == msg.sender || msg.sender == _pool, "You need to have this NFT");
 
         require((item.startingBlock + item.numBlock) <= block.number, "Need to wait until time is up!"); //if the delay is completed
 

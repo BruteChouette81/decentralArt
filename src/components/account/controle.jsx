@@ -975,6 +975,7 @@ function DisplayActions(props) {
 
 
         const [status, setStatus] = useState("Not prooved")
+        const [refundLoading, setRefundLoading ] = useState(false)
         const [trackingCode, setTrackingCode] = useState()
         const [numdaysToRetrieve, setNumdaysToRetrieve] = useState()
         
@@ -1058,8 +1059,12 @@ function DisplayActions(props) {
        
 
         const retrieve = async() => {
+            //console.log(props.realPurchase[0][0])
+            //console.log(props.tokenid)
+            setRefundLoading(true)
             for (let i=0; i<props.realPurchase.length; i++) {
-                if(props.realPurchase[i][0] === props.tokenid) { //if we match nft token id
+                if(props.realPurchase[i][0] == props.tokenid) { //if we match nft token id
+                    console.log("accessed")
                     try {
                         //gas price must be included in first transaction
                         //await dds.retrieveCredit()
@@ -1080,8 +1085,16 @@ function DisplayActions(props) {
                         
                             API.post('serverv2', url, data).then((response) => {
                                 console.log(response)
-                                alert("successfully refunded at your withdraw address! You will receive a Payout soon!")
-                                setSubmitLoading(false)
+                                if(response.status === 30) {
+                                    alert("Item is prooved ! It will arrive soon at your location !")
+                                    setRefundLoading(false)
+                                } else {
+                                    alert("successfully refunded at your withdraw address! You will receive a Payout soon!")
+                                    setRefundLoading(false)
+                                }
+                                
+                            }).catch((e) => {
+                                console.log(e)
                             })
                             
                         
@@ -1106,12 +1119,12 @@ function DisplayActions(props) {
             
                 <br />
                 <br />
-                <h4> Name:  <a href="">{props.name}</a></h4>
+                <h4> Nom:  <a href="">{props.name}</a></h4>
                 <p>description: {props.description?.slice(0, 20)}...</p>
-                {props.address === ImperialRealAddress.toLowerCase() ? ( <button onClick={pollStatus} class="btn btn-primary"> Get status</button> ) : ""}
-                {props.address === ImperialRealAddress.toLowerCase() ? status === "Not prooved" ? numdaysToRetrieve > 0 ? ( <h5 style={{color: "yellow"}}>Pending</h5> ) : ( <h5 style={{color: "red"}}>Not Prooved</h5> ) : ( <h5 style={{color: "green"}}>Prooved</h5> ) : ""}
-                {props.address === ImperialRealAddress.toLowerCase() ? ( <button onClick={retrieve} class="btn btn-primary"> Retrieve cash</button> ) : ""}
-                { props.address === ImperialRealAddress.toLowerCase() ? numdaysToRetrieve > 0 ? ( <h6>Item Prooved in {numdaysToRetrieve} days</h6> ) : ( <h6>Item Not prooved in time</h6> ) : ""  }
+                {props.address === ImperialRealAddress.toLowerCase() ? ( <button onClick={pollStatus} class="btn btn-primary">Rafraîchir le status</button> ) : ""}
+                {props.address === ImperialRealAddress.toLowerCase() ? status === "Not prooved" ? numdaysToRetrieve > 0 ? ( <h5 style={{color: "yellow"}}>En cours d'envoie</h5> ) : ( <h5 style={{color: "red"}}>Item non prouvé</h5> ) : ( <h5 style={{color: "green"}}>Item envoyé!</h5> ) : ""}
+                {props.address === ImperialRealAddress.toLowerCase() ? refundLoading ? (<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>) : ( <button onClick={retrieve} class="btn btn-primary">Remboursement</button> ) : ""}
+                { props.address === ImperialRealAddress.toLowerCase() ? numdaysToRetrieve > 0 ? ( <h6>L'item sera envoyé dans {numdaysToRetrieve} jours</h6> ) : ( <h6>L'item n'a pas été envoyé dans le délais</h6> ) : ""  }
                 {trackingCode ? ( <h5>Tracking Code: <a href="https://www.canadapost-postescanada.ca/track-reperage/en#/home">{trackingCode}</a></h5> ) : ""}
             </div>
         )
@@ -1188,7 +1201,7 @@ function DisplayActions(props) {
             'X-API-Key': web3ApiKey
           }
         };
-        let address = '0xBBeC2e9aFF367008F4A234B241AcB9bCd73013a9'
+        let address = '0xa3f5BDa09F71598B9333F5835Fbf5F8F730984C4'
         let nftlist = []
        
         

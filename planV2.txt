@@ -154,13 +154,13 @@ BEFORE RELEASE:
 
 - refunds test + new market payout DONE ✔️ EC: 30
 
-- delete Item: takes the fee of refund ==> need to modify contract ==> push contract and ABI EC: 60
+- delete Item: takes the fee of refund ==> need to modify contract ==> push contract and ABI DONE ✔️ EC: 60
 
 - CPL secret: private key, public address / CPL amelioration
 
 - password bug DONE ✔️
 
-- style
+- style DONE ✔️
 
 - facebook  DONE ✔️ 
 
@@ -175,6 +175,8 @@ BEFORE RELEASE:
 - relocate loading item in nftbox ==> load every singular items one by one DONE ✔️
 
 - fix multiMint error (get ids of items from contract before) DONE ✔️ ==> test
+
+- push new dds contract for retrieve cash ==> credit.sol: address _pool = public, retriveCredit in dds.sol
 
 - more cpl documentation + public ledger using uuid ID's and block scan for transactions database
 
