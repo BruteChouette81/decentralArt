@@ -866,7 +866,7 @@ function DisplayActions(props) {
         let res = JSON.parse(res1.toString(enc.Utf8));
         return (
             <div class="did">
-                <h4>Identitée Décentralizée: </h4>
+                <h4>Identitée Décentralisée: </h4>
                 <p>
                     <a class="btn btn-info" data-bs-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false" aria-controls="collapseExample1">
                         En savoir plus
@@ -1747,7 +1747,7 @@ function DisplayActions(props) {
                     
 
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pills-pay-tab" data-bs-toggle="pill" data-bs-target="#pill-pay" type="button" role="tab" aria-controls="pill-pay" aria-selected="true">Identitée Décentralizée</button>
+                        <button class="nav-link active" id="pills-pay-tab" data-bs-toggle="pill" data-bs-target="#pill-pay" type="button" role="tab" aria-controls="pill-pay" aria-selected="true">Identitée Décentralisée</button>
                     </li>
                     { props.level != 5 ? "" : 
                     (<li class="nav-item" role="presentation">

@@ -19,6 +19,8 @@ import Item from './components/market/item'
 
 import About from './components/about'
 
+import Questions from './components/questions';
+
 //contracts 
 
 
@@ -65,6 +67,7 @@ function App() {
               <Route path="/Imperial" element={<ImperialProfile/>} />
               <Route path="/item/:id" element={<Item/>} />
               <Route path="/about" element={<About/>} />
+              <Route path="/questions" element={<Questions/>} />
 
             </Routes>
             <EndOfPage />

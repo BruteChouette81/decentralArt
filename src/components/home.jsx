@@ -235,7 +235,7 @@ function InstaView() {
 function Q() {
     return (
         <div class="faq">
-            <h3>Des Questions ? Contactez nous à <strong style={{color: 'darkblue'}}>thomasberthiaume183@gmail.com</strong> !</h3>
+            <h3>Des Questions ? Contactez nous à <strong style={{color: 'darkblue'}}>thomasberthiaume183@gmail.com</strong> ou visitez notre section <a href="/questions">questions-réponses</a>  !</h3>
         </div>
 
     )
