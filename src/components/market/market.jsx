@@ -248,6 +248,7 @@ function Market() {
     const [getPassword, setGetPassword] = useState(true)
 
     const [numreal, setNumreal] = useState(0)
+    const [numticks, setNumticks] = useState(0)
 
     const types = "spin"
     const color = "#0000FF"
@@ -329,6 +330,8 @@ function Market() {
            
             const numReal = await ddsc?.functions.itemCount()
             setNumreal(numReal)
+            //setNumticks((Math.floor(numReal/10) + 1))
+            //{ Array.from({length: numticks }, (_, k) => k == numticks ? range(((k-1)*10), numreal, 1).map((j) => {(<NftBox id={j} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/> )}) : range(((k-1)*10), (k*10), 1).map((j) => {(<NftBox id={j} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/> )}) ) }
             console.log(parseInt(numReal))
             setStillLoading(false)
             /*
@@ -677,6 +680,9 @@ function Market() {
                                         )  : realItems.map((item) => 
                                             item.name.includes(search)===true ? (<NftBox key={item.itemId.toString()} real={true} tokenId={item.tokenId} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image}  account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} dds={dds} password={password} amm={amm}/> ) : ""
                                         )}*/
+
+    //{ Array.from({ length: numreal }, (_, k) =>  k < numreal-15 || k === 21 ? "" : (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/> )) }
+    const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step);
     return(
         getPassword ? <GetPassword /> : 
         <div class="market">
@@ -735,7 +741,9 @@ function Market() {
 
                                         
                                         
-                                        { Array.from({ length: numreal }, (_, k) =>  k < numreal-15 || k === 21 ? "" : (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/> )) }
+                                    { Array.from({ length: numreal }, (_, k) => k < numreal - 20 || k === 21 ? "" : (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/> )) }
+
+                                    
 
 
                                     </div>

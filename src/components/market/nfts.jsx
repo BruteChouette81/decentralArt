@@ -69,6 +69,7 @@ function NftBox (props) {
         }
 
         else {
+            //props.setnumloaded((props.numloaded + 1))
             var data = {
                 body: {
                     address: item.seller.toLowerCase(),
@@ -347,7 +348,7 @@ function NftBox (props) {
                 { purchasing ? props.real ? (
                     <Receipt quebec={quebec} state={state} subtotal={price} total={price} taxprice={taxprice} tax={tax} seller={seller} image={image} account={account} contract={credits} dds={dds} amm={amm} signer={signer} id={id} pay={pay} did={did} pk={pk} purchase={realPurchase} cancel={cancelPurchase} buyloading={buyloading} />
                 ) : ( <Receipt quebec={quebec} state={state} subtotal={price} total={price} taxprice={taxprice} tax={tax} seller={seller} image={image} account={account} contract={credits} market={market} amm={amm} signer={signer} id={id} pay={pay} did={did} pk={pk} purchase={purchase} cancel={cancelPurchase} /> ) : 
-                itemSold ? "" : marketLoaded ? props.mynft ? marketLoadedItem?.seller === account ? (<div class="nftbox">
+                itemSold ? "" :  marketLoaded ? props.mynft ? marketLoadedItem?.seller === account ? (<div class="nftbox">
                 <img id='itemimg' src={marketLoadedItem?.image} alt="" />
                 <h4><a href="">{marketLoadedItem?.name}</a></h4>
                 <h4>ID: {id}</h4>

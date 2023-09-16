@@ -1204,7 +1204,7 @@ function DisplayActions(props) {
             'X-API-Key': web3ApiKey
           }
         };
-        let address = '0xa3f5BDa09F71598B9333F5835Fbf5F8F730984C4'
+        let address = props.account
         let nftlist = []
        
         

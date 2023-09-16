@@ -1252,8 +1252,8 @@ app.get("/getOracleAddr", async (req, res) => {
 
 // plugin for paypal 
 
-const CLIENT_ID ="AbONA1Q9rbHJLPe5ZGWwssIF8z06zRc6y1qU2LsPp0lXaZYjqaCjSTXuC7sAdFW2E_AZCUOuJvnZDhaZ" //"AbONA1Q9rbHJLPe5ZGWwssIF8z06zRc6y1qU2LsPp0lXaZYjqaCjSTXuC7sAdFW2E_AZCUOuJvnZDhaZ" 
-const APP_SECRET = "EMVkPMQJUtDFGCc8mkmGIylNU1pi2Fa32KgIri4OWusHlYWM2JtoNT7MjmO_XARIrGkexoUwBN7kdJ35" //"EIKRUllYOi1Y3h13zdpAWCT-dNICCrvI71X9V_7tgFKpP2hFaQSIKuj3OK--vGSpiO2IRB0s9_99E0Pe"
+const CLIENT_ID ="AbKBS8GeKDT8lvM5rTIkO8QGSkVSlVaLzKy0rO_-dYxP3ZgtltziFVIVcMUKANV7U-KH1SDrHw1QUioD" //"" AbONA1Q9rbHJLPe5ZGWwssIF8z06zRc6y1qU2LsPp0lXaZYjqaCjSTXuC7sAdFW2E_AZCUOuJvnZDhaZ
+const APP_SECRET = "EMVkPMQJUtDFGCc8mkmGIylNU1pi2Fa32KgIri4OWusHlYWM2JtoNT7MjmO_XARIrGkexoUwBN7kdJ35" //""  EIKRUllYOi1Y3h13zdpAWCT-dNICCrvI71X9V_7tgFKpP2hFaQSIKuj3OK--vGSpiO2IRB0s9_99E0Pe
 //const CURRENT_GAS_FEE = 3 * 100000; //decimals
 
 const baseURL = {
@@ -1657,7 +1657,7 @@ async function mintBuy(address, amount, itemId, key) {
 		//console.log(amount)
 		try {
 			await (await credits._mint(ddsAddress, parseInt(amount * 100000))).wait();
-			await (await dds.mintBuy(address, itemId, itemId, key)).wait();
+			await dds.mintBuy(address, itemId, itemId, key);
 			return true;
 		
 		} catch (e) {
@@ -1671,8 +1671,8 @@ async function mintBuy(address, amount, itemId, key) {
 		const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
 
 		try {
-			await (await credits._mint(ddsAddress, parseInt(amount * 100000))).wait();
-			await (await dds.mintBuy(address, itemId, itemId, key)).wait();
+			await await (await credits._mint(ddsAddress, parseInt(amount * 100000))).wait();
+			await dds.mintBuy(address, itemId, itemId, key);
 			return true;
 		
 		} catch (e) {
