@@ -727,6 +727,8 @@ function DisplayActions(props) {
             var url = "/oracleMultiMint"
 
             const numItemBefore = await dds?.functions.itemCount()
+            //console.log(parseInt(numItemBefore) + tokenuri?.length)
+            //console.log(tokenuri?.length)
             
             API.post('serverv2', url, data).then((response) => {
                 console.log(response)
@@ -737,7 +739,7 @@ function DisplayActions(props) {
                         var data = {
                             body: {
                                 address: props.signer.address.toLowerCase(),
-                                itemid: numItemBefore + tokenuri?.length - i, // (parseInt(response) - tokenuri?.length + i + 1), //market item id
+                                itemid: (parseInt(numItemBefore) + i), // (parseInt(response) - tokenuri?.length + i + 1), //market item id
                                 name: nftnames[i], //get the name in the form
                                 score: 0, //set score to zero
                                 tag: tags[i], //"real" 
@@ -752,7 +754,7 @@ function DisplayActions(props) {
                             console.log(response)
                             let itemlink2 = itemLink;
                             itemlink2.push("/item/" +  data.body.itemid)
-                            setItemsDays(itemlink2)
+                            setItemLink(itemlink2)
                             
                         })
 
@@ -766,6 +768,7 @@ function DisplayActions(props) {
                 alert("Error while Multi-creation. Error code 20")
                 console.log(e)
             } )
+            
 
         } catch(e) {
             alert("Unable to create, check console for more informations");

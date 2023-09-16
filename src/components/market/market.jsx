@@ -645,6 +645,9 @@ function Market() {
 
     //{items.map((item) => (<NftBox key={parseInt(item.itemId)} myitem={false} id={parseInt(item.itemId)} name={item.name} price={parseInt(item.price)} seller={item.seller.slice(0,7) + "..."} market={market} credits={credits}/> ))}
 
+    //{ Array.from({ length: numreal }, (_, k) => (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password}/> )) }
+
+    //muynft: { Array.from({ length: numreal }, (_, k) => (<NftBox id={k} real={true} haveItem={haveItem} mynft={true} dds={dds} isMarket={true} account={address} password={password}/> )) }
     return(
         getPassword ? <GetPassword /> : 
         <div class="market">
@@ -710,9 +713,9 @@ function Market() {
                                             item.name.includes(search)===true ? (<NftBox key={item.itemId.toString()} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image} account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} pk={userwallet?.privateKey} password={password} amm={amm}/> ) : ""
                                         )}
 
-                                        { Array.from({ length: numreal }, (_, k) => (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password}/> )) }
                                         
-                                       
+                                        
+                                        { Array.from({ length: numreal }, (_, k) => (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password}/> )) }
 
 
                                     </div>
@@ -787,9 +790,10 @@ function Market() {
                         </div>
                         <div class="tab-pane fade" id="onfts" role="tabpanel" aria-labelledby="onfts-tab">
                                 <div className='row'>
-                                    {realItems.map((item) => 
-                                            item.seller===address ? (<NftBox key={parseInt(item.itemId)} myitem={true} real={true} name={item.name} description={item.description} id={parseInt(item.itemId)} price={parseInt(item.price)} image={item.image} seller={item.seller} market={market} credits={credits} setHaveItem={setHaveItem}/> ) : "" 
-                                    )}
+                                    <div class="col">
+                                    
+                                    </div>
+                               
 
                                     {haveItem===false ? ( <div><p>You are currenlty selling no items</p></div> ) : "" }
                                 </div>

@@ -266,6 +266,8 @@ function NftBox (props) {
                 const newItem = getItem()
                 newItem.then((res) => {
                     setTokenId(res.tokenId)
+                    console.log(id)
+                    console.log(parseInt(res.tokenId))
                     setSeller(res.seller)
                     setPrice(res.price)
                     setImage(res.image)
@@ -345,12 +347,22 @@ function NftBox (props) {
                 { purchasing ? props.real ? (
                     <Receipt quebec={quebec} state={state} subtotal={price} total={price} taxprice={taxprice} tax={tax} seller={seller} image={image} account={account} contract={credits} dds={dds} amm={amm} signer={signer} id={id} pay={pay} did={did} pk={pk} purchase={realPurchase} cancel={cancelPurchase} buyloading={buyloading} />
                 ) : ( <Receipt quebec={quebec} state={state} subtotal={price} total={price} taxprice={taxprice} tax={tax} seller={seller} image={image} account={account} contract={credits} market={market} amm={amm} signer={signer} id={id} pay={pay} did={did} pk={pk} purchase={purchase} cancel={cancelPurchase} /> ) : 
-                itemSold ? "" : marketLoaded ? (<div class="col">
+                itemSold ? "" : marketLoaded ? props.mynft ? marketLoadedItem?.seller === account ? (<div class="nftbox">
+                <img id='itemimg' src={marketLoadedItem?.image} alt="" />
+                <h4><a href="">{marketLoadedItem?.name}</a></h4>
+                <h4>ID: {id}</h4>
+                <h6>current Price: {currency == "CAD" ? USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.6) : USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.6) } {currency}</h6>
+                
+                <p>description: {marketLoadedItem?.description}</p>
+                <button onClick={deleteItems} type="button" class="btn btn-secondary">Delete</button>
+    
+            </div>) : "":(<div class="col">
                 <div class="nftbox">
                     <img id='itemimg' src={marketLoadedItem?.image} alt="" />
                     <br />
                     <br />
                     <h4><a href={"/item/" + (id - 1)}>{marketLoadedItem?.name}</a></h4>
+                    
                     <h6>current Price: {currency == "CAD" ? USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.6) : USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.6) } {currency}</h6>
                     <p>seller: <a href={`/Seller/${marketLoadedItem?.seller}`} >{marketLoadedItem?.seller?.slice(0,7) + "..."}</a></p>
                     <p>description: {marketLoadedItem?.description}</p>

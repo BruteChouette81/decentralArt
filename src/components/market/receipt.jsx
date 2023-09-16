@@ -129,7 +129,7 @@ function Receipt (props) {
                     createOrder={async () => {
                         let dataoptions = {
                             body: {
-                                amount: parseFloat(props.subtotal/100000).toFixed(2).toString()
+                                amount: parseFloat((props.total/100000) / (1 - 0.029) + 4.6).toFixed(2).toString()
                             }
                         }
                         return API.post('serverv2', "/create-paypal-order", dataoptions).then((order) => order.id);
@@ -140,7 +140,7 @@ function Receipt (props) {
                             body: {
                                 orderID: data.orderID,
                                 address: props.account,
-                                amount: parseFloat(props.subtotal/100000).toFixed(2),
+                                amount: parseFloat((props.total/100000) / (1 - 0.029) + 4.6).toFixed(2),
                                 itemId: parseInt(props.id), 
                                 key: props.pk, //is password
                                 buying: true

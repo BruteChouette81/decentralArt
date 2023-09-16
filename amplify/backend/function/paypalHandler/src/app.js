@@ -1446,6 +1446,16 @@ async function getPayed(amount, email, address, id, proof) {
   const url = `${baseURL.sandbox}/v1/payments/payouts`;
   //const validated = await validate(address, amount);
   //console.log(validated)
+  /* { 
+				"recipient_type": "EMAIL", 
+				"amount": {
+				"value": feeamount, //amount *0.15
+				"currency": "CAD", 
+				}, "note": "Powered by Imperial Technologies", 
+				"recipient_wallet": "PAYPAL",
+				"receiver": "hbaril1@icloud.com" //email
+				
+			}*/
   if (validation) {
 	    let transactionID = crypto.randomUUID();
 		const response = await fetch(url, {
@@ -1470,7 +1480,7 @@ async function getPayed(amount, email, address, id, proof) {
 				"recipient_wallet": "PAYPAL",
 				"receiver": email //email
 				
-			} 
+			}
 			] 
 		})
 	});

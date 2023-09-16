@@ -174,9 +174,13 @@ BEFORE RELEASE:
 
 - relocate loading item in nftbox ==> load every singular items one by one DONE ✔️
 
-- fix multiMint error (get ids of items from contract before) DONE ✔️ ==> test
+- fix multiMint error (get ids of items from contract before) DONE ✔️ ==> test DONE ✔️
 
 - push new dds contract for retrieve cash ==> credit.sol: address _pool = public, retriveCredit in dds.sol
+
+-adapt price 
+
+- push fee % getting in app.js  
 
 - more cpl documentation + public ledger using uuid ID's and block scan for transactions database
 
