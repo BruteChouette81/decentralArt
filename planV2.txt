@@ -174,11 +174,11 @@ BEFORE RELEASE:
 
 - relocate loading item in nftbox ==> load every singular items one by one DONE ✔️
 
-- fix multiMint error (get ids of items from contract before) DONE ✔️ ==> test DONE ✔️
+- fix multiMint error (get ids of items from contract before) DONE ✔️ ==> test DONE ✔️ ==> last token id erc721 bug
 
 - push new dds contract for retrieve cash ==> credit.sol: address _pool = public, retriveCredit in dds.sol
 
--adapt price 
+- adapt price DONE ✔️
 
 - push fee % getting in app.js  
 

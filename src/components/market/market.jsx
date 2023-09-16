@@ -315,12 +315,23 @@ function Market() {
         var url = "/connection"
 
         const provider = new ethers.providers.InfuraProvider("goerli")
-        API.post('serverv2', url, data).then((response) => {
+        API.post('serverv2', url, data).then(async (response) => {
             let userwallet = new ethers.Wallet(pk, provider)
             setAddress(userwallet.address)
             setUserwallet(userwallet)
             
             setPay(response.pay)
+            
+            const markets = await configureMarket("true", userwallet)
+            console.log(markets)
+            //let market = markets[0]
+            let ddsc = markets[1] //load both market
+           
+            const numReal = await ddsc?.functions.itemCount()
+            setNumreal(numReal)
+            console.log(parseInt(numReal))
+            setStillLoading(false)
+            /*
             let itemslist = getItems("true", userwallet)
             itemslist.then(res => {
                 //setItems(res[0])
@@ -345,7 +356,7 @@ function Market() {
 
                 
                 //console.log(newitemslist)
-            })
+            })*/
             
         })
     
@@ -648,6 +659,24 @@ function Market() {
     //{ Array.from({ length: numreal }, (_, k) => (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password}/> )) }
 
     //muynft: { Array.from({ length: numreal }, (_, k) => (<NftBox id={k} real={true} haveItem={haveItem} mynft={true} dds={dds} isMarket={true} account={address} password={password}/> )) }
+    /*
+    {sortedby==="activity" ? ( <p>activity</p> ) : ( <p>recently</p> )}
+                                        {sortedby==="activity" ? seaching===false ? sorted.map((item) => 
+                                            item.tag==="nft" ? (<NftBox key={item.itemId.toString()} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image} account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} pk={userwallet?.privateKey} password={password} amm={amm}/> ) : ""
+                                        )  : sorted.map((item) => 
+                                            item.name.includes(search)===true ? (<NftBox key={item.itemId.toString()} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image} account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} pk={userwallet?.privateKey} password={password} amm={amm}/> ) : ""
+                                        ) : seaching===false ? items.map((item) => 
+                                            item.tag==="nft" ? (<NftBox key={item.itemId.toString()} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image} account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} pk={userwallet?.privateKey} password={password} amm={amm}/> ) : ""
+                                        )  : items.map((item) => 
+                                            item.name.includes(search)===true ? (<NftBox key={item.itemId.toString()} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image} account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} pk={userwallet?.privateKey} password={password} amm={amm}/> ) : ""
+                                        )} 
+                                        
+    {sortedby==="activity" ? ( <p>activity</p> ) : ( <p>recently</p> )}
+                                        {seaching===false ? realItems.map((item) => 
+                                            (<NftBox key={(item.itemId)?.toString()} real={true} tokenId={item.tokenId} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image}  account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} dds={dds} password={password} amm={amm}/> )
+                                        )  : realItems.map((item) => 
+                                            item.name.includes(search)===true ? (<NftBox key={item.itemId.toString()} real={true} tokenId={item.tokenId} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image}  account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} dds={dds} password={password} amm={amm}/> ) : ""
+                                        )}*/
     return(
         getPassword ? <GetPassword /> : 
         <div class="market">
@@ -702,20 +731,11 @@ function Market() {
                             <div class="communityNfts">
                                 <div class="row">
                                     <div class="col">
-                                        {sortedby==="activity" ? ( <p>activity</p> ) : ( <p>recently</p> )}
-                                        {sortedby==="activity" ? seaching===false ? sorted.map((item) => 
-                                            item.tag==="nft" ? (<NftBox key={item.itemId.toString()} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image} account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} pk={userwallet?.privateKey} password={password} amm={amm}/> ) : ""
-                                        )  : sorted.map((item) => 
-                                            item.name.includes(search)===true ? (<NftBox key={item.itemId.toString()} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image} account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} pk={userwallet?.privateKey} password={password} amm={amm}/> ) : ""
-                                        ) : seaching===false ? items.map((item) => 
-                                            item.tag==="nft" ? (<NftBox key={item.itemId.toString()} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image} account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} pk={userwallet?.privateKey} password={password} amm={amm}/> ) : ""
-                                        )  : items.map((item) => 
-                                            item.name.includes(search)===true ? (<NftBox key={item.itemId.toString()} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image} account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} pk={userwallet?.privateKey} password={password} amm={amm}/> ) : ""
-                                        )}
+                                        
 
                                         
                                         
-                                        { Array.from({ length: numreal }, (_, k) => (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password}/> )) }
+                                        { Array.from({ length: numreal }, (_, k) =>  k < numreal-15 || k === 21 ? "" : (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/> )) }
 
 
                                     </div>
@@ -773,13 +793,8 @@ function Market() {
                             <div class="communityNfts">
                                 <div class="row">
                                     <div class="col">
-                                    {sortedby==="activity" ? ( <p>activity</p> ) : ( <p>recently</p> )}
-                                        {seaching===false ? realItems.map((item) => 
-                                            (<NftBox key={(item.itemId)?.toString()} real={true} tokenId={item.tokenId} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image}  account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} dds={dds} password={password} amm={amm}/> )
-                                        )  : realItems.map((item) => 
-                                            item.name.includes(search)===true ? (<NftBox key={item.itemId.toString()} real={true} tokenId={item.tokenId} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image}  account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} dds={dds} password={password} amm={amm}/> ) : ""
-                                        )}
-
+                                    
+                                    
                                     </div>
                                 </div>
                                 {stillLoading ? (<div style={{paddingLeft: 40 + "%"}}><ReactLoading type={types} color={color}
@@ -791,7 +806,7 @@ function Market() {
                         <div class="tab-pane fade" id="onfts" role="tabpanel" aria-labelledby="onfts-tab">
                                 <div className='row'>
                                     <div class="col">
-                                    
+                                    { Array.from({ length: numreal }, (_, k) => k < numreal-15 || k === 21 ? "" : (<NftBox id={k} real={true} haveItem={haveItem} mynft={true} dds={dds} isMarket={true} account={address} password={password}/> )) }
                                     </div>
                                
 

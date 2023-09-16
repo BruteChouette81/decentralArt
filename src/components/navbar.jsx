@@ -48,7 +48,7 @@ function NewNavBar() {
               <a class="nav-link active" aria-current="page" href="/">Accueil</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/About" disabled>Questions-réponses</a>
+              <a class="nav-link active" aria-current="page" href="/questions" disabled>Questions-réponses</a>
             </li>
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="/About" disabled>À propos</a>

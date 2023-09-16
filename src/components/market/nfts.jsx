@@ -278,7 +278,7 @@ function NftBox (props) {
             else {
                 
                 setId(props.id)
-                setPrice(props.price / (1 - 0.029) + 4.6*100000)
+                setPrice(props.price) /// (1 - 0.029) + 4.6*100000
                 console.log(props.price)
                 setSeller(props.seller)
                 setTokenId(props.tokenId)
@@ -366,7 +366,7 @@ function NftBox (props) {
                     <h6>current Price: {currency == "CAD" ? USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.6) : USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.6) } {currency}</h6>
                     <p>seller: <a href={`/Seller/${marketLoadedItem?.seller}`} >{marketLoadedItem?.seller?.slice(0,7) + "..."}</a></p>
                     <p>description: {marketLoadedItem?.description}</p>
-                    {props.displayItem ? window.localStorage.getItem("hasWallet") ? (<button onClick={()=>{window.location.replace("/item/" + (id - 1))}} type="button" class="btn btn-secondary" >Purchase</button>) : (<button onClick={()=>{alert("Vous devez créer votre compte afin de pouvoir acheter un item!")}} type="button" class="btn btn-secondary" >Purchase</button>) : (<button onClick={calculateTax} type="button" class="btn btn-secondary">Purchase</button>)}
+                    {props.displayItem ? window.localStorage.getItem("hasWallet") ? (<button onClick={()=>{window.location.replace("/item/" + (id - 1))}} type="button" class="btn btn-secondary" >Purchase</button>) : (<button onClick={()=>{alert("Vous devez créer votre compte afin de pouvoir acheter un item!")}} type="button" class="btn btn-secondary" >Purchase</button>) : props.numreal == id ? (<button onClick={()=>{window.location.replace("/item/" + (id - 1))}} type="button" class="btn btn-secondary" >Purchase</button>) : (<button onClick={calculateTax} type="button" class="btn btn-secondary">Purchase</button>)}
                     
 
                 </div>

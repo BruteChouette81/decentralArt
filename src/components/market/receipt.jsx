@@ -109,6 +109,7 @@ function Receipt (props) {
 
    
     //{props.quebec ? <div> <h6>GST: 1,500 $CREDIT (2,5$ at 5%) </h6> <h6>QST: 3,000 $CREDIT (5$ at 10%)</h6> </div> : <h6 class="tax">Tax: 3,000 $CREDITs ({props.taxprice}$ at {props.tax}%)</h6> } <a href="" class="link link-primary">taxes policies ({props.state})</a>
+    //sandbox ID: "AbONA1Q9rbHJLPe5ZGWwssIF8z06zRc6y1qU2LsPp0lXaZYjqaCjSTXuC7sAdFW2E_AZCUOuJvnZDhaZ"
     return (
         <div>
             { loadF2C === false ?
@@ -119,12 +120,12 @@ function Receipt (props) {
             <img id='itemimg2' src={props.image} alt="" />
             <br />
             <br />
-            <h4>subtotal: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.subtotal/100000)) : USDollar.format((props.subtotal/100000))}  {window.localStorage.getItem("currency")}</h4>
+            <h4>subtotal: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.subtotal/100000) / (1 - 0.029) + 4.6) : USDollar.format((props.subtotal/100000) / (1 - 0.029) + 4.6)}  {window.localStorage.getItem("currency")}</h4>
             
             
-            <h5> Total: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.total/100000)) : USDollar.format((props.total/100000))} {window.localStorage.getItem("currency")}</h5>
+            <h5> Total: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.total/100000) / (1 - 0.029) + 4.6) : USDollar.format((props.total/100000) / (1 - 0.029) + 4.6)} {window.localStorage.getItem("currency")}</h5>
             <br /><br />
-            <PayPalScriptProvider options={{ clientId: "AbONA1Q9rbHJLPe5ZGWwssIF8z06zRc6y1qU2LsPp0lXaZYjqaCjSTXuC7sAdFW2E_AZCUOuJvnZDhaZ", currency: "CAD" }}>
+            <PayPalScriptProvider options={{ clientId: "AbKBS8GeKDT8lvM5rTIkO8QGSkVSlVaLzKy0rO_-dYxP3ZgtltziFVIVcMUKANV7U-KH1SDrHw1QUioD", currency: "CAD" }}>
                 <PayPalButtons
                     createOrder={async () => {
                         let dataoptions = {

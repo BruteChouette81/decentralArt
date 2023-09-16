@@ -225,7 +225,7 @@ function InstaView() {
             <h5>Afin d'en apprendre plus sur une toile ou pour acheter, <a href="/Account">Connectez-vous</a>!</h5>
             <div class="row">
                 <div class="col">
-            { numrealItems > 0 ? Array.from({ length: numrealItems }, (_, k) => (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> )): ""}
+            { numrealItems > 0 ? Array.from({ length: numrealItems }, (_, k) => k < numrealItems-15 || k === 21 ? "" : (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> )): ""}
             </div>
             </div>
         </div>

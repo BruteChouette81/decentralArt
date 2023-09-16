@@ -1252,8 +1252,8 @@ app.get("/getOracleAddr", async (req, res) => {
 
 // plugin for paypal 
 
-const CLIENT_ID ="AbONA1Q9rbHJLPe5ZGWwssIF8z06zRc6y1qU2LsPp0lXaZYjqaCjSTXuC7sAdFW2E_AZCUOuJvnZDhaZ" 
-const APP_SECRET = "EIKRUllYOi1Y3h13zdpAWCT-dNICCrvI71X9V_7tgFKpP2hFaQSIKuj3OK--vGSpiO2IRB0s9_99E0Pe"
+const CLIENT_ID ="AbONA1Q9rbHJLPe5ZGWwssIF8z06zRc6y1qU2LsPp0lXaZYjqaCjSTXuC7sAdFW2E_AZCUOuJvnZDhaZ" //"AbONA1Q9rbHJLPe5ZGWwssIF8z06zRc6y1qU2LsPp0lXaZYjqaCjSTXuC7sAdFW2E_AZCUOuJvnZDhaZ" 
+const APP_SECRET = "EMVkPMQJUtDFGCc8mkmGIylNU1pi2Fa32KgIri4OWusHlYWM2JtoNT7MjmO_XARIrGkexoUwBN7kdJ35" //"EIKRUllYOi1Y3h13zdpAWCT-dNICCrvI71X9V_7tgFKpP2hFaQSIKuj3OK--vGSpiO2IRB0s9_99E0Pe"
 //const CURRENT_GAS_FEE = 3 * 100000; //decimals
 
 const baseURL = {
@@ -1366,7 +1366,7 @@ app.post("/deleteItem", async (req, res) => {
 async function createOrder(amount) {
   const accessToken = await generateAccessToken();
   //console.log(accessToken)
-  const url = `${baseURL.sandbox}/v2/checkout/orders`;
+  const url = `${baseURL.production}/v2/checkout/orders`;
   //console.log(url)
   const response = await fetch(url, {
     method: "POST",
@@ -1396,7 +1396,7 @@ async function getRefund(id, email) {
 	const accessToken = await generateAccessToken();
 	//console.log(accessToken)
 	const amount = await refundCredits(id)
-	const url = `${baseURL.sandbox}/v1/payments/payouts`;
+	const url = `${baseURL.production}/v1/payments/payouts`;
 	//const validated = await validate(address, amount);
 	//console.log(validated)
 	if (amount) {
@@ -1443,7 +1443,7 @@ async function getPayed(amount, email, address, id, proof) {
   const accessToken = await generateAccessToken();
   //console.log(accessToken)
   const validation = await proofAndGo(address, id, proof)
-  const url = `${baseURL.sandbox}/v1/payments/payouts`;
+  const url = `${baseURL.production}/v1/payments/payouts`;
   //const validated = await validate(address, amount);
   //console.log(validated)
   /* { 
@@ -1498,7 +1498,7 @@ async function getPayed(amount, email, address, id, proof) {
 // this triggers when payment is approved 
 async function capturePayment(orderId, address, amount, itemId, key, buying) {
   const accessToken = await generateAccessToken();
-  const url = `${baseURL.sandbox}/v2/checkout/orders/${orderId}/capture`;
+  const url = `${baseURL.production}/v2/checkout/orders/${orderId}/capture`;
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -1656,8 +1656,8 @@ async function mintBuy(address, amount, itemId, key) {
 		const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
 		//console.log(amount)
 		try {
-			await credits._mint(ddsAddress, parseInt(amount * 100000));
-			await dds.mintBuy(address, itemId, itemId, key);
+			await (await credits._mint(ddsAddress, parseInt(amount * 100000))).wait();
+			await (await dds.mintBuy(address, itemId, itemId, key)).wait();
 			return true;
 		
 		} catch (e) {
@@ -1671,8 +1671,8 @@ async function mintBuy(address, amount, itemId, key) {
 		const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
 
 		try {
-			await credits._mint(ddsAddress, parseInt(amount * 100000));
-			await dds.mintBuy(address, itemId, itemId, key);
+			await (await credits._mint(ddsAddress, parseInt(amount * 100000))).wait();
+			await (await dds.mintBuy(address, itemId, itemId, key)).wait();
 			return true;
 		
 		} catch (e) {
@@ -1733,7 +1733,7 @@ async function proofAndGo(address, id, proof) {
 // generate an access token using client id and app secret
 async function generateAccessToken() {
   const auth = Buffer.from(CLIENT_ID + ":" + APP_SECRET).toString("base64")
-  const response = await fetch(`${baseURL.sandbox}/v1/oauth2/token`, {
+  const response = await fetch(`${baseURL.production}/v1/oauth2/token`, {
     method: "POST",
     body: "grant_type=client_credentials",
     headers: {
