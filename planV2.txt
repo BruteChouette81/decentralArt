@@ -170,34 +170,38 @@ BEFORE RELEASE:
 
 - individual items link (facebook) DONE ✔️
 
-- load item in chunk (quicker) DONE ✔️ + delete db and get infos from uri + fast search (from indexing)
+- load item in chunk (quicker) DONE ✔️ + delete db and get infos from uri + fast search (from indexing) OK ✔️
 
 - relocate loading item in nftbox ==> load every singular items one by one DONE ✔️
 
-- fix multiMint error (get ids of items from contract before) DONE ✔️ ==> test DONE ✔️ ==> last token id erc721 bug 
-
-- push new dds contract for retrieve cash ==> credit.sol: address _pool = public, retriveCredit in dds.sol
+- fix multiMint error (get ids of items from contract before) DONE ✔️ ==> test DONE ✔️
 
 - adapt price DONE ✔️
 
 - time out bug DONE ✔️
 
-- handle more items at a time: split numreal in ticks, load the first 10 items, then set interval to autorise the displaying of a 
+- handle more items at a time: split numreal in ticks, load the first 10 items, then set interval to autorise the displaying of the rest
+
+- multi mint: last token id erc721 bug ==> review multipleMint method in Rnft.sol and multipleMintList in dds.sol
+
+- push new dds contract for retrieve cash ==> credit.sol: address _pool = public, retriveCredit in dds.sol ==> test retrieve cash 
+
+- decentralized the minting process (more ipfs nodes) ==> OK ✔️
 
 - reorganize 
 
 - one button load of your commands 
 
-- on/off account 
+- on/off account DONE ✔️
 
 - remove debug log 
 
-- test retrieve cash 
+->>>>>> Real life Transaction: PROOVED ✔️
 
 - push fee % getting in app.js  
 
 - more cpl documentation + public ledger using uuid ID's and block scan for transactions database
 
-- reopen cpl technology site: cpltechnology.net w/ new design / whitepaper
+- reopen cpl technology site: cpltechnology.net w/ new design / whitepaper DONE ✔️
 
 

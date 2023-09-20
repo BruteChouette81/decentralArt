@@ -25,6 +25,13 @@ function NewNavBar() {
     alert("Redirecting to Wallet selector! Select your wallet once in the page!")
     window.location.replace("/Account")
   }
+
+  const clear = () => {
+    window.sessionStorage.setItem("password", "")
+    window.location.replace("/")
+    alert("vous êtes déconnecté")
+
+  }
   
   const onChangeSortedImp = () => {
     setSortedby(2)
@@ -60,7 +67,7 @@ function NewNavBar() {
           </ul>
           <ul class="navbar-nav ms-auto" style={{"paddingRight": 200 + "px"}}>
           <li class="nav-item">
-            {window.localStorage.getItem("hasWallet") ? <a class="btn btn-outline-info me-2" type="button" href='/imperial'>Connection</a> : <a class="btn btn-outline-info me-2" type="button" href='/account'>Connection</a> }
+            {window.localStorage.getItem("hasWallet") ? window.sessionStorage.getItem("password") ? <div><a href="/imperial" style={{color: "green", float:"left", paddingRight: 20 + "px"}}>Vous êtes connecté</a> <button onClick={() => {clear()}} class="btn btn-outline-danger me-2">Se déconnecter</button></div> : <a class="btn btn-outline-info me-2" type="button" href='/imperial'>Mon compte</a> : <a class="btn btn-outline-info me-2" type="button" href='/account'>Créer un compte</a> }
               
             </li>
           </ul>

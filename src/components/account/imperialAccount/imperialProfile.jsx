@@ -555,6 +555,7 @@ function ImperialProfile() {
             try {
                 let res = JSON.parse(res1.toString(enc.Utf8));
                 if (res.pk) {
+                    window.sessionStorage.setItem("password", passwordInp)
                     getPrivateKey(window.localStorage.getItem("walletAddress"), res.pk)
                     if (res.email) {
                         setEmail(res.email)
@@ -580,6 +581,14 @@ function ImperialProfile() {
         
         async function boot() {
             console.log("OK")
+            if(window.sessionStorage.getItem("password")) {
+                setNeedPassword(false);
+                passwordInp = window.sessionStorage.getItem("password");
+                setPassword(passwordInp)
+                connection("true")
+
+
+            }
            
             
         }

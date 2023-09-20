@@ -39,7 +39,7 @@ function BuyCredit() {
     return (
         <div>
             <div class="d-grid gap-2 d-md-block">
-                <button onClick={connectOneClick} class="btn btn-success btn-lg">Connectez-vous en un clique!</button>
+            {window.localStorage.getItem("hasWallet") ? (<button onClick={connectOneClick} class="btn btn-success btn-lg">Connectez-vous en un clique!</button>) : (<button onClick={connectOneClick} class="btn btn-success btn-lg">Créer un compte en un seul click!</button>)}
             </div>
         </div>
     )
@@ -119,7 +119,7 @@ function Update() {
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
             <div class="accordion-body">
-                <h5>La première étape est la création du compte. Celui-ci vous permet d'accèder à l'Atelier en ligne afin de pouvoir explorer et acheter. La création du compte est 100% gratuite et ne prend que quelques instants. Vous n'avez qu'a rentrer un mot de passe et vos informations de livraison ( <a href="/about">en savoir plus sur nos mesures de sécurité</a>) et vous y êtes deja! Pour commencer, clickez <a href="/account">ici!</a></h5>
+                <h5>La première étape est la création du compte. Celui-ci vous permet d'accèder à l'Atelier en ligne afin de pouvoir explorer et acheter. La création du compte est 100% gratuite et ne prend que quelques instants. Vous n'avez qu'à entrer un mot de passe et vos informations de livraison (<a href="/about">en savoir plus sur nos mesures de sécurité</a>) et vous y êtes déjà! Pour commencer, clicker <a href="/account">ici!</a></h5>
             </div>
             </div>
         </div>
@@ -222,10 +222,10 @@ function InstaView() {
     return (
         <div class="instaView">
             <h1>Notre collection:</h1>
-            <h5>Afin d'en apprendre plus sur une toile ou pour acheter, <a href="/Account">Connectez-vous</a>!</h5>
+            <h5>Afin d'en apprendre plus sur une toile ou pour acheter, {window.localStorage.getItem("hasWallet") ? (<a href="/Account">Connectez-vous à votre compte</a>) : (<a href="/Account">Créer un compte</a>)}!</h5>
             <div class="row">
                 <div class="col">
-            { numrealItems > 0 ? Array.from({ length: numrealItems }, (_, k) => k < numrealItems-15 || k === 21 ? "" : (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> )): ""}
+            { numrealItems > 0 ? Array.from({ length: numrealItems }, (_, k) => k < numrealItems - 24 || k === 21 ? "" : (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> )): ""}
             </div>
             </div>
         </div>

@@ -1756,7 +1756,7 @@ function DisplayActions(props) {
                     (<li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-create-tab" data-bs-toggle="pill" data-bs-target="#pill-create" type="button" role="tab" aria-controls="pill-create" aria-selected="false">Create !</button>
                     </li>)
-    }            { props.level != 5 ?
+    }            { props.level == 5 ?
                     (<li class="nav-item" role="presentation">
                         <button class="nav-link" id="pills-ynft-tab" data-bs-toggle="pill" data-bs-target="#pill-ynft" type="button" role="tab" aria-controls="pill-ynft" aria-selected="false" onClick={loadNft}>Votre panier</button>
                     </li>) : ""}

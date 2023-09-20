@@ -78,7 +78,7 @@ function Item() {
     }
     
     const connectUsingPassword = (e) => {
-        e.preventDefault()
+        if (e) {e.preventDefault()}
         setPassword(passwordInp)
         let did = window.localStorage.getItem("did")
         let res1 = AES.decrypt(did, passwordInp) //props.signer.privateKey
@@ -89,6 +89,7 @@ function Item() {
                     window.location.replace("/")
                 }
                 if (res.pk) {
+                    window.sessionStorage.setItem("password", passwordInp)
                     getPrivateKey(window.localStorage.getItem("walletAddress"), res.pk)
                     setGetPassword(false)
                 }
@@ -279,7 +280,18 @@ function Item() {
             //alert("Vous devez créer un compte avant d'accèder à l'Atelier")
             //window.location.replace("/")
         } else {
-            setGetPassword(true)
+            if(window.sessionStorage.getItem("password")) {
+                setGetPassword(false);
+                passwordInp = window.sessionStorage.getItem("password");
+                //setPassword(passwordInp)
+                connectUsingPassword()
+                //connection("true")
+
+
+            } else {
+                setGetPassword(true)
+            }
+            
         }
         console.log("OK")
 
