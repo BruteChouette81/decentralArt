@@ -10,7 +10,7 @@ import DDSABI from '../artifacts/contracts/DDS.sol/DDS.json'
 
 import NftBox from './market/nfts'
 
-const DDSAddress = '0x15399E8a3EA9781EAA3bb1e6375AA51320D12Aea'
+const DDSAddress = '0x79915E0af8c4DeC83c5c628b2a050B7062D7bC1d'
 
 
 const getContract = () => { //for Imperial Account
@@ -225,7 +225,7 @@ function InstaView() {
             <h5>Afin d'en apprendre plus sur une toile ou pour acheter, {window.localStorage.getItem("hasWallet") ? (<a href="/Account">Connectez-vous à votre compte</a>) : (<a href="/Account">Créer un compte</a>)}!</h5>
             <div class="row">
                 <div class="col">
-            { numrealItems > 0 ? Array.from({ length: numrealItems }, (_, k) => k < numrealItems - 24 || k === 21 ? "" : (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> )): ""}
+            { numrealItems > 0 ? Array.from({ length: numrealItems }, (_, k) => numrealItems > 10 ? k > 10 ? (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> ) : "" : (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> )): ""}
             </div>
             </div>
         </div>

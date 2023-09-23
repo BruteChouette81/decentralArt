@@ -61,8 +61,12 @@ function NewNavBar() {
               <a class="nav-link active" aria-current="page" href="/About" disabled>À propos</a>
             </li>
             <li class="nav-item">
+              {window.sessionStorage.getItem("password") ? <a class="btn btn-outline-info me-2" type="button" href='/myItems'>Mes achats</a> : "" }
+            </li>
+            <li class="nav-item">
               <a class="btn btn-outline-success me-2" type="button" href='/Market'>L'Atelier</a>
             </li>
+            
             
           </ul>
           <ul class="navbar-nav ms-auto" style={{"paddingRight": 200 + "px"}}>

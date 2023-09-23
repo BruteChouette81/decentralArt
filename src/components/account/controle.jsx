@@ -35,9 +35,9 @@ const secret = "718da1ac14dfcf25c336bfea241e38563e5f2c9cc8bd77bcde1a5968ad8ebf6a
 const apikey = "681fa3fe8fcbfe2992fe"
 const key = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJmNjhjNmRmZi1mOGRmLTQzNzUtYjA5Ny1mMTNmNDk0OTk3ODIiLCJlbWFpbCI6ImhiYXJpbDFAaWNsb3VkLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiI2ODFmYTNmZThmY2JmZTI5OTJmZSIsInNjb3BlZEtleVNlY3JldCI6IjcxOGRhMWFjMTRkZmNmMjVjMzM2YmZlYTI0MWUzODU2M2U1ZjJjOWNjOGJkNzdiY2RlMWE1OTY4YWQ4ZWJmNmEiLCJpYXQiOjE2ODUyODk0NDZ9.dheuwiicVcI3mM7yMo9voga4Bis7nDu7g5TJocC_xkc"
 const MarketAddress = '0x710005797eFf093Fa95Ce9a703Da9f0162A6916C'; //goerli test contract for listing from account
-const DDSAddress = '0x15399E8a3EA9781EAA3bb1e6375AA51320D12Aea' //gas contract: 0x14b92ddc0e26C0Cf0E7b17Fe742361B8cd1D95e1, Real: 0x1D1db5570832b24b91F4703A52f25D1422CA86de
+const DDSAddress = '0x79915E0af8c4DeC83c5c628b2a050B7062D7bC1d' //gas contract: 0x14b92ddc0e26C0Cf0E7b17Fe742361B8cd1D95e1, Real: 0x1D1db5570832b24b91F4703A52f25D1422CA86de
 const NftAddress = '0x3d275ed3B0B42a7A3fCAA33458C34C0b5dA8Cc3A';
-const TicketAddress = '0x6CFADe18df81Cd9C41950FBDAcc53047EdB2e565' //goerli test contract
+const TicketAddress = '0x42F1c1E4c3b3287d727C15cf7034a26d3E23a7E4' //goerli test contract
 const ImperialRealAddress = "0x666f393A06285c3Ec10895D4092d9Dc86aeFD45b"
 
 /**
@@ -739,7 +739,7 @@ function DisplayActions(props) {
                         var data = {
                             body: {
                                 address: props.signer.address.toLowerCase(),
-                                itemid: (parseInt(numItemBefore) + i), // (parseInt(response) - tokenuri?.length + i + 1), //market item id
+                                itemid: (parseInt(numItemBefore) + i + 1), // (parseInt(response) - tokenuri?.length + i + 1), //market item id
                                 name: nftnames[i], //get the name in the form
                                 score: 0, //set score to zero
                                 tag: tags[i], //"real" 
@@ -1133,6 +1133,211 @@ function DisplayActions(props) {
         )
     }
 
+    function YnftCard2(props) {
+        const [listingItem, setListing] = useState(false)
+        const [usdPrice2, setUsdPrice2] = useState(0)
+        const [usdPrice3, setUsdPrice3] = useState(0)
+
+        const [importantInfo, setImportantInfo] = useState()
+
+
+        const [status, setStatus] = useState("Not prooved")
+        const [refundLoading, setRefundLoading ] = useState(false)
+        const [trackingCode, setTrackingCode] = useState()
+        const [numdaysToRetrieve, setNumdaysToRetrieve] = useState()
+        
+
+        const pollStatus = async() => {
+            console.log(props.realPurchase.length)
+            
+            //first get itemID using database
+                //first option get the address of the owner before ( buyer => contract => seller)
+                //second option get a map in users database of real item purchase => get it in props
+
+            //second, get item by itemID
+            
+
+            let topic = '0xd5374e02ff747047919675d27896da7d71e6f114f88ad9f715f0b4475dc69cda'
+              
+            
+            //third if prooved == true get event with moralis or uselogs
+            for (let i=0; i<props.realPurchase.length; i++) {
+                console.log(props.realPurchase[i][0])
+                console.log(props.tokenid)
+                if(props.realPurchase[i][0] == props.tokenid) { //if we match nft address
+                    const item = await dds.items(parseInt(props.realPurchase[i][1]))
+                    const blocknumber = await dds.provider.getBlock()
+                    console.log(parseInt(item.numBlock))
+                    console.log(parseInt(item.startingBlock))
+                    setNumdaysToRetrieve(parseFloat((parseInt(item.startingBlock) + parseInt(item.numBlock) - parseInt(blocknumber.number) ) / 5760).toFixed(3))
+                    if (item.prooved === true) {
+                        setStatus("prooved")
+
+                        var data = {
+                            body: {
+                                topic: topic
+                            }
+                            
+                        }
+                
+                        var url = "/getproofdata"
+                
+                        API.post('serverv2', url, data).then((response) => {
+                            if (response.result) {
+                                for(let i=0; i<response.result.length; i++) {
+                                    if (response.result[i].data.itemId == props.realPurchase[i][1]) {
+                                        setTrackingCode(response.result[i].data.proof)
+                                    }
+                                } 
+                            }
+
+                        })
+
+
+                        /*
+
+                        //'https://deep-index.moralis.io/api/v2/{dds.address.toLowerCase()}/events?chain=eth&topic={topic}'
+                        const web3ApiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6ImUxYTlmOGQ4LWYwNGUtNGY5Yi1hYjBkLWEwNTZlZTc5NzNjNSIsIm9yZ0lkIjoiMjI3NTYzIiwidXNlcklkIjoiMjI4MDc5IiwidHlwZUlkIjoiNzFhYWJmNjEtMzNjMi00MjMxLTgwMzAtOGQxZDA0OWMzMmVkIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE2ODg1NzkyMDQsImV4cCI6NDg0NDMzOTIwNH0.nBgu238SNYZ3XvLwpKkTIoM6qZ5ZLj4LtomEr03tHro"
+                        const options = {
+                          method: 'POST',
+                          headers: {
+                            accept: 'application/json',
+                            'X-API-Key': web3ApiKey
+                          },
+                          body: '{"anonymous":false,"inputs":[{"indexed":false,"name":"itemId","type":"uint256","internal_type":"uint256"},{"indexed":true,"name":"nft","type":"address","internal_type":"address"},{"indexed":false,"name":"tokenId","type":"uint256","internal_type":"uint256"},{"indexed":true,"name":"seller","type":"address","internal_type":"address"},{"indexed":false,"name":"proof","type":"string","internal_type":"string"}],"name":"Prooved","type":"event"}' //JSON.stringify(ProovedAbi)
+                        };
+                        
+                        
+                        fetch('https://deep-index.moralis.io/api/v2/0x1d1db5570832b24b91f4703a52f25d1422ca86de/events?chain=goerli&topic=0xd5374e02ff747047919675d27896da7d71e6f114f88ad9f715f0b4475dc69cda', options) //chain to arbitrum
+                          .then((res) => res.json())
+                          .then((data) => {
+                            console.log(data) //get the proof
+                            //setTrackingCode(log.data.proof)
+                          })
+
+                        */
+
+                    }
+                }
+            }
+            //return logs
+        }
+
+       
+
+        const retrieve = async() => {
+            //console.log(props.realPurchase[0][0])
+            //console.log(props.tokenid)
+            setRefundLoading(true)
+            for (let i=0; i<props.realPurchase.length; i++) {
+                if(props.realPurchase[i][0] == props.tokenid) { //if we match nft token id
+                    console.log("accessed")
+                    try {
+                        //gas price must be included in first transaction
+                        //await dds.retrieveCredit()
+                        
+                            //await dds.submitProof(orderID, proof)
+                            //let item = await dds.items(orderID-1);
+                            //console.log(parseFloat()
+                            
+                            let data = {
+                                body: {
+                                    id: parseInt(props.realPurchase[i][1]),
+                                    email: window.localStorage.getItem("MoneyAddress")
+                                }
+                            
+                            }
+                
+                            var url = "/get-refund"
+                        
+                            API.post('serverv2', url, data).then((response) => {
+                                console.log(response)
+                                if(response.status === 30) {
+                                    alert("Item is prooved ! It will arrive soon at your location !")
+                                    setRefundLoading(false)
+                                } else {
+                                    alert("successfully refunded at your withdraw address! You will receive a Payout soon!")
+                                    setRefundLoading(false)
+                                }
+                                
+                            }).catch((e) => {
+                                console.log(e)
+                            })
+                            
+                        
+                    } catch(e) {
+                        console.log(e)
+                        alert("Item is prooved ! It will arrive soon at your location !")
+                    }
+                    
+                    
+                }
+            }
+        } 
+
+        useEffect(() => {
+            const options2 = {
+                method: 'GET',
+                headers: {
+                accept: 'application/json',
+                Authorization: key
+                }
+            };
+
+            async function getData() {
+                fetch('https://api.pinata.cloud/data/pinList?status=pinned&hashContains=' + props?.ynft, options2).then((res2) => res2.json()
+                ).then((data2) => {
+                    //tokenAddress: data.result[i].token_address,
+                    //tokenId: data.result[i].token_id, //put to int
+                    
+                    console.log(data2?.rows[0])
+                    
+                    //let ynftlist = ynft;
+
+                    //console.log(ynftlist)
+                    
+                    
+                    setImportantInfo({
+                        name: data2?.rows[0]?.metadata.name,
+                        
+                        metadata: {
+                            description: data2?.rows[0]?.metadata.keyvalues?.description,
+                            tag: data2?.rows[0]?.metadata.keyvalues?.tag,
+                            image: "https://ipfs.moralis.io:2053/ipfs/" + props?.ynft
+                        }
+                    })
+                }).catch((error) => {
+                    console.log(error)
+                })
+            }
+            getData();
+            /**/
+            //console.log(props)
+            //console.log(props?.ynft)
+        })
+
+
+        
+
+       
+        return (
+           <div class="ynftcard">
+                
+                <img id='cardimg' src={importantInfo?.metadata?.image} alt="" />
+            
+                <br />
+                <br />
+                <h4> Nom:  <a href="">{importantInfo?.name}</a></h4>
+                <p>description: {importantInfo?.metadata.description?.slice(0, 20)}...</p>
+                <button onClick={pollStatus} class="btn btn-primary">Rafraîchir le status</button>
+                { status === "Not prooved" ? numdaysToRetrieve > 0 ? ( <h5 style={{color: "yellow"}}>En cours d'envoie</h5> ) : ( <h5 style={{color: "red"}}>Item non prouvé</h5> ) : ( <h5 style={{color: "green"}}>Item envoyé!</h5> )}
+                { refundLoading ? (<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>) : ( <button onClick={retrieve} class="btn btn-primary">Remboursement</button> )}
+                { numdaysToRetrieve > 0 ? ( <h6>L'item sera envoyé dans {numdaysToRetrieve} jours</h6> ) : ( <h6>L'item n'a pas été envoyé dans le délais</h6> )  }
+                {trackingCode ? ( <h5>Tracking Code: <a href="https://www.canadapost-postescanada.ca/track-reperage/en#/home">{trackingCode}</a></h5> ) : ""}
+            </div>
+        )
+    }
+
     function CusNftCard(props) {
         
         return (
@@ -1154,18 +1359,66 @@ function DisplayActions(props) {
     }
 
     function ListYnftCard(props) {
+        let j = 0;
+        //return <YnftCard name={i?.name} abi={i?.contractType} description={i.metadata?.description} image={i.metadata?.image} tag ={i.metadata?.tag} signer={props.signer} level={props.level} address={i?.tokenAddress} tokenid={i?.tokenId} account={props.account} did={props.did} pay={props.pay} realPurchase={props.realPurchase} />
         return (
             <div class="CardList">
                 <div class="row">
                     <div class="col">
                         {props.ynft?.map(i => {
-                         return <YnftCard name={i?.name} abi={i?.contractType} description={i.metadata?.description} image={i.metadata?.image} tag ={i.metadata?.tag} signer={props.signer} level={props.level} address={i?.tokenAddress} tokenid={i?.tokenId} account={props.account} did={props.did} pay={props.pay} realPurchase={props.realPurchase} />
+                            if (j < 5) {
+                                j++
+                                return <YnftCard2 ynft={i[0]} tokenid={i[1]} level={props.level} account={props.account} realPurchase={props.realPurchase}/> 
+                            }
+                            
                         })}
                     </div>
                 </div>
                
             </div>
         )
+    }
+
+    const loadNft2 = async () => {
+        window.location.replace("/myItems")
+        /*
+        const web3ApiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub25jZSI6ImUxYTlmOGQ4LWYwNGUtNGY5Yi1hYjBkLWEwNTZlZTc5NzNjNSIsIm9yZ0lkIjoiMjI3NTYzIiwidXNlcklkIjoiMjI4MDc5IiwidHlwZUlkIjoiNzFhYWJmNjEtMzNjMi00MjMxLTgwMzAtOGQxZDA0OWMzMmVkIiwidHlwZSI6IlBST0pFQ1QiLCJpYXQiOjE2ODg1NzkyMDQsImV4cCI6NDg0NDMzOTIwNH0.nBgu238SNYZ3XvLwpKkTIoM6qZ5ZLj4LtomEr03tHro"
+        const options = {
+          method: 'GET',
+          headers: {
+            accept: 'application/json',
+            'X-API-Key': web3ApiKey
+          }
+        };
+        let address = props.account
+        let nftlist = []
+       
+        
+        fetch('https://deep-index.moralis.io/api/v2/'+ address + '/nft?chain=goerli&format=decimal&media_items=false', options) //chain to arbitrum
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data.result)
+            for (let i=0; i<data?.result.length; i++) {
+                if (data.result[i].token_address == ImperialRealAddress.toLowerCase()){
+                    let metadata = data.result[i].token_uri
+                    
+
+                    console.log("CID: " + metadata?.replace("https://ipfs.moralis.io:2053/ipfs/", "") )
+
+                    //'https://api.pinata.cloud/data/pinList?status=pinned&pinSizeMin=100' \--header 'Authorization: Bearer PINATA JWT'
+
+                    nftlist.push([metadata?.replace("https://ipfs.moralis.io:2053/ipfs/", ""), data.result[i].token_id]) // cid
+                }
+            }
+        
+            //return nftlist
+            
+        }).then(() => {
+            setYnft(nftlist)
+            console.log(nftlist)
+        })
+        .catch((error)=>console.log(error));
+        */
     }
 
     const loadNft = async() => {
@@ -1319,6 +1572,8 @@ function DisplayActions(props) {
             setYnft(ynftlist)
             console.log(ynftlist)
         }*/
+
+        //useEffect(async() => {setTimeout(loadNft, 3000)})
         
 
         return (
@@ -1439,10 +1694,12 @@ function DisplayActions(props) {
                 console.log(response)
                     for(let i=0; i<=response.ids?.length; i++) { //loop trought every listed item of an owner 
                         //console.log(response.ids[i])
-                        if(response.ids[i] > 0) {
+                        if(response.ids[i] >= 0) {
                             numItem++
+
                             //console.log(dds)
-                            const item = await dds?.items(parseInt(response.ids[i])) //get the DDS item
+                            const item = await dds?.items(parseInt(response.ids[i]) + 1) //get the DDS item
+                            console.log(item)
                             //console.log(item)
                             if (item?.sold === true && item?.prooved === false) {
                                 orderIdToComplete.push(parseInt(item.itemId) + 1) //orderID
@@ -1758,7 +2015,7 @@ function DisplayActions(props) {
                     </li>)
     }            { props.level == 5 ?
                     (<li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-ynft-tab" data-bs-toggle="pill" data-bs-target="#pill-ynft" type="button" role="tab" aria-controls="pill-ynft" aria-selected="false" onClick={loadNft}>Votre panier</button>
+                        <button class="nav-link" id="pills-ynft-tab" data-bs-toggle="pill" data-bs-target="#pill-ynft" type="button" role="tab" aria-controls="pill-ynft" aria-selected="false" onClick={loadNft2}>Votre panier</button>
                     </li>) : ""}
                     { props.level != 5 ?
                     (<li class="nav-item" role="presentation">

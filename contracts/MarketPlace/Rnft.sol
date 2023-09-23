@@ -30,7 +30,7 @@ contract RealItem is ERC721, ERC721URIStorage, Ownable {
             _setTokenURI(tokenId, tokensURI[i]);
         }
         
-        return _tokenIdCounter.current();
+        return _tokenIdCounter.current() - 1;
 
     }
 

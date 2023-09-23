@@ -17,6 +17,8 @@ import Market from './components/market/market'
 
 import Item from './components/market/item'
 
+import DisplayYnft from './components/myitems';
+
 import About from './components/about'
 
 import Questions from './components/questions';
@@ -66,6 +68,7 @@ function App() {
               <Route path="/Market" element={<Market />}/>
               <Route path="/Imperial" element={<ImperialProfile/>} />
               <Route path="/item/:id" element={<Item/>} />
+              <Route path="/myItems" element={<DisplayYnft />} />
               <Route path="/about" element={<About/>} />
               <Route path="/questions" element={<Questions/>} />
 

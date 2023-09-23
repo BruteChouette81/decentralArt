@@ -2,6 +2,7 @@
 pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
 import "./Rnft.sol";
 import "./credit.sol";
@@ -70,6 +71,10 @@ contract DDS is PoolOwnable {
     constructor(credit _addrCredit, RealItem _addrRealItem) {
         credits = _addrCredit;
         realItems = _addrRealItem;
+    }
+
+    function onERC721Received(address, address, uint256, bytes calldata) external pure returns (bytes4) {
+        return IERC721Receiver.onERC721Received.selector;
     }
 
     // Make item to offer on the marketplace
@@ -143,7 +148,7 @@ contract DDS is PoolOwnable {
     function multipleMintList(address account, string[] memory uris, uint[] memory _prices, uint[] memory _numDays) public onlyPool() returns (uint) {
         require(_numDays.length == _prices.length, "must be the same number of items");
 
-
+        uint256 id2 = realItems._tokenIdCounter();
         uint id = realItems.multipleMint(address(this), uris);
 
         for (uint i = 0; i<_prices.length; i ++) {
@@ -156,7 +161,7 @@ contract DDS is PoolOwnable {
             items[itemCount] = Item (
                 itemCount,
                 realItems,
-                (id - _prices.length + i + 1),
+                id2 + i, //(id - _prices.length + i + 1),
                 _prices[i],
                 address(account),
                 false,
@@ -168,7 +173,7 @@ contract DDS is PoolOwnable {
             emit Offered(
                 itemCount,
                 address(realItems),
-                (id - _prices.length + i + 1),
+                id2 + i,//(id - _prices.length + i + 1),
                 _prices[i],
                 address(account)
             );

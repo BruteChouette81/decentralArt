@@ -42,8 +42,8 @@ max amount 3$ --> be return minus penalities
 
 new contracts :
 -credits: 0xc183177E3207788ea9342255C8Fcb218763d46e2 CONTRACT, ABI in ORACLE
--Rnft : 0x666f393A06285c3Ec10895D4092d9Dc86aeFD45b ABI AND CONTRACT
--dds: 0xdeAf39D7923dD5bbeb22C591694A0dBc38b6AD3a -> 0x15399E8a3EA9781EAA3bb1e6375AA51320D12Aea CONTRACT ABI in oracle AND site
+-Rnft : 0x42F1c1E4c3b3287d727C15cf7034a26d3E23a7E4 ABI AND CONTRACT
+-dds: 0xdeAf39D7923dD5bbeb22C591694A0dBc38b6AD3a -> 0x79915E0af8c4DeC83c5c628b2a050B7062D7bC1d CONTRACT ABI in oracle AND site
 
 oracle PK: 0xbc2ba2203c4cc302fcfb2df6358d01f6a15bd0d363bb1cabd17aef51921d501b
 oracle address: 0x439da8962debe41408712dE41b6161B66349E250
@@ -182,15 +182,15 @@ BEFORE RELEASE:
 
 - handle more items at a time: split numreal in ticks, load the first 10 items, then set interval to autorise the displaying of the rest
 
-- multi mint: last token id erc721 bug ==> review multipleMint method in Rnft.sol and multipleMintList in dds.sol
+- multi mint: last token id erc721 bug ==> review multipleMint method in Rnft.sol and multipleMintList in dds.sol ==> DONE ✔️
 
-- push new dds contract for retrieve cash ==> credit.sol: address _pool = public, retriveCredit in dds.sol ==> test retrieve cash 
+- push new dds contract for retrieve cash ==> credit.sol: address _pool = public, retriveCredit in dds.sol ==> test retrieve cash ==> OK ✔️
 
 - decentralized the minting process (more ipfs nodes) ==> OK ✔️
 
-- reorganize 
+- reorganize OK ✔️
 
-- one button load of your commands 
+- one button load of your commands DONE ✔️=> make its own page => use Rnft.sol contract to get metadata DONE ✔️
 
 - on/off account DONE ✔️
 

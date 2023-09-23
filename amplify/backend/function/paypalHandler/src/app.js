@@ -44,8 +44,8 @@ const getContract = (signer, abi, address) => {
   return contract
 }
 
-const ddsAddress = "0x15399E8a3EA9781EAA3bb1e6375AA51320D12Aea";
-const creditAddress = "0xc183177E3207788ea9342255C8Fcb218763d46e2"
+const ddsAddress = "0x79915E0af8c4DeC83c5c628b2a050B7062D7bC1d";
+const creditAddress = "0xc183177E3207788ea9342255C8Fcb218763d46e2";
 const ddsABI = [
 	{
 		"inputs": [
@@ -499,6 +499,19 @@ const ddsABI = [
 		"name": "transferOwnership",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_pool",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -1253,7 +1266,7 @@ app.get("/getOracleAddr", async (req, res) => {
 // plugin for paypal 
 
 const CLIENT_ID ="AbKBS8GeKDT8lvM5rTIkO8QGSkVSlVaLzKy0rO_-dYxP3ZgtltziFVIVcMUKANV7U-KH1SDrHw1QUioD" //"" AbONA1Q9rbHJLPe5ZGWwssIF8z06zRc6y1qU2LsPp0lXaZYjqaCjSTXuC7sAdFW2E_AZCUOuJvnZDhaZ
-const APP_SECRET = "EMVkPMQJUtDFGCc8mkmGIylNU1pi2Fa32KgIri4OWusHlYWM2JtoNT7MjmO_XARIrGkexoUwBN7kdJ35" //""  EIKRUllYOi1Y3h13zdpAWCT-dNICCrvI71X9V_7tgFKpP2hFaQSIKuj3OK--vGSpiO2IRB0s9_99E0Pe
+const APP_SECRET = "EMVkPMQJUtDFGCc8mkmGIylNU1pi2Fa32KgIri4OWusHlYWM2JtoNT7MjmO_XARIrGkexoUwBN7kdJ35"//"" EIKRUllYOi1Y3h13zdpAWCT-dNICCrvI71X9V_7tgFKpP2hFaQSIKuj3OK--vGSpiO2IRB0s9_99E0Pe
 //const CURRENT_GAS_FEE = 3 * 100000; //decimals
 
 const baseURL = {
