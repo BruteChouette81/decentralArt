@@ -693,6 +693,7 @@ function Market() {
 
     //{ Array.from({ length: numreal }, (_, k) =>  k < numreal-15 || k === 21 ? "" : (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/> )) }
     //const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step);
+    //{ Array.from({ length: numreal }, (_, k) => k < numreal - 20 || k === 21 ? "" : (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/> )) }
     return(
         getPassword ? <GetPassword /> : 
         <div class="market">
@@ -749,9 +750,9 @@ function Market() {
                                     <div class="col">
                                         
 
-                                        
-                                        
                                     { Array.from({ length: numreal }, (_, k) => k < numreal - 20 || k === 21 ? "" : (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/> )) }
+                                        
+                                    
 
                                     
 
@@ -824,7 +825,7 @@ function Market() {
                         <div class="tab-pane fade" id="onfts" role="tabpanel" aria-labelledby="onfts-tab">
                                 <div className='row'>
                                     <div class="col">
-                                    { Array.from({ length: numreal }, (_, k) => k < numreal-15 || k === 21 ? "" : (<NftBox id={k} real={true} haveItem={haveItem} mynft={true} dds={dds} isMarket={true} account={address} password={password}/> )) }
+                                    { Array.from({ length: numreal }, (_, k) => (<NftBox id={k} real={true} haveItem={haveItem} mynft={true} dds={dds} isMarket={true} account={address} password={password}/> )) }
                                     </div>
                                
 

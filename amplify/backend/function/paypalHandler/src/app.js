@@ -1433,7 +1433,7 @@ async function getRefund(id, email) {
 				  "amount": {
 				  "value": (amount/100000).toFixed(2).toString(), //amount
 				  "currency": "CAD", 
-				  }, "note": "Powered by Imperial Technologies", 
+				  }, "note": "Powered by Atelier de Simon", 
 				  "recipient_wallet": "PAYPAL",
 				  "receiver": email //email
 				  
@@ -1489,7 +1489,7 @@ async function getPayed(amount, email, address, id, proof) {
 				"amount": {
 				"value": amount, //amount
 				"currency": "CAD", 
-				}, "note": "Powered by Imperial Technologies", 
+				}, "note": "Powered by Atelier de Simon", 
 				"recipient_wallet": "PAYPAL",
 				"receiver": email //email
 				
