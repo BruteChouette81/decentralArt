@@ -30,6 +30,8 @@
     border-style: solid;
     border-width: 2px;
     color: grey;
+
+    box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2), 0 12px 40px 0 rgba(0, 0, 0, 0.19);
 }
 
 #itemimg2 {

@@ -124,6 +124,9 @@ function YnftCard2(props) {
         setRefundLoading(true)
         for (let i=0; i<props.realPurchase.length; i++) {
             if(props.realPurchase[i][0] == props.tokenid) { //if we match nft token id
+                if ( !window.localStorage.getItem("MoneyAddress")) {
+                    alert("Vous devez ajouter une addresse e-mail pour votre remboursement dans votre compte!")
+                }
                 console.log("accessed")
                 try {
                     //gas price must be included in first transaction
@@ -140,6 +143,7 @@ function YnftCard2(props) {
                             }
                         
                         }
+                        //console.log(data)
             
                         var url = "/get-refund"
                     

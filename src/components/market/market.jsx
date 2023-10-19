@@ -215,6 +215,7 @@ function RenderImage(props) {
 
 
 function Market() {
+   
     const [market, setMarket] = useState();
     const [credits, setCredits] = useState();
     const [did, setDid] = useState()
@@ -693,6 +694,66 @@ function Market() {
 
     //{ Array.from({ length: numreal }, (_, k) =>  k < numreal-15 || k === 21 ? "" : (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/> )) }
     //const range = (start, stop, step) => Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step);
+
+    const chunkGeneration = (max) => {
+        //return number of chunk, chunk size
+        const chunk_size = 5
+
+        if (max > chunk_size) {
+            let num_chunk = Math.floor(max/chunk_size)
+            return [num_chunk, chunk_size]
+        } else {
+            return [1, max]
+        }
+
+    }
+    function UListLoader() {
+        let timeo = 1000;
+        const [ulist, setUlist] = useState();
+
+        
+        //calculate chunk info
+        useEffect(() => {
+            console.log("reload")
+            let chunks = chunkGeneration(parseInt(12))
+
+            //console.log(chunks)
+            let lastLength = 0;
+            let exedent = 0;
+            let numtime = 1;
+            let fUlist = []
+            const timedOutReload = () => {
+                for (let i = 0; i<=chunks[1]; i++) {
+                    fUlist.push(i + exedent)
+                    console.log("t")
+                    if (i == chunks[1] || fUlist.length > lastLength) {
+                        setUlist(fUlist)
+                        exedent += 6;
+                        lastLength = fUlist.length;
+                        if(numtime < chunks[0]) {
+                            console.log("u")
+                            setTimeout(timedOutReload, timeo)
+                            numtime+=1;
+                        } else (
+                            console.log("done")
+                        )
+                         
+                    }
+                }
+                //setUlist(fUlist)
+            }
+            timedOutReload()
+        }, [setUlist])
+        
+
+
+        return (
+            ulist?.map((i) => ( <p>{i}</p> ))
+
+        )
+    }
+    // { Array.from({ length: numreal }, (_, k) => numreal > 10 ? k < 10 ? (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> ) : "" : (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/> )) }
+    //my items: { Array.from({ length: numreal }, (_, k) => k < numreal-15 || k === 21 ? "" : (<NftBox id={k} real={true} haveItem={haveItem} mynft={true} dds={dds} isMarket={true} account={address} password={password}/> )) }
     return(
         getPassword ? <GetPassword /> : 
         <div class="market">
@@ -750,8 +811,8 @@ function Market() {
                                         
 
                                         
-                                        
-                                    { Array.from({ length: numreal }, (_, k) => k < numreal - 20 || k === 21 ? "" : (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/> )) }
+                                    <UListLoader /> 
+                                   
 
                                     
 
@@ -824,7 +885,7 @@ function Market() {
                         <div class="tab-pane fade" id="onfts" role="tabpanel" aria-labelledby="onfts-tab">
                                 <div className='row'>
                                     <div class="col">
-                                    { Array.from({ length: numreal }, (_, k) => k < numreal-15 || k === 21 ? "" : (<NftBox id={k} real={true} haveItem={haveItem} mynft={true} dds={dds} isMarket={true} account={address} password={password}/> )) }
+                                    
                                     </div>
                                
 

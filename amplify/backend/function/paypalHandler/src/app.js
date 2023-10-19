@@ -1700,7 +1700,7 @@ async function refundCredits(id) {
 	if (ConnectedWallet[0]) {
 		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
 		try {
-			const amount = await dds.retrieveCredit(id);
+			const amount = await (await dds.retrieveCredit(id)).wait();
 			return amount;
 		} catch (e) {
 			return false;
@@ -1712,7 +1712,7 @@ async function refundCredits(id) {
 		await load_wallet()
 		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
 		try {
-			const amount = await dds.retrieveCredit(id);
+			const amount = await (await dds.retrieveCredit(id)).wait();
 			return amount;
 		} catch (e) {
 			return false;

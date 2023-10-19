@@ -225,7 +225,7 @@ function InstaView() {
             <h5>Afin d'en apprendre plus sur une toile ou pour acheter, {window.localStorage.getItem("hasWallet") ? (<a href="/Account">Connectez-vous à votre compte</a>) : (<a href="/Account">Créer un compte</a>)}!</h5>
             <div class="row">
                 <div class="col">
-            { numrealItems > 0 ? Array.from({ length: numrealItems }, (_, k) => numrealItems > 10 ? k > 10 ? (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> ) : "" : (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> )): ""}
+            { numrealItems > 0 ? Array.from({ length: numrealItems }, (_, k) => numrealItems > 13 ? k > 13 ? (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> ) : "" : (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> )): ""}
             </div>
             </div>
         </div>
