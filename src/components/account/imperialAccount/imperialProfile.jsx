@@ -298,9 +298,9 @@ function ImperialProfile() {
     }
 
     const writedId = async () => {
-        alert("writting your DID")
+        //alert("writting your DID")
         if (window.localStorage.getItem("usingMetamask") === "true") {
-            alert("error")
+            alert("Error... deconnecter votre compte Metamask...")
         }
         else {
             const NewWallet = ethers.Wallet.createRandom()
@@ -342,7 +342,7 @@ function ImperialProfile() {
             
               
             window.localStorage.setItem("did", encrypted);
-            alert("DID successfully written! Account successfully created!")
+            alert("Compte enregistré ! Bienvenue dans l'Atelier de Simon !")
         }
 
         
@@ -361,7 +361,7 @@ function ImperialProfile() {
             writedId()  
         }
         else {
-            alert("Information of DiD not well written... Try again...")
+            alert("Vous devez entrer vos informations... Veuiller réessayer...")
         }
         
         
@@ -466,7 +466,7 @@ function ImperialProfile() {
             setAmm(AMMContract)
             setFirstConnect(false)
             setProfileLoading(false)
-            alert("Bienvenue sur L'Atelier de Simon! Il ne vous reste qu'à vous créer une Identité Decentralizée pour accèder à l'Atelier!")
+            //alert("Bienvenue sur L'Atelier de Simon! Il ne vous reste qu'à vous créer une Identité Decentralizée pour accèder à l'Atelier!")
 
         })
     }

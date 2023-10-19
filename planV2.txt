@@ -194,7 +194,7 @@ BEFORE RELEASE:
 
 - on/off account DONE ✔️
 
-- remove debug log 
+- remove debug alert DONE ✔️ ==> log
 
 ->>>>>> Real life Transaction: PROOVED ✔️
 
