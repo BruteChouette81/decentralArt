@@ -707,14 +707,25 @@ function Market() {
         }
 
     }
+
     function UListLoader() {
-        let timeo = 1000;
-        const [ulist, setUlist] = useState();
+        let timeo = 2000;
+        const based = 5; //minimum item loading
+        const increasingby = 5; //number of more item being load each "load more "
+        //let chunk_number = 0;
+
+        const [chunk_number, setChunk_number] = useState(0);
+
+        const loadmore = () => {
+            setChunk_number(chunk_number+1)
+
+        }
 
         
         //calculate chunk info
         useEffect(() => {
             console.log("reload")
+            /*
             let chunks = chunkGeneration(parseInt(12))
 
             //console.log(chunks)
@@ -742,16 +753,35 @@ function Market() {
                 }
                 //setUlist(fUlist)
             }
-            timedOutReload()
-        }, [setUlist])
+            timedOutReload()*/
+            let numtime = 1;
+            //let maxtime = 2;
+            const timedOutReload = () => {
+                setChunk_number(chunk_number+1)
+                if(numtime > (numreal/increasingby)) {
+                        console.log("reloading")
+                        setTimeout(timedOutReload, timeo)
+                        numtime+=1;
+                } else {
+                    console.log("done")
+                }
+            }
+            setTimeout(timedOutReload, timeo);
+        }, [])
         
 
-
+        // Array.from({ length: based + (increasingby * chunk_number) }, (_, k) => k <=  based + (increasingby * (chunk_number-1)) ? "" : <p>{k}</p>)
+        // (chunk_number-(i+1))
         return (
-            ulist?.map((i) => ( <p>{i}</p> ))
+            <div>
+            {Array.from({ length: based }, (_, k) => numreal > 0 ? (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/>) : "")}
+            {chunk_number > 0 ? Array.from({ length: chunk_number}, (_, i) => Array.from({ length: based + (increasingby * (i + 1)) }, (_, k) => k <=  (based-1) + (increasingby * i) || k >= numreal ? "" : (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/>) )) : ""}
+            <button onClick={loadmore} class="btn btn-primary btn-lg" style={{"float": "bottom"}}>Load more!</button>
+            </div>
 
         )
     }
+
     // { Array.from({ length: numreal }, (_, k) => numreal > 10 ? k < 10 ? (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> ) : "" : (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/> )) }
     //my items: { Array.from({ length: numreal }, (_, k) => k < numreal-15 || k === 21 ? "" : (<NftBox id={k} real={true} haveItem={haveItem} mynft={true} dds={dds} isMarket={true} account={address} password={password}/> )) }
     return(

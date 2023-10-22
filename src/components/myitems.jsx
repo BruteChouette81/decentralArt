@@ -34,6 +34,8 @@ function YnftCard2(props) {
     const [numdaysToRetrieve, setNumdaysToRetrieve] = useState()
 
     const [availableRefund, setAvailableRefund] = useState()
+
+    const [notDone, setNotDone] = useState(true);
     
 
     const pollStatus = async() => {
@@ -126,7 +128,7 @@ function YnftCard2(props) {
             if(props.realPurchase[i][0] == props.tokenid) { //if we match nft token id
                 if ( !window.localStorage.getItem("MoneyAddress")) {
                     alert("Vous devez ajouter une addresse e-mail pour votre remboursement dans votre compte!")
-                }
+                } else {
                 console.log("accessed")
                 try {
                     //gas price must be included in first transaction
@@ -166,6 +168,7 @@ function YnftCard2(props) {
                     console.log(e)
                     alert("Item is prooved ! It will arrive soon at your location !")
                 }
+            }
                 
                 
             }
@@ -203,11 +206,16 @@ function YnftCard2(props) {
                         image: "https://ipfs.moralis.io:2053/ipfs/" + props?.ynft
                     }
                 })
+
+                setNotDone(false)
             }).catch((error) => {
                 console.log(error)
             })
         }
-        getData();
+        if (notDone) {
+            getData();
+        }
+        
         /**/
         //console.log(props)
         //console.log(props?.ynft)

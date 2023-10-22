@@ -146,6 +146,17 @@ function Update() {
 function InstaView() {
     const [numrealItems, setNumRealItems] = useState(0);
     const [dds, setDds] = useState();
+    let timeo = 2000;
+    const based = 5; //minimum item loading
+    const increasingby = 5; //number of more item being load each "load more "
+    //let chunk_number = 0;
+
+    const [chunk_number, setChunk_number] = useState(0);
+
+    const loadmore = () => {
+        setChunk_number(chunk_number+1)
+
+    }
 
     useEffect(() => {
         const ddsc = getContract()
@@ -216,6 +227,19 @@ function InstaView() {
         loadInstaItems().then(() => {
             console.log("Done")
         })
+        let numtime = 1;
+        //let maxtime = 2;
+        const timedOutReload = () => {
+            setChunk_number(chunk_number+1)
+            if(numtime > (numrealItems/increasingby)) {
+                    console.log("reloading")
+                    setTimeout(timedOutReload, timeo)
+                    numtime+=1;
+            } else {
+                console.log("done")
+            }
+        }
+        setTimeout(timedOutReload, timeo);
         //setRealItems(listofDis)
         
     }, [])
@@ -225,9 +249,11 @@ function InstaView() {
             <h5>Afin d'en apprendre plus sur une toile ou pour acheter, {window.localStorage.getItem("hasWallet") ? (<a href="/Account">Connectez-vous à votre compte</a>) : (<a href="/Account">Créer un compte</a>)}!</h5>
             <div class="row">
                 <div class="col">
-            { numrealItems > 0 ? Array.from({ length: numrealItems }, (_, k) => numrealItems > 13 ? k > 13 ? (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> ) : "" : (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> )): ""}
+            { numrealItems > 0 ? Array.from({ length: based }, (_, k) =>  (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> )) : ""}
+            {chunk_number > 0 ? Array.from({ length: chunk_number}, (_, i) => Array.from({ length: based + (increasingby * (i + 1)) }, (_, k) => k <=  (based-1) + (increasingby * i) || k >= numrealItems ? "" : (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> ) )) : ""}
             </div>
             </div>
+            <button onClick={loadmore} class="btn btn-primary btn-lg" style={{"float": "bottom"}}>Load more!</button>
         </div>
     );
 }

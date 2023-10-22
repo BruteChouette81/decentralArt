@@ -180,7 +180,7 @@ BEFORE RELEASE:
 
 - time out bug DONE ✔️
 
-- handle more items at a time: split numreal in ticks, load the first 10 items, then set interval to autorise the displaying of the rest
+- handle more items at a time: split numreal in ticks, load the first 10 items, then set interval to autorise the displaying of the rest DONE ✔️ ==> apply it everywhere DONE ✔️
 
 - multi mint: last token id erc721 bug ==> review multipleMint method in Rnft.sol and multipleMintList in dds.sol ==> DONE ✔️
 
