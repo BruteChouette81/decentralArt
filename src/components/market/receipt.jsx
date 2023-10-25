@@ -120,6 +120,7 @@ function Receipt (props) {
             <img id='itemimg2' src={props.image} alt="" />
             <br />
             <br />
+            <p>Des questions ? contacter nous a <strong>thomasberthiaume183@gmail.com</strong></p>
             <h4>subtotal: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.subtotal/100000) / (1 - 0.029) + 4.6) : USDollar.format((props.subtotal/100000) / (1 - 0.029) + 4.6)}  {window.localStorage.getItem("currency")}</h4>
             
             

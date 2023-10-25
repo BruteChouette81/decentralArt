@@ -9,6 +9,8 @@ const marketdds = '0x1D1db5570832b24b91F4703A52f25D1422CA86de'
 
 const TicketAddress = '0x6CFADe18df81Cd9C41950FBDAcc53047EdB2e565'
 
+const tags = ["nft", "tickets"];
+
 let USDollar = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -41,6 +43,7 @@ function NftBox (props) {
     const [itemSold, setItemSold] = useState(false)
     const [marketLoaded, setMarketLoaded] = useState(false)
     const [marketLoadedItem, setMarketLoadedItem] = useState({})
+    const [notload, setNotload] = useState(false)
     
 
     const [purchasing, setPurchasing] = useState(false)
@@ -266,13 +269,18 @@ function NftBox (props) {
                 
                 const newItem = getItem()
                 newItem.then((res) => {
-                    setTokenId(res.tokenId)
-                    console.log(id)
-                    console.log(parseInt(res.tokenId))
-                    setSeller(res.seller)
-                    setPrice(res.price)
-                    setImage(res.image)
-                    setMarketLoadedItem(res)
+                    if (res.tag === tags[props.catID]) {
+                        setTokenId(res.tokenId)
+                        console.log(id)
+                        console.log(parseInt(res.tokenId))
+                        setSeller(res.seller)
+                        setPrice(res.price)
+                        setImage(res.image)
+                        setMarketLoadedItem(res)
+                    } else {
+                        setNotload(true)
+                    }
+                    
                 })
             }
 
@@ -344,6 +352,7 @@ function NftBox (props) {
     //<!--  -->
     else {
         return(
+            notload ? "" : 
             <div>
                 { purchasing ? props.real ? (
                     <Receipt quebec={quebec} state={state} subtotal={price} total={price} taxprice={taxprice} tax={tax} seller={seller} image={image} account={account} contract={credits} dds={dds} amm={amm} signer={signer} id={id} pay={pay} did={did} pk={pk} purchase={realPurchase} cancel={cancelPurchase} buyloading={buyloading} />
@@ -366,7 +375,9 @@ function NftBox (props) {
                     
                     <h6>current Price: {currency == "CAD" ? USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.6) : USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.6) } {currency}</h6>
                     <p>seller: <a href={`/Seller/${marketLoadedItem?.seller}`} >{marketLoadedItem?.seller?.slice(0,7) + "..."}</a></p>
+                    
                     <p>description: {marketLoadedItem?.description}</p>
+                    
                     {props.displayItem ? window.localStorage.getItem("hasWallet") ? (<button onClick={()=>{window.location.replace("/item/" + (id - 1))}} type="button" class="btn btn-secondary" >Purchase</button>) : (<button onClick={()=>{alert("Vous devez créer votre compte afin de pouvoir acheter un item!")}} type="button" class="btn btn-secondary" >Purchase</button>) : props.numreal == id ? (<button onClick={()=>{window.location.replace("/item/" + (id - 1))}} type="button" class="btn btn-secondary" >Purchase</button>) : (<button onClick={calculateTax} type="button" class="btn btn-secondary">Purchase</button>)}
                     
 

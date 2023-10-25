@@ -249,8 +249,8 @@ function InstaView() {
             <h5>Afin d'en apprendre plus sur une toile ou pour acheter, {window.localStorage.getItem("hasWallet") ? (<a href="/Account">Connectez-vous à votre compte</a>) : (<a href="/Account">Créer un compte</a>)}!</h5>
             <div class="row">
                 <div class="col">
-            { numrealItems > 0 ? Array.from({ length: based }, (_, k) =>  (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> )) : ""}
-            {chunk_number > 0 ? Array.from({ length: chunk_number}, (_, i) => Array.from({ length: based + (increasingby * (i + 1)) }, (_, k) => k <=  (based-1) + (increasingby * i) || k >= numrealItems ? "" : (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> ) )) : ""}
+            { numrealItems > 0 ? Array.from({ length: based }, (_, k) =>  (<NftBox id={k} catID={0} real={true} displayItem={true} isMarket={true} dds={dds}/> )) : ""}
+            {chunk_number > 0 ? Array.from({ length: chunk_number}, (_, i) => Array.from({ length: based + (increasingby * (i + 1)) }, (_, k) => k <=  (based-1) + (increasingby * i) || k >= numrealItems ? "" : (<NftBox id={k} catID={0} real={true} displayItem={true} isMarket={true} dds={dds}/> ) )) : ""}
             </div>
             </div>
             <button onClick={loadmore} class="btn btn-primary btn-lg" style={{"float": "bottom"}}>Load more!</button>

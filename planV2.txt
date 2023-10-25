@@ -205,3 +205,6 @@ BEFORE RELEASE:
 - reopen cpl technology site: cpltechnology.net w/ new design / whitepaper DONE ✔️
 
 
+Tickets === maitre canadien
+
+

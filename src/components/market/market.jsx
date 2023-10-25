@@ -708,7 +708,7 @@ function Market() {
 
     }
 
-    function UListLoader() {
+    function UListLoader(props) {
         let timeo = 2000;
         const based = 5; //minimum item loading
         const increasingby = 5; //number of more item being load each "load more "
@@ -774,12 +774,10 @@ function Market() {
         // (chunk_number-(i+1))
         return (
             <div>
-            {Array.from({ length: based }, (_, k) => numreal > 0 ? (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/>) : "")}
-            {chunk_number > 0 ? Array.from({ length: chunk_number}, (_, i) => Array.from({ length: based + (increasingby * (i + 1)) }, (_, k) => k <=  (based-1) + (increasingby * i) || k >= numreal ? "" : (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/>) )) : ""}
+            {Array.from({ length: based }, (_, k) => numreal > 0 ? (<NftBox id={k} catID={props.id} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/>) : "")}
+            {chunk_number > 0 ? Array.from({ length: chunk_number}, (_, i) => Array.from({ length: based + (increasingby * (i + 1)) }, (_, k) => k <=  (based-1) + (increasingby * i) || k >= numreal ? "" : (<NftBox id={k} real={true} catID={props.id} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/>) )) : ""}
             <button onClick={loadmore} class="btn btn-primary btn-lg" style={{"float": "bottom"}}>Load more!</button>
-            </div>
-
-        )
+            </div>)
     }
 
     // { Array.from({ length: numreal }, (_, k) => numreal > 10 ? k < 10 ? (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> ) : "" : (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/> )) }
@@ -798,16 +796,14 @@ function Market() {
                 <nav class="nav">
                     <ul class="nav nav-pills" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="cnfts-tab" data-bs-toggle="tab" data-bs-target="#cnfts" type="button" role="tab" aria-controls="cnfts" aria-selected="true">Impressionisme</button>
+                            <button class="nav-link active" id="cnfts-tab" data-bs-toggle="tab" data-bs-target="#cnfts" type="button" role="tab" aria-controls="cnfts" aria-selected="true">Toile de L'artiste</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="ticket-tab" data-bs-toggle="tab" data-bs-target="#ticket" type="button" role="tab" aria-controls="ticket" aria-selected="false">Nature Morte</button>
+                            <button class="nav-link" id="ticket-tab" data-bs-toggle="tab" data-bs-target="#ticket" type="button" role="tab" aria-controls="ticket" aria-selected="false">Maitre canadien</button>
                         </li>
+                       
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="vp-tab" data-bs-toggle="tab" data-bs-target="#vp" type="button" role="tab" aria-controls="vp" aria-selected="false">Realisme</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="onfts-tab" data-bs-toggle="tab" data-bs-target="#onfts" type="button" role="tab" aria-controls="onfts" aria-selected="false">My Items</button>
+                            <button class="nav-link" id="onfts-tab" data-bs-toggle="tab" data-bs-target="#onfts" type="button" role="tab" aria-controls="onfts" aria-selected="false">Mes Items</button>
                         </li>
                        
 
@@ -841,7 +837,7 @@ function Market() {
                                         
 
                                         
-                                    <UListLoader /> 
+                                    <UListLoader id={0}/> 
                                    
 
                                     
@@ -871,13 +867,7 @@ function Market() {
                             <div class="communityNfts">
                                 <div class="row">
                                     <div class="col">
-                                    {sortedby==="activity" ? ( <p>recently</p> ) : ( <p>recently</p> )}
-                                        {seaching===false ? items.map((item) => 
-                                            item.tag==="ticket" ? (<NftBox key={item.itemId.toString()} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image} account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} password={password} amm={amm}/> ) : ""
-                                        )  : items.map((item) => 
-                                            item.name.includes(search)===true ? (<NftBox key={item.itemId.toString()} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image}  account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} password={password} amm={amm}/> ) : ""
-                                        )}
-                                        
+                                    <UListLoader id={1}/> 
 
                                     </div>
                                 </div>
@@ -887,31 +877,7 @@ function Market() {
                             
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="vp" role="tabpanel" aria-labelledby="vp-tab">
-                            <br />
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Sorted by
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-dark">
-                                    <li><button class="dropdown-item" onClick={onChangeSortedActivity}>Trending</button></li>
-                                    <li><button class="dropdown-item" onClick={onChangeSortedRecently}>Recently Posted</button></li>
-                                    <li><button class="dropdown-item disabled" onClick={onChangeSortedAi}>Imperial-AI</button></li>
-                                </ul>
-                            </div>
-                            <div class="communityNfts">
-                                <div class="row">
-                                    <div class="col">
-                                    
-                                    
-                                    </div>
-                                </div>
-                                {stillLoading ? (<div style={{paddingLeft: 40 + "%"}}><ReactLoading type={types} color={color}
-                                    height={200} width={200} /><h5>Still loading items...</h5></div>) : ""
-                                }
-                            
-                            </div>
-                        </div>
+                        
                         <div class="tab-pane fade" id="onfts" role="tabpanel" aria-labelledby="onfts-tab">
                                 <div className='row'>
                                     <div class="col">
@@ -919,44 +885,14 @@ function Market() {
                                     </div>
                                
 
-                                    {haveItem===false ? ( <div><p>You are currenlty selling no items</p></div> ) : "" }
+                                    {haveItem===false ? ( <div><p>Vous ne vendez pas d'item.</p></div> ) : "" }
                                 </div>
                                 {stillLoading ? (<div style={{paddingLeft: 40 + "%"}}><ReactLoading type={types} color={color}
                                     height={200} width={200} /><h5>Still loading items...</h5></div>) : ""
                                 }
 
                         </div>
-                        <div class="tab-pane fade" id="real" role="tabpanel" aria-labelledby="real-tab">
-                            <br />
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Sorted by
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-dark">
-                                    <li><button class="dropdown-item" onClick={onChangeSortedActivity}>Trending</button></li>
-                                    <li><button class="dropdown-item" onClick={onChangeSortedRecently}>Recently Posted</button></li>
-                                    <li><button class="dropdown-item disabled" onClick={onChangeSortedAi}>Imperial-AI</button></li>
-                                </ul>
-                            </div>
-                            <div class="communityNfts">
-                                <div class="row">
-                                    <div class="col">
-                                    {sortedby==="activity" ? ( <p>activity</p> ) : ( <p>recently</p> )}
-                                        {seaching===false ? realItems.map((item) => 
-                                            item.tag==="real" ? (<NftBox key={(item.itemId + 99).toString()} real={true} tokenId={item.tokenId} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image}  account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} dds={dds} password={password} amm={amm}/> ) : ""
-                                        )  : realItems.map((item) => 
-                                            item.name.includes(search)===true ? (<NftBox key={item.itemId.toString()} real={true} tokenId={item.tokenId} myitem={false} id={parseInt(item.itemId)} name={item.name} description={item.description} price={parseInt(item.price)} seller={item.seller} image={item.image}  account={address} signer={userwallet} pay={pay} did={did} market={market} credits={credits} dds={dds} password={password} amm={amm}/> ) : ""
-                                        )}
-                                        
-                                    </div>
-                                </div>
-                                {stillLoading ? (<div style={{paddingLeft: 40 + "%"}}><ReactLoading type={types} color={color}
-                                    height={200} width={200} /><h5>Still loading items...</h5></div>) : ""
-                                }
-                                
-                            
-                            </div>
-                        </div>
+                       
                     </div>
             </div>)}
         </div>
