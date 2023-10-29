@@ -358,7 +358,7 @@ function NftBox (props) {
                     <Receipt quebec={quebec} state={state} subtotal={price} total={price} taxprice={taxprice} tax={tax} seller={seller} image={image} account={account} contract={credits} dds={dds} amm={amm} signer={signer} id={id} pay={pay} did={did} pk={pk} purchase={realPurchase} cancel={cancelPurchase} buyloading={buyloading} />
                 ) : ( <Receipt quebec={quebec} state={state} subtotal={price} total={price} taxprice={taxprice} tax={tax} seller={seller} image={image} account={account} contract={credits} market={market} amm={amm} signer={signer} id={id} pay={pay} did={did} pk={pk} purchase={purchase} cancel={cancelPurchase} /> ) : 
                 itemSold ? "" :  marketLoaded ? props.mynft ? marketLoadedItem?.seller === account ? (<div class="nftbox">
-                <img id='itemimg' src={marketLoadedItem?.image} alt="" />
+                <a href={marketLoadedItem?.image}><img id='itemimg' src={marketLoadedItem?.image} alt="" /></a>
                 <h4><a href="">{marketLoadedItem?.name}</a></h4>
                 <h4>ID: {id}</h4>
                 <h6>current Price: {currency == "CAD" ? USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.6) : USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.6) } {currency}</h6>
@@ -368,7 +368,7 @@ function NftBox (props) {
     
             </div>) : "":(<div class="col">
                 <div class="nftbox">
-                    <img id='itemimg' src={marketLoadedItem?.image} alt="" />
+                <a href={marketLoadedItem?.image}><img id='itemimg' src={marketLoadedItem?.image} alt="" /></a>
                     <br />
                     <br />
                     <h4><a href={"/item/" + (id - 1)}>{marketLoadedItem?.name}</a></h4>
@@ -385,7 +385,7 @@ function NftBox (props) {
             </div>) : (
                     <div class="col">
                         <div class="nftbox">
-                            <img id='itemimg' src={image} alt="" />
+                        <a href={image}><img id='itemimg' src={image} alt="" /></a>
                             <br />
                             <br />
                             <h4><a href={"/item/" + (props.id -1)}>{props.name}</a></h4>

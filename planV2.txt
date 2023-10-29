@@ -198,6 +198,12 @@ BEFORE RELEASE:
 
 ->>>>>> Real life Transaction: PROOVED ✔️
 
+- mobile version: home page DONE ✔️, account DONE ✔️, market DONE ✔️
+
+- email list
+
+- sounds
+
 - push fee % getting in app.js  
 
 - more cpl documentation + public ledger using uuid ID's and block scan for transactions database

@@ -78,9 +78,9 @@ function ShowAccount(props) {
     else {
         return (
             <div>
-                <h5>Numéro de compte: <strong>{props.account?.slice(0,10)}...</strong> {props.level === 0 ? (<span class="badge bg-secondary"><a href={`/subs/${props.account}`}>Basic</a> </span>) : props.level === 1 ? (<span class="badge bg-info"><a href={`/subs/${props.account}`}>Premium</a></span>) : props.level === 2 ? (<span class="badge bg-warning">Expert</span>) : props.level === 3 ? (<span class="badge bg-success">Verified</span>) : props.level === 5 ? (<span class="badge bg-light text-dark">Owner</span>) : ""} </h5>
-                <h5>Nom Complet: <strong>{props.fullname}</strong></h5>
-                <h5>Email: <strong>{props.email}</strong></h5>
+                
+                <h6>Nom Complet: <strong>{props.fullname}</strong></h6>
+                <h6>Email: <strong>{props.email}</strong></h6>
             </div>
         )
     }

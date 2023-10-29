@@ -259,7 +259,7 @@ function Profile(props) {
             
         
     }, [])
-    if (window.ethereum) {
+    if (true) {
 
         if (custimg === true) {
             //
@@ -280,7 +280,7 @@ function Profile(props) {
                         <h4 id="profile-info-tag">personnal information: </h4>
                         <Settings address={props.account}/>
                         
-                        <ShowAccount level={level} />
+                        {window.screen.width < 700 ? "" : <ShowAccount level={level} /> }
                         <ShowUsername name={name}/>
                         <ShowDescription description={description} />
                         <ShowBalance account={props.account} credits={props.credit} />
@@ -304,10 +304,11 @@ function Profile(props) {
                     </div>
                     <div class="profile-info">
                         <h4 id="profile-info-tag">personnal information:</h4>
-                        <Settings />
+                        <Settings address={props.account}/>
 
-                        <ShowAccount />
+                        {window.screen.width < 700 ? "" : <ShowAccount /> }
                         <ShowUsername name={name}/>
+                        <ShowDescription description={description} />
                         <ShowBalance account={props.account} credits={props.credit} />
                     </div>
                     <br />
