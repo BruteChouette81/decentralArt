@@ -3,6 +3,7 @@ import './css/nftbox.css'
 import {useState, useEffect } from 'react';
 import { API, Storage } from 'aws-amplify';
 import Receipt from './receipt';
+import ding from '../css/ding-36029.mp3'
 const MarketAddress = '0x710005797eFf093Fa95Ce9a703Da9f0162A6916C'; // goerli new test contract
 const marketdds = '0x1D1db5570832b24b91F4703A52f25D1422CA86de'
 // make myitem parameters and modify the card to dislay a delete button
@@ -15,6 +16,8 @@ let USDollar = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
 });
+
+let audioding = new Audio(ding)
 
 function NftBox (props) {
     //see in bigger using modal
@@ -157,6 +160,7 @@ function NftBox (props) {
 
     const calculateTax = () => {
         updateScore() //update score on click once you visit an item
+        audioding.play();
         const quebectax = 0.15;
         const ontariotax = 0.13;
         const usatax = 0.1;
@@ -251,6 +255,7 @@ function NftBox (props) {
     }
 
     useEffect(() => {
+       
         if (props.myitem) {
             setId(props.id)
             setMarket(props.market)
