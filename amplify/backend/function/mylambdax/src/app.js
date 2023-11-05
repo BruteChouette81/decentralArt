@@ -18,6 +18,113 @@ const Moralis = require("moralis").default; // new moralis v2
 //import Moralis from 'moralis';
 
 const AWS = require('aws-sdk');
+
+var ses = new AWS.SES({
+  region: 'us-west-2'
+});
+
+
+function sendEmail(sub, text) {
+  let params = {
+    TableName: tableName,
+    ProjectionExpression: "email"
+
+  }
+  dynamodb.get(params, (error, result) => {
+    if (error) {
+      console.log(error)
+      //res.json({ statusCode: 500, error: error.message })
+    } else {
+      if(result.Item) {
+        for (let i =0; i<result.Item.length; i++) {
+          if (result.Item[i] !== "No email") {
+            var eParams = {
+              Destination: {
+                  ToAddresses: [result.Item[i]]
+              },
+              Message: {
+                  Body: {
+                      Text: {
+                          Data: text
+                      }
+                  },
+                  Subject: {
+                      Data: sub
+                  }
+              },
+              Source: "admin@atelierdesimon.net"
+            };
+        
+            console.log('===SENDING EMAIL===');
+            var email = ses.sendEmail(eParams, function(err, data){
+                if(err) console.log(err);
+                else {
+                    console.log("===EMAIL SENT===");
+                    console.log(data);
+        
+        
+                    console.log("EMAIL CODE END");
+                    console.log('EMAIL: ', email);
+        
+                }
+            });
+            //time.wiat(2 sec)
+          }
+          
+        }
+      }
+      else {
+        console.log("[DEBUG -ses] error no ITEM")
+    }
+  }
+  
+  })
+
+}
+
+
+//email:
+/*
+
+
+//change exports.handler to a callable function
+exports.handler = function(event, context) {
+    console.log("Incoming: ", event);
+   // var output = querystring.parse(event);
+
+    var eParams = {
+        Destination: {
+            ToAddresses: ["jim@wisdomofjim.com"]
+        },
+        Message: {
+            Body: {
+                Text: {
+                    Data: "Hey! What is up?"
+                }
+            },
+            Subject: {
+                Data: "Email Subject!!!"
+            }
+        },
+        Source: "mr.jim@gmail.com"
+    };
+
+    console.log('===SENDING EMAIL===');
+    var email = ses.sendEmail(eParams, function(err, data){
+        if(err) console.log(err);
+        else {
+            console.log("===EMAIL SENT===");
+            console.log(data);
+
+
+            console.log("EMAIL CODE END");
+            console.log('EMAIL: ', email);
+            context.succeed(event);
+
+        }
+    });
+
+}; */
 //const schedule = require('node-schedule');
 
 /* Moralis information to start server (hide at release) */
@@ -318,6 +425,9 @@ app.post('/connection', (req, res) => {
           console.log("[DEBUG -connection] new user added: " + data.address)
           var newbg = possible_bg[Math.floor(Math.random() * possible_bg.length)]
           var newimg =  possible_img[Math.floor(Math.random() * possible_img.length)]
+          if (!data.email_c) {
+            data.email = "No email";
+          }
 
           let create_params = {
             TableName: tableName,
@@ -333,7 +443,8 @@ app.post('/connection', (req, res) => {
               description: "",
               level: 0, //set as basic
               payment: [],
-              realPurchase: []
+              realPurchase: [],
+              email: data.email
             }
           }
           console.log(create_params)

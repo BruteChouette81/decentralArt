@@ -231,6 +231,7 @@ function ImperialProfile() {
     const [street, setStreet] = useState("")
     const [code, setCode] = useState("")
     const [phone, setPhone] = useState("")
+    const [emailC, setEmailC] = useState(true)
 
     const type = "spin"
     const color = "#0000FF"
@@ -261,6 +262,11 @@ function ImperialProfile() {
     }
     const onPhoneChanged = (event) => {
         setPhone(event.target.value)
+    }
+
+    const onEmailC = (event) => {
+        setEmailC(event.target.checked)
+        console.log(event.target.checked)
     }
 
     const changePass = (event) => {
@@ -426,7 +432,9 @@ function ImperialProfile() {
         var data = {
             body: {
                 address: account.toLowerCase(),
-                privatekey: "" //set did to "" for new accounts
+                privatekey: "", //set did to "" for new accounts
+                email_c: emailC,
+                email: email
             }
         }
         setPrivatekey(privatekey)
@@ -659,6 +667,9 @@ function ImperialProfile() {
                                     <input type="text" id="phone" name="phone" class="form-control" placeholder="Phone : 14188889065" onChange={onPhoneChanged}/>
                                     <br />
                                     <input type="text" id="email" name="email" class="form-control" placeholder="Email : thom@example.com" onChange={onEmailChanged}/>
+                                    <br />
+                                    <label for="email-check">Me notifé par e-mail des nouvelles oeuvres</label><br />
+                                    <input type="checkbox" id="email-check" name="email-check" value="email_check" checked={emailC} onChange={onEmailC} style={{"float": "right"}} />
                                     <br />
                                     <input type="submit" class="btn btn-primary" value="Submit" />
                                 </form>

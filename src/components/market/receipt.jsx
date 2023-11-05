@@ -155,7 +155,7 @@ function Receipt (props) {
                             } else {
                                 const transaction = orderData.purchase_units[0].payments.captures[0];
                                 props.purchase()
-                                alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+                                alert(`Transaction completé! Merci de faire affaire avec nous ! État de la transaction: ${transaction.status}`);
                             }
 
                             //props.purchase()

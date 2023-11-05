@@ -130,4 +130,28 @@ h5 {
         margin-left: 1%;
         margin-right: 1%;
     }
+
+    .getPassword {
+        color: white;
+        text-align: center;
+        
+        background-color: black;
+        padding: 20px;
+        margin-top: 15%;
+        margin-bottom: 20%;
+        margin-left: 1%;
+        margin-right: 1%;
+        border-radius: 12px;
+    }
+    .DidBuilding {
+        margin-top: 15%;
+        margin-left: 1%;
+        margin-right: 1%;
+        padding: 20px;
+        background-color: white;
+        
+        color: black;
+        border-radius: 6px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
 }
