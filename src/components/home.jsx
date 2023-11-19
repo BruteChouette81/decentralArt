@@ -1,6 +1,7 @@
 import React, { useEffect, useState} from 'react'
 import { ethers } from 'ethers'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.min.js'
 import './css/intro.css'
 import './css/home.css'
 import './css/idea.css'
@@ -230,13 +231,13 @@ function InstaView() {
         let numtime = 0;
         //let maxtime = 2;
         const timedOutReload = () => {
-            setChunk_number(chunk_number+1)
-            if(numtime > (numrealItems/increasingby)) {
+            setChunk_number(numtime+1)
+            if(numtime < 4) { //
                     console.log("reloading")
                     setTimeout(timedOutReload, timeo)
                     numtime+=1;
             } else {
-                console.log("done")
+                console.log(chunk_number)
             }
         }
         setTimeout(timedOutReload, timeo);
@@ -253,7 +254,7 @@ function InstaView() {
             {chunk_number > 0 ? Array.from({ length: chunk_number}, (_, i) => Array.from({ length: based + (increasingby * (i + 1)) }, (_, k) => k <=  (based-1) + (increasingby * i) || k >= numrealItems ? "" : (<NftBox id={k} catID={0} real={true} displayItem={true} isMarket={true} dds={dds}/> ) )) : ""}
             </div>
             </div>
-            <button onClick={loadmore} class="btn btn-primary btn-lg" style={{"float": "bottom"}}>Load more!</button>
+            <button onClick={loadmore} class="btn btn-primary btn-lg" style={{"float": "bottom"}}>En voir davantage!</button>
         </div>
     );
 }
@@ -267,10 +268,31 @@ function Q() {
     )
 }
 
+function Notification() {
+    const [alertdone, setAlertdone] = useState(false)
+
+    const close = () => {
+        setAlertdone(true)
+    }
+
+    return (
+        alertdone || window.localStorage.getItem("hasWallet") ? "" : <div>
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <strong>Bienvenue ! </strong> <a href="/account" className="">Créer un nouveau compte</a> et participer bientôt à nos promotions.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" onClick={close} style={{"float": "right"}}>
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+        </div>
+
+    )
+}
+
 function Home() {
     
     return(
         <div class="main">
+            <Notification />
             <Intro />
             <br />
             <InstaView />

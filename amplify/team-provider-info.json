@@ -29,7 +29,7 @@
         },
         "mylambdax": {
           "deploymentBucketName": "amplify-artsim-dev-144802-deployment",
-          "s3Key": "amplify-builds/mylambdax-796e6d734a5442673752-build.zip"
+          "s3Key": "amplify-builds/mylambdax-616e6165315a43483933-build.zip"
         },
         "paypalHandler": {
           "deploymentBucketName": "amplify-artsim-dev-144802-deployment",

@@ -200,9 +200,9 @@ BEFORE RELEASE:
 
 - mobile version: home page DONE ✔️, account DONE ✔️, market DONE ✔️
 
-- email list
+- email list  DONE ✔️
 
-- sounds
+- sounds  DONE ✔️
 
 - push fee % getting in app.js  
 
@@ -210,7 +210,26 @@ BEFORE RELEASE:
 
 - reopen cpl technology site: cpltechnology.net w/ new design / whitepaper DONE ✔️
 
+- promotion code: push notif, email, lottery and winner tracker ==> winner page 
+
+- review tile arrangement
 
 Tickets === maitre canadien
+
+
+Marketing idea: 
+
+- post more on facebook
+
+- publicity: 5 orders or more
+
+- notification system with promotion ==> email list/facebook 
+
+- discount for top 10 new account
+
+goal to december: 
+- 10 accounts
+- 5 orders
+
 
 
