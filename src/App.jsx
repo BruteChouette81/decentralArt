@@ -23,6 +23,8 @@ import About from './components/about'
 
 import Questions from './components/questions';
 
+import Compare from './components/compare';
+
 //contracts 
 
 
@@ -71,6 +73,7 @@ function App() {
               <Route path="/myItems" element={<DisplayYnft />} />
               <Route path="/about" element={<About/>} />
               <Route path="/questions" element={<Questions/>} />
+              <Route path="/compare" element={<Compare/>} />
 
             </Routes>
             <EndOfPage />

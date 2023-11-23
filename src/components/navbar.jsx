@@ -61,6 +61,9 @@ function NewNavBar() {
               <a class="nav-link active" aria-current="page" href="/About" disabled>À propos</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/Compare" disabled>Comparer les tailles</a>
+            </li>
+            <li class="nav-item">
               {window.sessionStorage.getItem("password") ? <a class="btn btn-outline-info me-2" type="button" href='/myItems'>Mes achats</a> : "" }
             </li>
             <li class="nav-item">
