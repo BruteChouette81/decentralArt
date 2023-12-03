@@ -87,7 +87,7 @@ function Settings(props) {
     return(
         <div>
             <button class="btn btn-link" type="button" id="edit-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-                [edit your account]
+            {window.localStorage.getItem("language") == "en" ? "[edit your account]" :"[modifier votre compte]"}
             </button>
 
             <div class="offcanvas offcanvas-start" tabIndex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" style={{textAlign: 'start'}}>

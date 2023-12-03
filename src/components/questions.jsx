@@ -4,7 +4,44 @@ import "./css/about.css";
 function Questions() {
     //Contactez nous au besoin d'une commande spéciale au E-mail suivant: <strong style={{color: 'darkblue'}}>thomasberthiaume183@gmail.com</strong> .
         return (
-            <div class="about">
+            <div> {window.localStorage.getItem("language") == "en" ? (<div class="about">
+                <div class="about-intro" >
+                    <h1> Frequently Asked Questions  </h1>
+                    
+                    <br />
+                </div>
+                <div>
+                    <div class='why-site'>
+                        <h3><strong>1</strong> - is the art framed? </h3>
+                        <h5>
+                        Unless otherwise specified, art is delivered unframed.
+                        </h5>
+                        
+                    </div>
+                    <div className="why-account">
+                        <h3><strong>2</strong> - Is it possible to see art in reality before buying?</h3>
+                        <h5>
+                        Yes, it is possible to visit the Workshop by making an appointment with me. Contact me at 418-564-3962 to schedule a meeting.
+                        </h5>
+                    </div>
+                    <div className="why-account">
+                        <h3><strong>3</strong> - How do I know if the art I purchased has been shipped? </h3>
+                        <h5>
+                        Your account gives you access to the shipping registration number of the art you purchased. You can then track your package from the Canada Post website (or other sender as the case may be). For more information, visit the <a href="/about">about</a> page to learn more. In some cases (short distance) it is the artist himself who will deliver the art to you in person.
+                        </h5>
+                        
+                    </div>
+                    <div className="why-account">
+                        <h3><strong>4</strong> - Who pays shipping costs and taxes?</h3>
+                        <h5>
+                        These costs are included in the sale price.
+                        </h5>
+                        
+                    </div>
+                    
+                    
+                </div>
+            </div>) : (<div class="about">
                 <div class="about-intro" >
                     <h1> Questions populaires  </h1>
                     
@@ -41,6 +78,7 @@ function Questions() {
                     
                     
                 </div>
+            </div>)}
             </div>
         )
    

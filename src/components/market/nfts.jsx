@@ -378,12 +378,12 @@ function NftBox (props) {
                     <br />
                     <h4><a href={"/item/" + (id - 1)}>{marketLoadedItem?.name}</a></h4>
                     
-                    <h6>current Price: {currency == "CAD" ? USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.74) : USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.74) } {currency}</h6>
-                    <p>seller: <a href={`/Seller/${marketLoadedItem?.seller}`} >{marketLoadedItem?.seller?.slice(0,7) + "..."}</a></p>
+                    <h6>{window.localStorage.getItem("language") == "en" ? "current Price:" : "Prix:" } {currency == "CAD" ? USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.74) : USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.74) } {currency}</h6>
+                    <p>{window.localStorage.getItem("language") == "en" ? "Seller:" : "Vendeur:" } <a href={`/Seller/${marketLoadedItem?.seller}`} >{marketLoadedItem?.seller?.slice(0,7) + "..."}</a></p>
                     
-                    <p>description: {marketLoadedItem?.description}</p>
+                    <p>Description: {marketLoadedItem?.description}</p>
                     
-                    {props.displayItem ? window.localStorage.getItem("hasWallet") ? (<button onClick={()=>{window.location.replace("/item/" + (id - 1))}} type="button" class="btn btn-secondary" >Purchase</button>) : (<button onClick={()=>{alert("Vous devez créer votre compte afin de pouvoir acheter un item!")}} type="button" class="btn btn-secondary" >Purchase</button>) : props.numreal == id ? (<button onClick={()=>{window.location.replace("/item/" + (id - 1))}} type="button" class="btn btn-secondary" >Purchase</button>) : (<button onClick={calculateTax} type="button" class="btn btn-secondary">Purchase</button>)}
+                    {props.displayItem ? window.localStorage.getItem("hasWallet") ? (<button onClick={()=>{window.location.replace("/item/" + (id - 1))}} type="button" class="btn btn-secondary" >{window.localStorage.getItem("language") == "en" ? "Purchase" : "Acheter" }</button>) : (<button onClick={()=>{alert("Vous devez créer votre compte afin de pouvoir acheter un item!")}} type="button" class="btn btn-secondary" >{window.localStorage.getItem("language") == "en" ? "Purchase" : "Acheter" }</button>) : props.numreal == id ? (<button onClick={()=>{window.location.replace("/item/" + (id - 1))}} type="button" class="btn btn-secondary" >{window.localStorage.getItem("language") == "en" ? "Purchase" : "Acheter" }</button>) : (<button onClick={calculateTax} type="button" class="btn btn-secondary">{window.localStorage.getItem("language") == "en" ? "Purchase" : "Acheter" }</button>)}
                     
 
                 </div>
@@ -394,10 +394,10 @@ function NftBox (props) {
                             <br />
                             <br />
                             <h4><a href={"/item/" + (props.id -1)}>{props.name}</a></h4>
-                            <h6>current Price: {currency == "CAD" ? USDollar.format((props.price/100000) / (1 - 0.029) + 4.74) : USDollar.format((props.price/100000) / (1 - 0.029) + 4.74) } {currency}</h6>
-                            <p>seller: <a href={`/Seller/${seller}`} >{props.seller?.slice(0,7) + "..."}</a></p>
-                            <p>description: {props.description}</p>
-                            {props.displayItem ? (<button onClick={()=>{alert("Vous devez créer votre compte afin de pouvoir acheter un item!")}} type="button" class="btn btn-secondary" >Purchase</button>) : (<button onClick={calculateTax} type="button" class="btn btn-secondary">Purchase</button>)}
+                            <h6>{window.localStorage.getItem("language") == "en" ? "current Price:" : "Prix:" } {currency == "CAD" ? USDollar.format((props.price/100000) / (1 - 0.029) + 4.74) : USDollar.format((props.price/100000) / (1 - 0.029) + 4.74) } {currency}</h6>
+                            <p>{window.localStorage.getItem("language") == "en" ? "Seller:" : "Vendeur:" } <a href={`/Seller/${seller}`} >{props.seller?.slice(0,7) + "..."}</a></p>
+                            <p>Description: {props.description}</p>
+                            {props.displayItem ? (<button onClick={()=>{alert("Vous devez créer votre compte afin de pouvoir acheter un item!")}} type="button" class="btn btn-secondary" >{window.localStorage.getItem("language") == "en" ? "Purchase" : "Acheter" }</button>) : (<button onClick={calculateTax} type="button" class="btn btn-secondary">{window.localStorage.getItem("language") == "en" ? "Purchase" : "Acheter" }</button>)}
                             
         
                         </div>

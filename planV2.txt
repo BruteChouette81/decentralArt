@@ -206,13 +206,31 @@ BEFORE RELEASE:
 
 - push fee % getting in app.js  
 
-- more cpl documentation + public ledger using uuid ID's and block scan for transactions database
-
 - reopen cpl technology site: cpltechnology.net w/ new design / whitepaper DONE ✔️
 
 - promotion code: push notif, email, lottery and winner tracker ==> winner page 
 
-- review tile arrangement
+
+
+- review tile arrangement DONE ✔️
+- more cpl documentation + public ledger using uuid ID's and block scan for transactions database ==> important for validation 
+- work on fee reduction system ( proove )
+- account recovery ==> remove delete local storage from setting
+- translate the website:
+    home DONE ✔️
+    navbar DONE ✔️
+    endofpage DONE ✔️
+    about DONE ✔️
+    FAQ DONE ✔️
+    compare DONE ✔️
+    market DONE ✔️
+    items DONE ✔️
+    account
+    other
+- spin when making a transaction DONE ✔️
+- build google seo + maximize marketing 
+- add more sellers 
+
 
 Tickets === maitre canadien
 

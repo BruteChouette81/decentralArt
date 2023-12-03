@@ -31,6 +31,7 @@ import Compare from './components/compare';
 //Amplify
 import { Amplify, Auth, Storage} from 'aws-amplify'; //import { Amplify, Auth, Storage } from 'aws-amplify'; - see manual config using auth and storage
 import awsmobile from './aws-exports';
+import Home_en from './components/home_en';
 
 Amplify.configure(awsmobile);
 //
@@ -65,7 +66,7 @@ function App() {
           <Router>
             <NewNavBar />  
             <Routes>
-              <Route path="/" element={<Home />}/>
+              <Route path="/" element={window.localStorage.getItem("language") == "en" ? <Home_en /> : <Home />}/>
               <Route path="/Account" element={<Account />} />
               <Route path="/Market" element={<Market />}/>
               <Route path="/Imperial" element={<ImperialProfile/>} />

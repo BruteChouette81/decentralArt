@@ -50,6 +50,7 @@ const getContract = (address, abi, signer ) => { //for Imperial Account
 
 function Receipt (props) {
     //const [fees, setFees] = useState()
+    const [paypalLoading, setPaypalLoading] = useState(false)
     const [loadF2C, setLoadF2C] = useState(false)
     const type = "spin"
     const color = "#0000FF"
@@ -114,13 +115,13 @@ function Receipt (props) {
         <div>
             { loadF2C === false ?
             (<div className="receipt">
-            {props.buyloading ? (<div class="ynftcard" ><ReactLoading type={type} color={color}
-            height={200} width={200} /><h5>Buying Item loading...</h5></div>) : (
+            {paypalLoading ? (<div ><ReactLoading type={type} color={color}
+            height={200} width={200} /><h5>{window.localStorage.getItem("language") == "en" ? "Processing payment..." : "Transaction en cours..." }</h5></div>) : (
                 <div>
             <img id='itemimg2' src={props.image} alt="" />
             <br />
             <br />
-            <p>Des questions ? contacter nous a <strong>thomasberthiaume183@gmail.com</strong></p>
+            <p>{window.localStorage.getItem("language") == "en" ? "Questions ? contact us at thomasberthiaume183@gmail.com" : "Des questions ? contacter nous a thomasberthiaume183@gmail.com" }</p>
             <h4>subtotal: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.subtotal/100000) / (1 - 0.029) + 4.6) : USDollar.format((props.subtotal/100000) / (1 - 0.029) + 4.6)}  {window.localStorage.getItem("currency")}</h4>
             
             
@@ -129,6 +130,7 @@ function Receipt (props) {
             <PayPalScriptProvider options={{ clientId: "AbKBS8GeKDT8lvM5rTIkO8QGSkVSlVaLzKy0rO_-dYxP3ZgtltziFVIVcMUKANV7U-KH1SDrHw1QUioD", currency: "CAD" }}>
                 <PayPalButtons
                     createOrder={async () => {
+                        setPaypalLoading(true)
                         let dataoptions = {
                             body: {
                                 amount: parseFloat((props.total/100000) / (1 - 0.029) + 4.6).toFixed(2).toString()
@@ -155,6 +157,7 @@ function Receipt (props) {
                             } else {
                                 const transaction = orderData.purchase_units[0].payments.captures[0];
                                 props.purchase()
+                                setPaypalLoading(false)
                                 alert(`Transaction completé! Merci de faire affaire avec nous ! État de la transaction: ${transaction.status}`);
                             }
 

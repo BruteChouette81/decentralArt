@@ -22,7 +22,67 @@ function About() {
                     </div> */
     
         return (
-            <div class="about">
+            <div> {window.localStorage.getItem("language") == "en" ? (<div class="about">
+                <div class="about-intro" >
+                    <h1> About L'Atelier de Simon </h1>
+                    <h5> Here you will find all the information you are looking for </h5>
+                    <br />
+                </div>
+                <div>
+                    
+                    <div className="why-account">
+                        <h3>Your safety, our priority</h3>
+                        <h5>
+                        The technology used for our platform ensures the protection of your personal information against unauthorized access, use, modification and communication. <br /> <br />
+
+
+Your personal information will only be used for the following purposes: <br />
+<ul>
+<li>Answer your questions or requests for information on the art that interests you;</li>
+<li> Billing and delivery of your orders.</li>
+</ul>
+<br />
+You have the option to delete your account at any time, if desired. If you decide to delete your account, your personal information will be kept for as long as there is a commercial purpose (e.g. order in progress) or a legal obligation to do so. Thereafter, your personal information will be destroyed. <br /> <br />
+
+ 
+
+Although we strive to protect your personal information, we cannot be held responsible for any disclosure resulting from unauthorized use of our platform that may compromise the security of your personal information. We cannot be held responsible for direct or indirect damage that may arise from the use of our platform.
+
+                            
+                        </h5>
+                    </div>
+                    <div className="why-account">
+                        <h3>Why create an account</h3>
+                        <h5>
+                        Creating an account allows your personal information to be saved securely. This is why it is required to have an account in order to purchase an item. Creating an account is quick and easy and as mentioned in the security section: 100% confidential, to the extent of the platform.
+                           <br /> <br />to start creating an account click <a href="/account">here</a>
+                        </h5>
+                        
+                    </div>
+                    <div className="why-account">
+                        <h3>How to track an order</h3>
+                        <h5>
+                        In order to track the status of an order, you must access your account in the ¨Your cart¨ tab. Once the account has been scanned and the item you wish to track identified, click on ¨Refresh Status¨ to obtain the status of the item. If it has been sent or is being sent, a link to track your item should appear shortly. Otherwise, if the item was not sent within the seller's deadline, you have access to a free refund. In order to receive a refund, make sure you have an email address to receive payment (this can be entered under the ¨Refunds¨ tab).
+                        </h5>
+                        
+                    </div>
+                    
+                    <div class='why-site'>
+                        <h3>The software:</h3>
+                        <h5>
+                        L’Atelier de Simon uses innovative and high-performance technology. If you are looking for an efficient way to do business online, we invite you to click on the following link to learn more about the features and benefits of using our technology.
+                            <br /> <br />
+                            On this page you will find information about everything about our software and how to use it.
+                            <br />
+                            <br />
+                            To learn more about the technologies that enable this platform: visit <a href="https://imperialdao.net">imperialdao.net</a>
+                        </h5>
+                        
+                    </div>
+                    
+                    
+                </div>
+            </div>) : (<div class="about">
                 <div class="about-intro" >
                     <h1> À propos de L'Atelier de Simon </h1>
                     <h5>Ici vous trouverez tous l'information que vous cherchez</h5>
@@ -84,7 +144,7 @@ Bien que nous tâchions de protéger vos renseignements personnels, nous ne pouv
                     
                     
                 </div>
-            </div>
+            </div>)} </div>
         )
    
     

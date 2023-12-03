@@ -73,7 +73,7 @@ function Account() {
                             <p>Temps estimé: 1-2 minutes</p>
                             <br />
                             <button className="btn btn-primary" onClick={imperialConnect}>                           
-                                Commencé! 
+                                Commencer! 
                             </button>
                             <br />
                             

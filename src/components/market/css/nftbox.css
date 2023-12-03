@@ -67,7 +67,30 @@
     color: black;
     
 }
+@media screen and (max-width:2000px) and (min-width:700px) {
+    .nftbox {
+        margin: 5px;
+        padding: 10px;
+        width: auto;
+        background-color: white;
+        
+        color: black;
+        border-radius: 6px;
+        float: left;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    #itemimg {
+        width: auto;
+        height: 250px;
+        border-radius: 6px;
+        border-style: solid;
+        border-width: 2px;
+        color: grey;
+    
+        box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2), 0 12px 40px 0 rgba(0, 0, 0, 0.19);
+    }
 
+}
 @media screen and (max-width:700px) {
     .nftbox {
         margin: 5px;

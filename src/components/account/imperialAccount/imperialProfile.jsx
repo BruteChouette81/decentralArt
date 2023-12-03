@@ -68,8 +68,8 @@ function ShowAccount(props) {
     if (window.screen.width > 900) {
         return (
             <div>
-                <h5>Numéro de compte: <strong>{props.account}</strong> {props.level === 0 ? (<span class="badge bg-secondary"><a href={`/subs/${props.account}`}>Basic</a> </span>) : props.level === 1 ? (<span class="badge bg-info"><a href={`/subs/${props.account}`}>Premium</a></span>) : props.level === 2 ? (<span class="badge bg-warning">Expert</span>) : props.level === 3 ? (<span class="badge bg-success">Verified</span>) : props.level === 5 ? (<span class="badge bg-light text-dark">Owner</span>) : ""}</h5>
-                {props.fullname ? <div><h5>Nom Complet: <strong>{props.fullname}</strong></h5>
+                <h5> {window.localStorage.getItem("language") == "en" ? "Account number:" :"Numéro de compte:"} <strong>{props.account}</strong> {props.level === 0 ? (<span class="badge bg-secondary"><a href={`/subs/${props.account}`}>Basic</a> </span>) : props.level === 1 ? (<span class="badge bg-info"><a href={`/subs/${props.account}`}>Premium</a></span>) : props.level === 2 ? (<span class="badge bg-warning">Expert</span>) : props.level === 3 ? (<span class="badge bg-success">Verified</span>) : props.level === 5 ? (<span class="badge bg-light text-dark">Owner</span>) : ""}</h5>
+                {props.fullname ? <div><h5>{window.localStorage.getItem("language") == "en" ? "Full name:" :"Nom complet:"} <strong>{props.fullname}</strong></h5>
                 <h5>Email: <strong>{props.email}</strong></h5></div> : <h5>Afin de terminé la creation de votre compte, veillez vous créer une Identitée Décentralizée dans la section plus bas ayant ce même nom!</h5>}
             </div>
         )
@@ -79,7 +79,7 @@ function ShowAccount(props) {
         return (
             <div>
                 
-                <h6>Nom Complet: <strong>{props.fullname}</strong></h6>
+                <h6>{window.localStorage.getItem("language") == "en" ? "Full name:" :"Nom complet:"} <strong>{props.fullname}</strong></h6>
                 <h6>Email: <strong>{props.email}</strong></h6>
             </div>
         )
@@ -131,7 +131,7 @@ function ShowBalance(props) {
     */
     return ( //, ({money / 100000} $ USD)
         <div> 
-            <h5>Your Balance: <strong>{(balance / 100000).toLocaleString('en-US')} {currency} </strong> <a style={{float: "right"}} class="btn btn-link" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <h5>{window.localStorage.getItem("language") == "en" ? "Your balance" :"Votre solde"} <strong>{(balance / 100000).toLocaleString('en-US')} {currency} </strong> <a style={{float: "right"}} class="btn btn-link" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" >
                                         <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
                                     </svg>
@@ -149,14 +149,14 @@ function ShowBalance(props) {
                             <div class="collapse" id="collapseExample">
                                 <div class="card card-body" style={{color: "black"}}>
                                     
-                                    You can select the currency you want to buy things in and get payed in!
+                                {window.localStorage.getItem("language") == "en" ? "You can select the currency you want to buy things in and get payed in!" :"Vous pouvez sélectionner la devise dans laquelle vous souhaitez acheter des choses et être payé !"}
                                 </div>
                             </div>
             </h5>
-            <button onClick={() => {getBalance(props.account, setBalance, currency, props.credits)}} class="btn btn-primary" id='profile-info-balance'>Reload balance</button>
+            <button onClick={() => {getBalance(props.account, setBalance, currency, props.credits)}} class="btn btn-primary" id='profile-info-balance'>{window.localStorage.getItem("language") == "en" ? "Reload balance" :"Rafraichir le solde"}</button>
             <br />
             <br />
-            <button onClick={loadMarket} class="btn btn-primary" id='profile-info-balance'>Connect market - New! </button>
+            <button onClick={loadMarket} class="btn btn-primary" id='profile-info-balance'>{window.localStorage.getItem("language") == "en" ? "Connect market - New!" :"Aller à L'Atelier - Nouveau!"} </button>
         </div>
     )
 };
@@ -178,7 +178,7 @@ function ShowMarket(props) {
 function ShowUsername(props) {
     //function to get the custom username from the database
     return ( <div>
-                <h5>Connected as: {props.name}</h5>
+                <h5>{window.localStorage.getItem("language") == "en" ? "Connected as:" :"Connecté en temps que:"} {props.name}</h5>
             </div>
      )
 }
@@ -287,8 +287,8 @@ function ImperialProfile() {
     function GetPassword() {
         return ( <div class="getPassword">
             <form onSubmit={connectUsingPassword}> 
-            {window.localStorage.getItem("hasWallet") ? (<h3>Entrez votre Mot de Passe</h3>) : ( <div>Entrez un nouveau Mot de Passe<h3></h3>
-                <p>IMPORTANT: lorseque vous entrez votre mot de passe: vous ne pouvez le changer sans perdre votre compte !</p></div> )}
+            {window.localStorage.getItem("hasWallet") ? (<h3>{window.localStorage.getItem("language") == "en" ? "Enter your password" :"Entrer votre Mot de Passe"}</h3>) : ( <div>{window.localStorage.getItem("language") == "en" ? "Enter a new password" :"Entrer un nouveau Mot de Passe"}<h3></h3>
+                <p>{window.localStorage.getItem("language") == "en" ? "IMPORTANT: when you enter your password: you cannot change it without losing your account!" :"IMPORTANT: lorsque vous entrez votre mot de passe: vous ne pouvez pas le changer sans perdre votre compte !"}</p></div> )}
                 
                 <br />
                 <div class="mb-3 row">
@@ -627,7 +627,7 @@ function ImperialProfile() {
                     <img alt="" src={image} id="profile_img" />
                 </div>
                 <div class="profile-info">
-                    <h4 id="profile-info-tag">Information du compte: </h4>
+                    <h4 id="profile-info-tag">{window.localStorage.getItem("language") == "en" ? "Account information:" :"Information du compte:"} </h4>
                     <Settings address={signer?.address}/>
                     
                     <ShowAccount account={signer?.address} level={level} email={email} fullname={fullname}/>

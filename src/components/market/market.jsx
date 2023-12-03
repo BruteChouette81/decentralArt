@@ -776,7 +776,7 @@ function Market() {
             <div>
             {Array.from({ length: based }, (_, k) => numreal > 0 ? (<NftBox id={k} catID={props.id} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/>) : "")}
             {chunk_number > 0 ? Array.from({ length: chunk_number}, (_, i) => Array.from({ length: based + (increasingby * (i + 1)) }, (_, k) => k <=  (based-1) + (increasingby * i) || k >= numreal ? "" : (<NftBox id={k} real={true} catID={props.id} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/>) )) : ""}
-            <button onClick={loadmore} class="btn btn-primary btn-lg" style={{"float": "bottom"}}>Load more!</button>
+            <button onClick={loadmore} class="btn btn-primary btn-lg" style={{"float": "bottom"}}>{window.localStorage.getItem("language") == "en" ? "Load more!" : "En voir davantage!" }</button>
             </div>)
     }
 
@@ -786,8 +786,8 @@ function Market() {
         getPassword ? <GetPassword /> : 
         <div class="market">
             <div class="account">
-               {userwallet ? (<RenderImage account={userwallet?.address} />) :  active ? (<RenderImage account={account} />) : ( <img src={default_profile} alt="" id='profilepic' /> )} {userwallet ? (<h6 id='account'>account: {userwallet?.address.slice(0,10) + "..."}</h6>) : (<h6 id='account'>account: {account?.slice(0,10) + "..."}</h6>)}
-               {userwallet ? (<p id='connected' style={{color: "green"}}>connected</p>) : active ? (<p id='connected' style={{color: "green"}}>connected</p>) : (<p id='connected' style={{color: "red"}}>disconnected</p>)}
+               {userwallet ? (<RenderImage account={userwallet?.address} />) :  active ? (<RenderImage account={account} />) : ( <img src={default_profile} alt="" id='profilepic' /> )} {userwallet ? (<h6 id='account'>{window.localStorage.getItem("language") == "en" ? "account" : "compte" }: {userwallet?.address.slice(0,10) + "..."}</h6>) : (<h6 id='account'>account: {account?.slice(0,10) + "..."}</h6>)}
+               {userwallet ? (<p id='connected' style={{color: "green"}}>connected</p>) : active ? (<p id='connected' style={{color: "green"}}>{window.localStorage.getItem("language") == "en" ? "connected" : "connecté" }</p>) : (<p id='connected' style={{color: "red"}}>disconnected</p>)}
                
             </div>              
             {!userwallet ? (<div style={{paddingLeft: 40 + "%"}}><ReactLoading type={types} color={color}
@@ -796,14 +796,14 @@ function Market() {
                 <nav class="nav">
                     <ul class="nav nav-pills" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="cnfts-tab" data-bs-toggle="tab" data-bs-target="#cnfts" type="button" role="tab" aria-controls="cnfts" aria-selected="true">Toile de L'artiste</button>
+                            <button class="nav-link active" id="cnfts-tab" data-bs-toggle="tab" data-bs-target="#cnfts" type="button" role="tab" aria-controls="cnfts" aria-selected="true">{window.localStorage.getItem("language") == "en" ? "Art of the artist" : "Toile de l'artiste" }</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="ticket-tab" data-bs-toggle="tab" data-bs-target="#ticket" type="button" role="tab" aria-controls="ticket" aria-selected="false">Maitre canadien</button>
+                            <button class="nav-link" id="ticket-tab" data-bs-toggle="tab" data-bs-target="#ticket" type="button" role="tab" aria-controls="ticket" aria-selected="false">{window.localStorage.getItem("language") == "en" ? "Canadian master" : "Maitre canadien" }</button>
                         </li>
                        
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="onfts-tab" data-bs-toggle="tab" data-bs-target="#onfts" type="button" role="tab" aria-controls="onfts" aria-selected="false">Mes Items</button>
+                            <button class="nav-link" id="onfts-tab" data-bs-toggle="tab" data-bs-target="#onfts" type="button" role="tab" aria-controls="onfts" aria-selected="false">{window.localStorage.getItem("language") == "en" ? "My Items" : "Mes Items" }</button>
                         </li>
                        
 

@@ -29,6 +29,7 @@
     "ethers": "^5.6.7",
     "fb": "^2.0.0",
     "ipfs-core": "^0.18.0",
+    "jquery": "^3.7.1",
     "js-base64": "^3.7.5",
     "jscharting": "^3.3.1",
     "moralis": "^1.11.0",
@@ -73,6 +74,7 @@
     ]
   },
   "devDependencies": {
-    "@types/fb": "^0.0.28"
+    "@types/fb": "^0.0.28",
+    "@types/jquery": "^3.5.29"
   }
 }
