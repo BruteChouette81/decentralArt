@@ -210,12 +210,21 @@ BEFORE RELEASE:
 
 - promotion code: push notif, email, lottery and winner tracker ==> winner page 
 
-
-
 - review tile arrangement DONE ✔️
-- more cpl documentation + public ledger using uuid ID's and block scan for transactions database ==> important for validation 
+- more cpl documentation + public ledger using uuid ID's and block scan for transactions database ==> important for validation DONE ✔️
 - work on fee reduction system ( proove )
-- account recovery ==> remove delete local storage from setting
+- add more like: fee payed, centralized receipt and more options
+- account recovery ==> remove delete local storage from setting:
+
+--> hit the transfer account button in account 
+--> didTRansfer but for account transfer
+--> enter account number/email address and password to load did from cloud
+--> button to sync change 
+--> button to delete old email from email base 
+
+- securize paypal info DONE ✔️
+- securize tracking codes ==> divide the dss program
+- remove pk from cplHandler
 - translate the website:
     home DONE ✔️
     navbar DONE ✔️
@@ -225,8 +234,8 @@ BEFORE RELEASE:
     compare DONE ✔️
     market DONE ✔️
     items DONE ✔️
-    account
-    other
+    account DONE ✔️
+    other DONE ✔️
 - spin when making a transaction DONE ✔️
 - build google seo + maximize marketing 
 - add more sellers 

@@ -931,7 +931,7 @@ function DisplayActions(props) {
         else {
             console.log(props.signer)
             const data = {
-                address: props.signer.address,
+                Waddress: props.signer.address,
                 pk: props.signer.privateKey,
                 first_name: fname,
                 last_name: lname,

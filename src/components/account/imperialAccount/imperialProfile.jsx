@@ -190,6 +190,36 @@ function ShowDescription(props) {
         </div>
     )
 }
+function setS3Config(bucket, level) {
+    Storage.configure({
+        bucket: bucket,
+        level: level,
+        region: "ca-central-1",
+        identityPoolId: 'ca-central-1:85ca7a33-46b1-4827-ae75-694463376952'
+    })
+}
+
+function AddDevice(props) {
+    const addNewDevice = () => {
+        setS3Config("didtransfer", "public");
+
+       
+        Storage.put(`${props.email}.txt`, window.localStorage.getItem("did")).then((results) => { // add ".png"
+                console.log(results)
+                if (window.localStorage.getItem("language") == 'en') {
+                    alert("Your account is ready to be link. Press the 'I have an account' button when connecting with your new device and fill the form!")
+                } else {
+                    alert("Votre compte est prêt à être lié. Appuyer sur le bouton « J'ai un compte » lors de la connexion avec votre nouvel appareil et remplir le formulaire !")
+                }
+        });
+
+    }
+    return (
+        <div>
+            <button class="btn btn-primary" style={{"marginTop": 20+"px"}} onClick={addNewDevice}>{window.localStorage.getItem("language") == "en" ? "Link a new device" :"Ajouté un nouvel appareil"}</button>
+        </div>
+    )
+}
 
 
 function ImperialProfile() {
@@ -320,7 +350,7 @@ function ImperialProfile() {
 
             //console.log(props.signer)
             const data = {
-                address: newConnectedWallet.address,
+                Waddress: newConnectedWallet.address,
                 pk: newConnectedWallet.privateKey,
                 first_name: fname,
                 last_name: lname,
@@ -402,14 +432,7 @@ function ImperialProfile() {
           </div>)
     }
     
-    function setS3Config(bucket, level) {
-        Storage.configure({
-            bucket: bucket,
-            level: level,
-            region: "ca-central-1",
-            identityPoolId: 'ca-central-1:85ca7a33-46b1-4827-ae75-694463376952'
-        })
-    }
+    
 
     const getImage = async () => {
         setS3Config("clientbc6cabec04d84d318144798d9000b9b3205313-dev", "public")
@@ -505,7 +528,7 @@ function ImperialProfile() {
     
             //change user privatekey to the json
             let userwallet = new ethers.Wallet(privatekey, provider) //response.privatekey
-            console.log(userwallet)
+            //console.log(userwallet.mnemonic)
             //let userwallet = new ethers.Wallet.fromEncryptedJson(response.privatekey, password)
 
             let contract = getContract(userwallet, Credit, contractAddress)
@@ -635,6 +658,7 @@ function ImperialProfile() {
                     <ShowDescription description={description} />
 
                     <ShowBalance account={signer?.address} credits={credit} /></div>) : (<ShowMarket email={email}/>)}
+                    <AddDevice email={email}/>
                 </div>
                 <br />
                 {signer?.address && password ? (<DisplayActions balance={balance} livePrice={money} request={request} friendList={friendList} signer={signer} account={signer?.address} pay={pay}  did={did} realPurchase={realPurchase} level={level} amm={amm} password={password}/>) : ""}
@@ -691,6 +715,7 @@ function ImperialProfile() {
                     <ShowDescription description={description} />
 
                     <ShowBalance account={signer?.address} credits={credit} /></div>) : (<ShowMarket email={email}/>)}
+                    <AddDevice email={email} />
                     
                     
                     

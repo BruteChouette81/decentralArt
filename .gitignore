@@ -11,6 +11,7 @@ build/
 dist/
 node_modules/
 aws-exports.js
+apikeyStorer.js
 awsconfiguration.json
 amplifyconfiguration.json
 amplifyconfiguration.dart

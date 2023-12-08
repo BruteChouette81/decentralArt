@@ -41,6 +41,10 @@ function NewNavBar() {
     window.localStorage.setItem("language", "en")
     window.location.reload()
   }
+
+  const setTransferAccount = () => {
+    window.localStorage.setItem("ta", "true") //transfer account
+  }
   
   const onChangeSortedImp = () => {
     setSortedby(2)
@@ -83,7 +87,7 @@ function NewNavBar() {
           </ul>
           <ul class="navbar-nav ms-auto" style={{"paddingRight": 200 + "px"}}>
             <li class="nav-item">
-              {window.localStorage.getItem("hasWallet") ? window.sessionStorage.getItem("password") ? <div><a href="/imperial" style={{color: "green", float:"left", paddingRight: 20 + "px"}}>{window.localStorage.getItem("language") == "en" ? "Connected" : "Vous êtes connecté"}</a> <button onClick={() => {clear()}} class="btn btn-outline-danger me-2">{window.localStorage.getItem("language") == "en" ? "Disconnect" : "Se déconnecter"}</button></div> : <a class="btn btn-outline-info me-2" type="button" href='/imperial'>{window.localStorage.getItem("language") == "en" ? "My account" : "Mon compte"}</a> : <a class="btn btn-outline-info me-2" type="button" href='/account'>{window.localStorage.getItem("language") == "en" ? "Create an account" : "Créer un compte"}</a> }
+              {window.localStorage.getItem("hasWallet") ? window.sessionStorage.getItem("password") ? <div><a href="/imperial" style={{color: "green", float:"left", paddingRight: 20 + "px"}}>{window.localStorage.getItem("language") == "en" ? "Connected" : "Vous êtes connecté"}</a> <button onClick={() => {clear()}} class="btn btn-outline-danger me-2">{window.localStorage.getItem("language") == "en" ? "Disconnect" : "Se déconnecter"}</button></div> : <a class="btn btn-outline-info me-2" type="button" href='/imperial'>{window.localStorage.getItem("language") == "en" ? "My account" : "Mon compte"}</a> : <div><a class="btn btn-outline-info me-2" type="button" href='/account' onClick={setTransferAccount}>{window.localStorage.getItem("language") == "en" ? "Link an account" : "J'ai un compte"}</a> <a class="btn btn-outline-info me-2" type="button" href='/account'>{window.localStorage.getItem("language") == "en" ? "Create an account" : "Créer un compte"}</a></div> }
             </li>
             <li class="nav-item">
             <div><button onClick={setFrench} class="btn btn-outline-dark me-2" style={{ float:"left", paddingLeft: 20 + "px", paddingRight: 20 + "px"}}>Français</button> <button onClick={setEnglish} class="btn btn-outline-dark me-2">English</button></div> 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import {CLIENT_ID} from '../../apikeyStorer.js'
 import "./css/nftbox.css"
 
 import {ethers} from 'ethers'
@@ -22,6 +23,7 @@ import lock from "./css/png-lock-picture-2-lock-png-400.png"
 import cpl from "./css/fontbolt.png"
 
 const DDSGasContract = '0x14b92ddc0e26C0Cf0E7b17Fe742361B8cd1D95e1'
+
 
 let USDollar = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -110,7 +112,7 @@ function Receipt (props) {
 
    
     //{props.quebec ? <div> <h6>GST: 1,500 $CREDIT (2,5$ at 5%) </h6> <h6>QST: 3,000 $CREDIT (5$ at 10%)</h6> </div> : <h6 class="tax">Tax: 3,000 $CREDITs ({props.taxprice}$ at {props.tax}%)</h6> } <a href="" class="link link-primary">taxes policies ({props.state})</a>
-    //sandbox ID: "AbONA1Q9rbHJLPe5ZGWwssIF8z06zRc6y1qU2LsPp0lXaZYjqaCjSTXuC7sAdFW2E_AZCUOuJvnZDhaZ"
+    //sandbox ID: ""
     return (
         <div>
             { loadF2C === false ?
@@ -127,10 +129,10 @@ function Receipt (props) {
             
             <h5> Total: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.total/100000) / (1 - 0.029) + 4.6) : USDollar.format((props.total/100000) / (1 - 0.029) + 4.6)} {window.localStorage.getItem("currency")}</h5>
             <br /><br />
-            <PayPalScriptProvider options={{ clientId: "AbKBS8GeKDT8lvM5rTIkO8QGSkVSlVaLzKy0rO_-dYxP3ZgtltziFVIVcMUKANV7U-KH1SDrHw1QUioD", currency: "CAD" }}>
+            <PayPalScriptProvider options={{ clientId: CLIENT_ID, currency: "CAD" }}>
                 <PayPalButtons
                     createOrder={async () => {
-                        setPaypalLoading(true)
+                        
                         let dataoptions = {
                             body: {
                                 amount: parseFloat((props.total/100000) / (1 - 0.029) + 4.6).toFixed(2).toString()
@@ -139,6 +141,7 @@ function Receipt (props) {
                         return API.post('serverv2', "/create-paypal-order", dataoptions).then((order) => order.id);
                     }}
                     onApprove={async (data) => {
+                        setPaypalLoading(true)
                         
                         let dataoptions = {
                             body: {

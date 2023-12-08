@@ -62,6 +62,7 @@ function NftBox (props) {
         //let credits = await ddsc?.credits()
         //console.log(credits)        
         //only real items
+        console.log(props.dds)
 
         let item = await props.dds.items(parseInt(props.id + 1))
         console.log(item)
@@ -97,7 +98,26 @@ function NftBox (props) {
                                 newItem.name = response.names[i] //get the corresponding name
                                 newItem.score = response.scores[i] //get the corresponding score
                                 newItem.tag = response.tags[i] //get the corresponding tag
-                                newItem.description = response.descriptions[i]
+
+                                if(response.descriptions[i].length > 40) {
+                                    var middle = Math.floor(response.descriptions[i].length / 2);
+                                    var before = response.descriptions[i].lastIndexOf(' ', middle);
+                                    var after = response.descriptions[i].indexOf(' ', middle + 1);
+
+                                    if (middle - before < after - middle) {
+                                        middle = before;
+                                    } else {
+                                        middle = after;
+                                    }
+
+                                    var s1 = response.descriptions[i].substr(0, middle);
+                                    var s2 = response.descriptions[i].substr(middle + 1);
+                                    newItem.description = [s1, s2]
+                                } else {
+                                    newItem.description = response.descriptions[i]
+                                }
+                                
+                               
                                 newItem.image = response.image[i]
                     }
                 }
@@ -368,7 +388,7 @@ function NftBox (props) {
                 <h4>ID: {id}</h4>
                 <h6>current Price: {currency == "CAD" ? USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.74) : USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.74) } {currency}</h6>
                 
-                <p>description: {marketLoadedItem?.description}</p>
+                <p>description: {marketLoadedItem?.description?.length == 2 ? (<div>{marketLoadedItem?.description[0]} <br /> {marketLoadedItem?.description[1]}</div>) : marketLoadedItem?.description}</p>
                 <button onClick={deleteItems} type="button" class="btn btn-secondary">Delete</button>
     
             </div>) : "":(<div class="col">
@@ -381,7 +401,7 @@ function NftBox (props) {
                     <h6>{window.localStorage.getItem("language") == "en" ? "current Price:" : "Prix:" } {currency == "CAD" ? USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.74) : USDollar.format((marketLoadedItem?.price/100000) / (1 - 0.029) + 4.74) } {currency}</h6>
                     <p>{window.localStorage.getItem("language") == "en" ? "Seller:" : "Vendeur:" } <a href={`/Seller/${marketLoadedItem?.seller}`} >{marketLoadedItem?.seller?.slice(0,7) + "..."}</a></p>
                     
-                    <p>Description: {marketLoadedItem?.description}</p>
+                    <p>Description: {marketLoadedItem?.description?.length == 2 ? (<div>{marketLoadedItem?.description[0]} <br /> {marketLoadedItem?.description[1]}</div>) : marketLoadedItem?.description}</p>
                     
                     {props.displayItem ? window.localStorage.getItem("hasWallet") ? (<button onClick={()=>{window.location.replace("/item/" + (id - 1))}} type="button" class="btn btn-secondary" >{window.localStorage.getItem("language") == "en" ? "Purchase" : "Acheter" }</button>) : (<button onClick={()=>{alert("Vous devez créer votre compte afin de pouvoir acheter un item!")}} type="button" class="btn btn-secondary" >{window.localStorage.getItem("language") == "en" ? "Purchase" : "Acheter" }</button>) : props.numreal == id ? (<button onClick={()=>{window.location.replace("/item/" + (id - 1))}} type="button" class="btn btn-secondary" >{window.localStorage.getItem("language") == "en" ? "Purchase" : "Acheter" }</button>) : (<button onClick={calculateTax} type="button" class="btn btn-secondary">{window.localStorage.getItem("language") == "en" ? "Purchase" : "Acheter" }</button>)}
                     

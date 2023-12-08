@@ -782,6 +782,9 @@ function Market() {
 
     // { Array.from({ length: numreal }, (_, k) => numreal > 10 ? k < 10 ? (<NftBox id={k} real={true} displayItem={true} isMarket={true} dds={dds}/> ) : "" : (<NftBox id={k} real={true} dds={dds} isMarket={true} account={address} password={password} numreal={numreal}/> )) }
     //my items: { Array.from({ length: numreal }, (_, k) => k < numreal-15 || k === 21 ? "" : (<NftBox id={k} real={true} haveItem={haveItem} mynft={true} dds={dds} isMarket={true} account={address} password={password}/> )) }
+    //<UListLoader id={0}/> 
+    //<UListLoader id={1}/> 
+    //<NftBox id={12} real={true} catID={1} haveItem={haveItem} mynft={true} dds={dds} isMarket={true} account={address} password={password}/>
     return(
         getPassword ? <GetPassword /> : 
         <div class="market">
@@ -835,9 +838,9 @@ function Market() {
                                 <div class="row">
                                     <div class="col">
                                         
-
-                                        
                                     <UListLoader id={0}/> 
+                                        
+                                    
                                    
 
                                     
@@ -883,7 +886,7 @@ function Market() {
                                     <div class="col">
                                     
                                     </div>
-                               
+
 
                                     {haveItem===false ? ( <div><p>Vous ne vendez pas d'item.</p></div> ) : "" }
                                 </div>
