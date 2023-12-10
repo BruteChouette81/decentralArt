@@ -212,19 +212,24 @@ BEFORE RELEASE:
 
 - review tile arrangement DONE ✔️
 - more cpl documentation + public ledger using uuid ID's and block scan for transactions database ==> important for validation DONE ✔️
-- work on fee reduction system ( proove )
+- work on fee reduction system ( proove ) 
 - add more like: fee payed, centralized receipt and more options
-- account recovery ==> remove delete local storage from setting:
+- account recovery DONE ✔️ ==> remove delete local storage from setting:
 
---> hit the transfer account button in account 
---> didTRansfer but for account transfer
---> enter account number/email address and password to load did from cloud
---> button to sync change 
---> button to delete old email from email base 
+--> hit the transfer account button in account DONE ✔️
+--> didTRansfer but for account transfer DONE ✔️
+--> enter account number/email address and password to load did from cloud DONE ✔️
+--> button to sync change DONE ✔️
+--> button to delete old email from email base DONE ✔️
+--> figure out a nft style account transfer
 
 - securize paypal info DONE ✔️
-- securize tracking codes ==> divide the dss program
-- remove pk from cplHandler
+- securize tracking codes DONE ✔️ ==> divide the dds program:
+- DDS: main DB==> never change ==> add client compiler and node system
+--> buying (on start connect to db to access items) ==> add a security check (like OnlyBuyingContract)
+--> minting
+--> prooving  
+- remove pk from cplHandler DONE ✔️
 - translate the website:
     home DONE ✔️
     navbar DONE ✔️
@@ -237,7 +242,7 @@ BEFORE RELEASE:
     account DONE ✔️
     other DONE ✔️
 - spin when making a transaction DONE ✔️
-- build google seo + maximize marketing 
+- build google seo DONE ✔️ + maximize marketing 
 - add more sellers 
 
 
