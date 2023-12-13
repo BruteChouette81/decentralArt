@@ -159,9 +159,11 @@ function Receipt (props) {
                                 alert("Error while buying. Error code: 50")
                             } else {
                                 const transaction = orderData.purchase_units[0].payments.captures[0];
-                                props.purchase()
-                                setPaypalLoading(false)
-                                alert(`Transaction completé! Merci de faire affaire avec nous ! État de la transaction: ${transaction.status}`);
+                                props.purchase().then((result) => {
+                                    setPaypalLoading(false)
+                                    alert(`Transaction completé! Merci de faire affaire avec nous ! État de la transaction: ${transaction.status}`);
+                                })
+                                
                             }
 
                             //props.purchase()

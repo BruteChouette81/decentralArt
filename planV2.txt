@@ -228,7 +228,7 @@ BEFORE RELEASE:
 - DDS: main DB==> never change ==> add client compiler and node system
 --> buying (on start connect to db to access items) ==> add a security check (like OnlyBuyingContract)
 --> minting
---> prooving  
+--> prooving ==> multiple type of prooving 
 - remove pk from cplHandler DONE ✔️
 - translate the website:
     home DONE ✔️
@@ -242,6 +242,12 @@ BEFORE RELEASE:
     account DONE ✔️
     other DONE ✔️
 - spin when making a transaction DONE ✔️
+- make the transaction process easier:
+ --> putting infos while in approval DONE ✔️ ==> test
+ --> adding text
+- 16 numbers tracking code problem ==> dont give a f about protecting them if not in contract
+- validate proof by date: https://www.canadapost-postescanada.ca/track-reperage/en#/details/id : 0184861854056169
+- remake the my items page using new contracts
 - build google seo DONE ✔️ + maximize marketing 
 - add more sellers 
 

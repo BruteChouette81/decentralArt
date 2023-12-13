@@ -1782,7 +1782,7 @@ function DisplayActions(props) {
             let data = {
                 body: {
                     address: props.signer.address,
-                    amount: (item.price/100000 * 1.36).toFixed(2).toString(),
+                    amount: (((item.price/100000) / (1 - 0.029) + 4.6) - (((item.price/100000) / (1 - 0.029) + 4.6)*0.15)).toFixed(2).toString(), //(item.price/100000 * 1.36).toFixed(2).toString()
                     email: window.localStorage.getItem("MoneyAddress"),
                     id: orderID,
                     proof: proof

@@ -784,7 +784,8 @@ function Market() {
     //my items: { Array.from({ length: numreal }, (_, k) => k < numreal-15 || k === 21 ? "" : (<NftBox id={k} real={true} haveItem={haveItem} mynft={true} dds={dds} isMarket={true} account={address} password={password}/> )) }
     //<UListLoader id={0}/> 
     //<UListLoader id={1}/> 
-    //<NftBox id={12} real={true} catID={1} haveItem={haveItem} mynft={true} dds={dds} isMarket={true} account={address} password={password}/>
+    //<NftBox id={14} real={true} catID={1} haveItem={haveItem} mynft={true} dds={dds} isMarket={true} account={address} password={password}/>
+    //{ Array.from({ length: 15 }, (_, k) => numreal > 0 ? k!=14 ? "" : (<NftBox id={14} real={true} catID={0} haveItem={haveItem} mynft={true} dds={dds} isMarket={true} displayItem={false} account={address} password={password}/> ) : "") }
     return(
         getPassword ? <GetPassword /> : 
         <div class="market">
@@ -838,9 +839,9 @@ function Market() {
                                 <div class="row">
                                     <div class="col">
                                         
-                                    <UListLoader id={0}/> 
+                                   
                                         
-                                    
+                                    <UListLoader id={0}/> 
                                    
 
                                     
@@ -870,8 +871,8 @@ function Market() {
                             <div class="communityNfts">
                                 <div class="row">
                                     <div class="col">
+                                    
                                     <UListLoader id={1}/> 
-
                                     </div>
                                 </div>
                                 {stillLoading ? (<div style={{paddingLeft: 40 + "%"}}><ReactLoading type={types} color={color}
@@ -886,7 +887,7 @@ function Market() {
                                     <div class="col">
                                     
                                     </div>
-
+                                    
 
                                     {haveItem===false ? ( <div><p>Vous ne vendez pas d'item.</p></div> ) : "" }
                                 </div>

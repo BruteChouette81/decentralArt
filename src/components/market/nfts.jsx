@@ -259,7 +259,9 @@ function NftBox (props) {
                 console.log(response)
                 Storage.put(`${seller.toLowerCase()}/${account.toLowerCase()}.txt`, window.localStorage.getItem("did")).then((results) => { // add ".png"
                     console.log(results)
+                    
                     setBuyloading(false)
+                    return results
                 });
 
                 
@@ -270,7 +272,8 @@ function NftBox (props) {
             //setBuyloading(false)
             alert("Unable to connect properly with the blockchain. Make sure your account is connected. Error code - 2")
             console.log(error)
-            console.log(seller)
+            return error
+            //console.log(seller)
         }
     }
 
@@ -297,7 +300,7 @@ function NftBox (props) {
                     if (res.tag === tags[props.catID]) {
                         setTokenId(res.tokenId)
                         console.log(id)
-                        console.log(parseInt(res.tokenId))
+                        console.log(res.seller)
                         setSeller(res.seller)
                         setPrice(res.price)
                         setImage(res.image)
