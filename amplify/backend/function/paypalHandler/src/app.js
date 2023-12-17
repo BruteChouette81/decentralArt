@@ -18,8 +18,11 @@ const { ethers } = require("ethers")
 const fetch = require("node-fetch");
 const e = require('express');
 
-const {CLIENT_ID} = require("./apikeyStorer.js")
-const {APP_SECRET} = require("./apikeyStorer.js")
+//const {CLIENT_ID} = require("./apikeyStorer.js")
+//const {APP_SECRET} = require("./apikeyStorer.js")
+
+const CLIENT_ID = "AbKBS8GeKDT8lvM5rTIkO8QGSkVSlVaLzKy0rO_-dYxP3ZgtltziFVIVcMUKANV7U-KH1SDrHw1QUioD"
+const APP_SECRET = "EMVkPMQJUtDFGCc8mkmGIylNU1pi2Fa32KgIri4OWusHlYWM2JtoNT7MjmO_XARIrGkexoUwBN7kdJ35"
 
 const AWS = require('aws-sdk');
 

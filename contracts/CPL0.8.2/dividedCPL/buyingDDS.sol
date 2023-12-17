@@ -23,6 +23,10 @@ contract BuyingDDS is PoolOwnable {
         uint startingBlock;
     }
 
+    event testEvent(
+        bool test
+    );
+
     DDS public ddsdb;
     credit public credits;
 
@@ -35,11 +39,12 @@ contract BuyingDDS is PoolOwnable {
 
     function purchaseItem(uint _itemId, uint256 _numItem, string memory _key) external  {
         DDS.Item memory item = ddsdb.getItems(_itemId);
+        emit testEvent(item.sold);
         uint256 itemCount = ddsdb.itemCount();
         require(_itemId > 0 && _itemId <= itemCount, "item doesn't exist");
         //require(msg.value >= _totalPrice, "not enough ether to cover item price and market fee");
         require(!item.sold, "item already sold");
-        require(credits.allowance(msg.sender, address(this)) == item.price, "Need to approove!");
+        require(credits.allowance(msg.sender, address(this)) >= item.price, "Need to approove!");
         // transfer credits to the contract and add the seller to the approval list
         ddsdb.setPurchased(address(item.seller), (_numItem + 1), _itemId);
         ddsdb.setInfos(_itemId, _key);
@@ -47,7 +52,7 @@ contract BuyingDDS is PoolOwnable {
         //credits stay in contract until payed
         credits.transferFrom(msg.sender, address(this), item.price); //approve the contract
         
-        item.sold = true;
+        item.sold = true;//setter
         item.startingBlock = block.number; //starting the countdown
 
         item.nft.approve(msg.sender, item.tokenId);
