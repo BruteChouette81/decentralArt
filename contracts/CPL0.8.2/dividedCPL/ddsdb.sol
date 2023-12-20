@@ -22,6 +22,7 @@ contract DDS is PoolOwnable {
         uint tokenId;
         uint price;
         address seller;
+        address buyer;
         bool sold;
         bool prooved;
         uint numBlock;
@@ -151,7 +152,13 @@ contract DDS is PoolOwnable {
         return info;
     }
 
-    function getProof(uint _itemId) public onlyPool view returns (string memory _proof){
+    function getProofPool(uint _itemId) public onlyPool view returns (string memory _proof){
+        string memory proof = proofs[_itemId];
+        return proof;
+    }
+    function getProof(uint _itemId) public view returns (string memory _proof){
+        Item memory item = items[_itemId];
+        require(item.buyer == msg.sender, "Need to buy the Item to consult the proof");
         string memory proof = proofs[_itemId];
         return proof;
     }

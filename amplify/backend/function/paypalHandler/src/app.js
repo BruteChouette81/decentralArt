@@ -18,11 +18,9 @@ const { ethers } = require("ethers")
 const fetch = require("node-fetch");
 const e = require('express');
 
-//const {CLIENT_ID} = require("./apikeyStorer.js")
-//const {APP_SECRET} = require("./apikeyStorer.js")
+const {CLIENT_ID} = require("./apikeyStorer.js")
+const {APP_SECRET} = require("./apikeyStorer.js")
 
-const CLIENT_ID = "AbKBS8GeKDT8lvM5rTIkO8QGSkVSlVaLzKy0rO_-dYxP3ZgtltziFVIVcMUKANV7U-KH1SDrHw1QUioD"
-const APP_SECRET = "EMVkPMQJUtDFGCc8mkmGIylNU1pi2Fa32KgIri4OWusHlYWM2JtoNT7MjmO_XARIrGkexoUwBN7kdJ35"
 
 const AWS = require('aws-sdk');
 
@@ -1362,6 +1360,16 @@ app.post("/oracleMultiMint", async (req, res) => {
 		res.json({"status": 20})
 	}
 }); //deleteItem(uint _itemId)
+
+pp.post("/oracleMultiMint", async (req, res) => {
+	const itemCount = await multipleMintList(req.body.address, req.body.uri, req.body.MaxPrice, req.body.numDays);
+	// TODO: store payment information such as the transaction ID
+	if (itemCount) {
+		res.send(itemCount);
+	} else {
+		res.json({"status": 20})
+	}
+});
 
 app.post("/deleteItem", async (req, res) => {
 	const confirmation = await deleteItem(req.body.owner, req.body.itemId);

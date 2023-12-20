@@ -17,6 +17,7 @@ contract BuyingDDS is PoolOwnable {
         uint tokenId;
         uint price;
         address seller;
+        address buyer;
         bool sold;
         bool prooved;
         uint numBlock;
@@ -53,6 +54,7 @@ contract BuyingDDS is PoolOwnable {
         credits.transferFrom(msg.sender, address(this), item.price); //approve the contract
         
         item.sold = true;//setter
+        item.buyer = address(msg.sender);
         item.startingBlock = block.number; //starting the countdown
 
         item.nft.approve(msg.sender, item.tokenId);
@@ -86,6 +88,7 @@ contract BuyingDDS is PoolOwnable {
        // credits.transferFrom(msg.sender, address(this), item.price); //approve the contract
         
         item.sold = true;
+        item.buyer = address(buyer);
         item.startingBlock = block.number; //starting the countdown
 
         item.nft.approve(buyer, item.tokenId);

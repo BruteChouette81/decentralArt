@@ -16,6 +16,7 @@ contract MintItem is PoolOwnable {
         uint tokenId;
         uint price;
         address seller;
+        address buyer;
         bool sold;
         bool prooved;
         uint numBlock;
@@ -61,6 +62,7 @@ contract MintItem is PoolOwnable {
             _tokenId,
             _price,
             address(msg.sender),
+            address(0),
             false,
             false,
             _numDays * 5760,
@@ -91,6 +93,7 @@ contract MintItem is PoolOwnable {
             id,
             _price,
             address(account),
+            address(0),
             false,
             false,
             _numDays * 5760,
@@ -128,6 +131,7 @@ contract MintItem is PoolOwnable {
                 id2 + i, //(id - _prices.length + i + 1),
                 _prices[i],
                 address(account),
+                address(0),
                 false,
                 false,
                 _numDays[i] * 5760,

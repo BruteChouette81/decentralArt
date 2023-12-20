@@ -214,7 +214,7 @@ BEFORE RELEASE:
 - more cpl documentation + public ledger using uuid ID's and block scan for transactions database ==> important for validation DONE ✔️
 - work on fee reduction system ( proove ) 
 - add more like: fee payed, centralized receipt and more options
-- account recovery DONE ✔️ ==> remove delete local storage from setting:
+- account recovery DONE ✔️ ==> remove delete local storage from setting: ==> use few mounths cookie until fix
 --> hit the transfer account button in account DONE ✔️
 --> didTRansfer but for account transfer DONE ✔️
 --> enter account number/email address and password to load did from cloud DONE ✔️
@@ -257,7 +257,10 @@ CPL v 2.0:
     --> putting infos while in approval DONE ✔️ ==> test
     --> spin when making a transaction DONE ✔️ ==> test
     --> adding text
-    - using contract (getInfos), build new myItems page
+    - using contract (getInfos), build new myItems page DONE ✔️ ==> transfer fetching stuff to server2 so less lag(1 server call)
+
+    - remake home page (background image) DONE ✔️
+    - remake profile (fit mobile)
 
     *COMPILER for legder
 

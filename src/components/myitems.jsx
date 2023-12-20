@@ -70,6 +70,9 @@ function YnftCard2(props) {
                 if (item.prooved === true) {
                     setStatus("prooved")
 
+                    //new way: 
+                    //setTrackingCode(props.dds.getProof(parseInt(props.realPurchase[i][1])))
+
                     var data = {
                         body: {
                             topic: topic
