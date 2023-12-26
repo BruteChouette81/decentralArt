@@ -59,6 +59,8 @@ contract BuyingDDS is PoolOwnable {
 
         item.nft.approve(msg.sender, item.tokenId);
         item.nft.transferFrom(address(this), msg.sender, item.tokenId); //nft transfer 
+
+        ddsdb.setItems(_itemId, item);
        
         // emit Bought event
         ddsdb.triggerBought(
@@ -93,6 +95,8 @@ contract BuyingDDS is PoolOwnable {
 
         item.nft.approve(buyer, item.tokenId);
         item.nft.transferFrom(address(this), buyer, item.tokenId); //nft transfer 
+
+        ddsdb.setItems(_itemId, item);
        
         // emit Bought event
         ddsdb.triggerBought(

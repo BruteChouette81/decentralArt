@@ -36,8 +36,9 @@ contract DDS is PoolOwnable {
         return items[_id];
     }
     //setter
-    function setItems(Item memory _item) public onlyMinter() returns (bool) {
-        items[itemCount] = _item;
+    function setItems(uint _itemId, Item memory _item) public returns (bool) {
+        require(msg.sender == _mintConract || msg.sender == _buyContract || msg.sender == _prooveContract);
+        items[_itemId] = _item;
         return true;
     }
     // seller -> [1: itemId, 2: itemId ...]

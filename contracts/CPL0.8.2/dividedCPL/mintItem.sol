@@ -56,7 +56,7 @@ contract MintItem is PoolOwnable {
         
         _nft.transferFrom(msg.sender, address(_buyContract), _tokenId);
         // add new item to items mapping
-        ddsdb.setItems( DDS.Item(
+        ddsdb.setItems(itemCount, DDS.Item(
             itemCount,
             _nft,
             _tokenId,
@@ -87,7 +87,7 @@ contract MintItem is PoolOwnable {
         // mint nft directly to the contract to avoid two transactions
         uint id = realItems.safeMint(address(this), uri);
         // add new item to items mapping
-        ddsdb.setItems(DDS.Item (
+        ddsdb.setItems(itemCount, DDS.Item (
             itemCount,
             realItems,
             id,
@@ -125,7 +125,7 @@ contract MintItem is PoolOwnable {
             // mint nft directly to the contract to avoid two transactions
             
             // add new item to items mapping
-            ddsdb.setItems(DDS.Item (
+            ddsdb.setItems(itemCount, DDS.Item (
                 itemCount,
                 realItems,
                 id2 + i, //(id - _prices.length + i + 1),
@@ -162,6 +162,8 @@ contract MintItem is PoolOwnable {
         item.nft.approve(msg.sender, item.tokenId);
         item.nft.transferFrom(address(this), msg.sender, item.tokenId);
 
+        ddsdb.setItems(_itemId, item);
+
         ddsdb.triggerDeleted(
             _itemId,
             address(item.nft),
@@ -181,6 +183,8 @@ contract MintItem is PoolOwnable {
         item.sold = true;
         item.nft.approve(item.seller, item.tokenId);
         item.nft.transferFrom(address(this), item.seller, item.tokenId);
+
+        ddsdb.setItems(_itemId, item);
 
         ddsdb.triggerDeleted(
             _itemId,

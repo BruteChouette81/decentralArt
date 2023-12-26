@@ -123,11 +123,12 @@ function Receipt (props) {
             <img id='itemimg2' src={props.image} alt="" />
             <br />
             <br />
-            <p>{window.localStorage.getItem("language") == "en" ? "Questions ? contact us at thomasberthiaume183@gmail.com" : "Des questions ? contacter nous a thomasberthiaume183@gmail.com" }</p>
-            <h4>subtotal: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.subtotal/100000) / (1 - 0.029) + 4.6) : USDollar.format((props.subtotal/100000) / (1 - 0.029) + 4.6)}  {window.localStorage.getItem("currency")}</h4>
+            <p>{window.localStorage.getItem("language") == "en" ? "Questions ? contact us at thomasberthiaume183@gmail.com" : "Des questions ? contacter nous à thomasberthiaume183@gmail.com" }</p>
+            <h4>Subtotal: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.subtotal/100000) / (1 - 0.029) + 4.6) : USDollar.format((props.subtotal/100000) / (1 - 0.029) + 4.6)}  {window.localStorage.getItem("currency")}</h4>
             
             
             <h5> Total: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.total/100000) / (1 - 0.029) + 4.6) : USDollar.format((props.total/100000) / (1 - 0.029) + 4.6)} {window.localStorage.getItem("currency")}</h5>
+            <p>{window.localStorage.getItem("language") == "en" ? "Transactions may take up to 2 minutes. Please, wait until the confirm message to quit the page!" : "Les transactions peuvent prendre jusqu'à 2 minutes. S'il vous plaît, attendez le message de confirmation pour quitter la page !"}</p>
             <br /><br />
             <PayPalScriptProvider options={{ clientId: CLIENT_ID, currency: "CAD" }}>
                 <PayPalButtons
@@ -159,6 +160,7 @@ function Receipt (props) {
                                 alert("Error while buying. Error code: 50")
                             } else {
                                 const transaction = orderData.purchase_units[0].payments.captures[0];
+                                console.log(transaction)
                                 props.purchase().then((result) => {
                                     setPaypalLoading(false)
                                     alert(`Transaction completé! Merci de faire affaire avec nous ! État de la transaction: ${transaction.status}`);
@@ -169,6 +171,7 @@ function Receipt (props) {
                             //props.purchase()
                         }).catch((e) => {
                             alert("Error while buying. Error code: 50")
+                            setPaypalLoading(false)
                             console.log(e)
                         });
                     }}

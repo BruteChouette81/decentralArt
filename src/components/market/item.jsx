@@ -17,7 +17,7 @@ import AMMABI from '../../artifacts/contracts/AMM.sol/AMM.json'
 import NftBox from './nfts';
 
 const MarketAddress = '0x710005797eFf093Fa95Ce9a703Da9f0162A6916C'; // goerli new test contract
-const DDSAddress = '0x79915E0af8c4DeC83c5c628b2a050B7062D7bC1d' // 0x2F810063f44244a2C3B2a874c0aED5C6c28D1D87, 0xd860F7aA2ACD3dc213D1b01e2cE0BC827Bd3be46
+const DDSAddress = '0x0188EFFc74943b4F54833A14f58E632a3f920a56' // 0x2F810063f44244a2C3B2a874c0aED5C6c28D1D87, 0xd860F7aA2ACD3dc213D1b01e2cE0BC827Bd3be46
 const CreditsAddress = "0xD475c58549D3a6ed2e90097BF3D631cf571Bdd86" //goerli test contract
 const NftAddress = '0x3d275ed3B0B42a7A3fCAA33458C34C0b5dA8Cc3A'; // goerli new test contract
 const DiDAddress = "0x6f1d3cd1894b3b7259f31537AFbb930bd15e0EB8" //goerli test contract 

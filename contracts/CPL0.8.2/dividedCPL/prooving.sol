@@ -34,6 +34,8 @@ contract Prooving is PoolOwnable {
 
         item.prooved = true;
 
+        ddsdb.setItems(ddsdb.getPurchased(msg.sender, _id), item);
+
         ddsdb.triggerProoved(
             item.itemId,
             address(item.nft),
@@ -58,6 +60,8 @@ contract Prooving is PoolOwnable {
         credits.transfer(seller, item.price); //pay seller
 
         item.prooved = true;
+
+        ddsdb.setItems(ddsdb.getPurchased(seller, _id), item);
 
         ddsdb.triggerProoved(
                 item.itemId,

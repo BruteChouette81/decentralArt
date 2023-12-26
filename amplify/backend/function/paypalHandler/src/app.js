@@ -48,8 +48,12 @@ const getContract = (signer, abi, address) => {
   return contract
 }
 
-const ddsAddress = "0x79915E0af8c4DeC83c5c628b2a050B7062D7bC1d";
+const ddsAddress = "0x0188EFFc74943b4F54833A14f58E632a3f920a56";
 const creditAddress = "0xc183177E3207788ea9342255C8Fcb218763d46e2";
+const buyingAddress = "0xc73CBdd54Af25AE6be362B222074027d545963cC";
+const proovingAddress = "0x0179F9C8B674CCd07354Dcc3998d0160216D02a6";
+const mintingAddress = "0xF9E4e1C24206178CC632D3Bdfe6c389cc09E5B0A";
+
 const ddsABI = [
 	{
 		"inputs": [
@@ -66,6 +70,28 @@ const ddsABI = [
 		],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "OwnableInvalidOwner",
+		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "OwnableUnauthorizedAccount",
+		"type": "error"
 	},
 	{
 		"anonymous": false,
@@ -142,157 +168,9 @@ const ddsABI = [
 		"type": "event"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_itemId",
-				"type": "uint256"
-			}
-		],
-		"name": "deleteItem",
+		"inputs": [],
+		"name": "incrementItemCount",
 		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_itemOwner",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_itemId",
-				"type": "uint256"
-			}
-		],
-		"name": "deleteItemPool",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract IERC721",
-				"name": "_nft",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_tokenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_price",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_numDays",
-				"type": "uint256"
-			}
-		],
-		"name": "listItem",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "buyer",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_itemId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_numItem",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_key",
-				"type": "string"
-			}
-		],
-		"name": "mintBuy",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "uri",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_price",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_numDays",
-				"type": "uint256"
-			}
-		],
-		"name": "mintList",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "account",
-				"type": "address"
-			},
-			{
-				"internalType": "string[]",
-				"name": "uris",
-				"type": "string[]"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "_prices",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "_numDays",
-				"type": "uint256[]"
-			}
-		],
-		"name": "multipleMintList",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
@@ -381,36 +259,13 @@ const ddsABI = [
 			},
 			{
 				"indexed": false,
-				"internalType": "string",
+				"internalType": "bytes32",
 				"name": "proof",
-				"type": "string"
+				"type": "bytes32"
 			}
 		],
 		"name": "Prooved",
 		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_itemId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_numItem",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_key",
-				"type": "string"
-			}
-		],
-		"name": "purchaseItem",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
 	},
 	{
 		"inputs": [],
@@ -422,19 +277,126 @@ const ddsABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "buyer",
+				"type": "address"
+			}
+		],
+		"name": "setBuyer",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "uint256",
 				"name": "_itemId",
 				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_infos",
+				"type": "string"
 			}
 		],
-		"name": "retrieveCredit",
+		"name": "setInfos",
 		"outputs": [
 			{
-				"internalType": "uint256",
+				"internalType": "bool",
 				"name": "",
-				"type": "uint256"
+				"type": "bool"
 			}
 		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			},
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "itemId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "contract IERC721",
+						"name": "nft",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "seller",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "sold",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "prooved",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "numBlock",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "startingBlock",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct DDS.Item",
+				"name": "_item",
+				"type": "tuple"
+			}
+		],
+		"name": "setItems",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "minter",
+				"type": "address"
+			}
+		],
+		"name": "setMinter",
+		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
@@ -455,7 +417,7 @@ const ddsABI = [
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_id",
+				"name": "_key",
 				"type": "uint256"
 			},
 			{
@@ -464,7 +426,26 @@ const ddsABI = [
 				"type": "string"
 			}
 		],
-		"name": "submitProof",
+		"name": "setProofs",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "proover",
+				"type": "address"
+			}
+		],
+		"name": "setProover",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -473,22 +454,28 @@ const ddsABI = [
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "seller",
+				"name": "_seller",
 				"type": "address"
 			},
 			{
 				"internalType": "uint256",
-				"name": "_id",
+				"name": "_key",
 				"type": "uint256"
 			},
 			{
-				"internalType": "string",
-				"name": "_proof",
-				"type": "string"
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
 			}
 		],
-		"name": "submitProofPool",
-		"outputs": [],
+		"name": "setPurchased",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
@@ -506,8 +493,179 @@ const ddsABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "itemId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "nft",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "seller",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "buyer",
+				"type": "address"
+			}
+		],
+		"name": "triggerBought",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "itemId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "nft",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "seller",
+				"type": "address"
+			}
+		],
+		"name": "triggerDeleted",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "itemId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "nft",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "seller",
+				"type": "address"
+			}
+		],
+		"name": "triggerOffered",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "itemId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "nft",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "seller",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "proof",
+				"type": "bytes32"
+			}
+		],
+		"name": "triggerProoved",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_buyContract",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_mintConract",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "_pool",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_prooveContract",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -577,6 +735,115 @@ const ddsABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getItems",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "itemId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "contract IERC721",
+						"name": "nft",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "seller",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "sold",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "prooved",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "numBlock",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "startingBlock",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct DDS.Item",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			}
+		],
+		"name": "getProof",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "_proof",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			}
+		],
+		"name": "getProofPool",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "_proof",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "_seller",
 				"type": "address"
@@ -600,7 +867,46 @@ const ddsABI = [
 	},
 	{
 		"inputs": [],
+		"name": "isBuyer",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isMinter",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "isPool",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isProover",
 		"outputs": [
 			{
 				"internalType": "bool",
@@ -660,6 +966,11 @@ const ddsABI = [
 				"type": "address"
 			},
 			{
+				"internalType": "address",
+				"name": "buyer",
+				"type": "address"
+			},
+			{
 				"internalType": "bool",
 				"name": "sold",
 				"type": "bool"
@@ -681,40 +992,6 @@ const ddsABI = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bytes",
-				"name": "",
-				"type": "bytes"
-			}
-		],
-		"name": "onERC721Received",
-		"outputs": [
-			{
-				"internalType": "bytes4",
-				"name": "",
-				"type": "bytes4"
-			}
-		],
-		"stateMutability": "pure",
 		"type": "function"
 	},
 	{
@@ -768,6 +1045,1156 @@ const ddsABI = [
 		"type": "function"
 	}
 ];
+
+const buyingABI = [
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			}
+		],
+		"name": "deleteItem",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_itemOwner",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			}
+		],
+		"name": "deleteItemPool",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "buyer",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_numItem",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_key",
+				"type": "string"
+			}
+		],
+		"name": "mintBuy",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract DDS",
+				"name": "_addrDds",
+				"type": "address"
+			},
+			{
+				"internalType": "contract credit",
+				"name": "_addrCredit",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "OwnableInvalidOwner",
+		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "OwnableUnauthorizedAccount",
+		"type": "error"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "previousOwner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "OwnershipTransferred",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_numItem",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_key",
+				"type": "string"
+			}
+		],
+		"name": "purchaseItem",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "buyer",
+				"type": "address"
+			}
+		],
+		"name": "setBuyer",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "minter",
+				"type": "address"
+			}
+		],
+		"name": "setMinter",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "pool",
+				"type": "address"
+			}
+		],
+		"name": "setPool",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "proover",
+				"type": "address"
+			}
+		],
+		"name": "setProover",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_buyContract",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_mintConract",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_pool",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_prooveContract",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "credits",
+		"outputs": [
+			{
+				"internalType": "contract credit",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "ddsdb",
+		"outputs": [
+			{
+				"internalType": "contract DDS",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isBuyer",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isMinter",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isPool",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isProover",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes",
+				"name": "",
+				"type": "bytes"
+			}
+		],
+		"name": "onERC721Received",
+		"outputs": [
+			{
+				"internalType": "bytes4",
+				"name": "",
+				"type": "bytes4"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+
+const mintingABI = [
+	{
+		"inputs": [
+			{
+				"internalType": "contract IERC721",
+				"name": "_nft",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_numDays",
+				"type": "uint256"
+			}
+		],
+		"name": "listItem",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "uri",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_price",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_numDays",
+				"type": "uint256"
+			}
+		],
+		"name": "mintList",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"internalType": "string[]",
+				"name": "uris",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_prices",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "_numDays",
+				"type": "uint256[]"
+			}
+		],
+		"name": "multipleMintList",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract DDS",
+				"name": "_addrDds",
+				"type": "address"
+			},
+			{
+				"internalType": "contract credit",
+				"name": "_addrCredit",
+				"type": "address"
+			},
+			{
+				"internalType": "contract RealItem",
+				"name": "_addrReal",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "OwnableInvalidOwner",
+		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "OwnableUnauthorizedAccount",
+		"type": "error"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "previousOwner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "OwnershipTransferred",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "buyer",
+				"type": "address"
+			}
+		],
+		"name": "setBuyer",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "minter",
+				"type": "address"
+			}
+		],
+		"name": "setMinter",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "pool",
+				"type": "address"
+			}
+		],
+		"name": "setPool",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "proover",
+				"type": "address"
+			}
+		],
+		"name": "setProover",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_buyContract",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_mintConract",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_pool",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_prooveContract",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "credits",
+		"outputs": [
+			{
+				"internalType": "contract credit",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "ddsdb",
+		"outputs": [
+			{
+				"internalType": "contract DDS",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isBuyer",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isMinter",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isPool",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isProover",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes",
+				"name": "",
+				"type": "bytes"
+			}
+		],
+		"name": "onERC721Received",
+		"outputs": [
+			{
+				"internalType": "bytes4",
+				"name": "",
+				"type": "bytes4"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "realItems",
+		"outputs": [
+			{
+				"internalType": "contract RealItem",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+
+const proovingABI = [
+	{
+		"inputs": [
+			{
+				"internalType": "contract DDS",
+				"name": "_addrDds",
+				"type": "address"
+			},
+			{
+				"internalType": "contract credit",
+				"name": "_addrCredit",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "OwnableInvalidOwner",
+		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "OwnableUnauthorizedAccount",
+		"type": "error"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "previousOwner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "OwnershipTransferred",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "_buyContract",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_mintConract",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_pool",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_prooveContract",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "credits",
+		"outputs": [
+			{
+				"internalType": "contract credit",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "ddsdb",
+		"outputs": [
+			{
+				"internalType": "contract DDS",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isBuyer",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isMinter",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isPool",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isProover",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			}
+		],
+		"name": "retrieveCredit",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "buyer",
+				"type": "address"
+			}
+		],
+		"name": "setBuyer",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "minter",
+				"type": "address"
+			}
+		],
+		"name": "setMinter",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "pool",
+				"type": "address"
+			}
+		],
+		"name": "setPool",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "proover",
+				"type": "address"
+			}
+		],
+		"name": "setProover",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_proof",
+				"type": "string"
+			}
+		],
+		"name": "submitProof",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "seller",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_proof",
+				"type": "string"
+			}
+		],
+		"name": "submitProofPool",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+];
+
 const creditABI = [
 	{
 		"inputs": [],
@@ -1361,7 +2788,7 @@ app.post("/oracleMultiMint", async (req, res) => {
 	}
 }); //deleteItem(uint _itemId)
 
-pp.post("/oracleMultiMint", async (req, res) => {
+app.post("/oracleMultiMint", async (req, res) => {
 	const itemCount = await multipleMintList(req.body.address, req.body.uri, req.body.MaxPrice, req.body.numDays);
 	// TODO: store payment information such as the transaction ID
 	if (itemCount) {
@@ -1534,6 +2961,7 @@ async function capturePayment(orderId, address, amount, itemId, key, buying) {
   const data = await response.json();
 
   if (buying) {
+
 	let bool = await mintBuy(address, amount, itemId, key )
 	if (bool) {
 		return data
@@ -1584,6 +3012,7 @@ async function capturePayment(orderId, address, amount, itemId, key, buying) {
 // url: /oracleMint
 async function mintList(address, uri, price, numDays) {
 	if (ConnectedWallet[0]) {
+		const minter = getContract(ConnectedWallet[0], mintingABI, mintingAddress);
 		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
 		console.log(parseInt(price*100000))
 		//console.log(address)
@@ -1591,7 +3020,7 @@ async function mintList(address, uri, price, numDays) {
 		//console.log(numDays)
 		//console.log(dds)
 		try {
-			await dds.mintList(address, uri, parseInt(price*100000), numDays); //max price mintList(address,string,uint256,uint256)
+			await minter.mintList(address, uri, parseInt(price*100000), numDays); //max price mintList(address,string,uint256,uint256)
 			//console.log(itemCount)
 			let realitemcount = await dds.itemCount()
 			return realitemcount;
@@ -1603,9 +3032,10 @@ async function mintList(address, uri, price, numDays) {
 	} else {
 		await load_wallet()
 		//console.log(price*100000)
+		const minter = getContract(ConnectedWallet[0], mintingABI, mintingAddress);
 		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
 		try {
-			await dds.mintList(address, uri, parseInt(price*100000), numDays); //max price mintList(address,string,uint256,uint256)
+			await minter.mintList(address, uri, parseInt(price*100000), numDays); //max price mintList(address,string,uint256,uint256)
 			//console.log(itemCount)
 			let realitemcount = await dds.itemCount()
 			return realitemcount;
@@ -1624,9 +3054,9 @@ async function multipleMintList(address, uri, price, numDays) {
 		for (let i =0; i < price?.length; i++) {
 			price[i] = parseInt(price[i] *100000) //maxprice
 		}
-		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		const minter = getContract(ConnectedWallet[0], mintingABI, mintingAddress);
 		try {
-			let itemCount = await dds.multipleMintList(address, uri, price, numDays);
+			let itemCount = await minter.multipleMintList(address, uri, price, numDays);
 			return itemCount;
 		} catch (e) {
 			console.log(e);
@@ -1639,9 +3069,9 @@ async function multipleMintList(address, uri, price, numDays) {
 		for (let i =0; i < price?.length; i++) {
 			price[i] = price[i] *100000
 		}
-		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		const minter = getContract(ConnectedWallet[0], mintingABI, mintingAddress);
 		try {
-			let itemCount = await dds.multipleMintList(address, uri, price, numDays);
+			let itemCount = await minter.multipleMintList(address, uri, price, numDays);
 			return itemCount;
 		} catch (e) {
 			console.log(e);
@@ -1652,9 +3082,9 @@ async function multipleMintList(address, uri, price, numDays) {
 
 async function deleteItem(address, itemId) {
 	if (ConnectedWallet[0]) {
-		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		const buyer = getContract(ConnectedWallet[0], buyingABI, buyingAddress);
 		try {
-			await dds.deleteItemPool(address, itemId); //transfer the item to the oracle and removes it from the market
+			await buyer.deleteItemPool(address, itemId); //transfer the item to the oracle and removes it from the market
 			return true;
 		} catch (e) {
 			console.log(e);
@@ -1663,9 +3093,9 @@ async function deleteItem(address, itemId) {
 		
 	} else {
 		await load_wallet()
-		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		const buyer = getContract(ConnectedWallet[0], buyingABI, buyingAddress);
 		try {
-			await dds.deleteItemPool(address, itemId); //transfer the item to the oracle and removes it from the market
+			await buyer.deleteItemPool(address, itemId); //transfer the item to the oracle and removes it from the market
 			return true;
 		} catch (e) {
 			console.log(e);
@@ -1677,12 +3107,12 @@ async function deleteItem(address, itemId) {
 //mint -> maxprice
 async function mintBuy(address, amount, itemId, key) {
 	if (ConnectedWallet[0]) {
-		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		const buyer = getContract(ConnectedWallet[0], buyingABI, buyingAddress);
 		const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
 		//console.log(amount)
 		try {
-			await (await credits._mint(ddsAddress, parseInt(amount * 100000))).wait();
-			await dds.mintBuy(address, itemId, itemId, key);
+			await (await credits._mint(proovingAddress, parseInt(amount * 100000))).wait();
+			await buyer.mintBuy(address, itemId, itemId, key);
 			return true;
 		
 		} catch (e) {
@@ -1692,12 +3122,12 @@ async function mintBuy(address, amount, itemId, key) {
 		
 	} else {
 		await load_wallet()
-		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		const buyer = getContract(ConnectedWallet[0], buyingABI, buyingAddress);
 		const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
 
 		try {
-			await await (await credits._mint(ddsAddress, parseInt(amount * 100000))).wait();
-			await dds.mintBuy(address, itemId, itemId, key);
+			await (await credits._mint(proovingAddress, parseInt(amount * 100000))).wait();
+			await buyer.mintBuy(address, itemId, itemId, key);
 			return true;
 		
 		} catch (e) {
@@ -1710,9 +3140,9 @@ async function mintBuy(address, amount, itemId, key) {
 async function refundCredits(id) {
 	//retrieveCredit(uint256 _itemId)
 	if (ConnectedWallet[0]) {
-		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		const proover = getContract(ConnectedWallet[0], proovingABI, proovingAddress);
 		try {
-			const amount = await (await dds.retrieveCredit(id)).wait();
+			const amount = await (await proover.retrieveCredit(id)).wait();
 			return amount;
 		} catch (e) {
 			return false;
@@ -1722,9 +3152,9 @@ async function refundCredits(id) {
 		
 	} else {
 		await load_wallet()
-		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		const proover = getContract(ConnectedWallet[0], proovingABI, proovingAddress);
 		try {
-			const amount = await (await dds.retrieveCredit(id)).wait();
+			const amount = await (await proover.retrieveCredit(id)).wait();
 			return amount;
 		} catch (e) {
 			return false;
@@ -1735,9 +3165,9 @@ async function refundCredits(id) {
 
 async function proofAndGo(address, id, proof) {
 	if (ConnectedWallet[0]) {
-		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		const proover = getContract(ConnectedWallet[0], proovingABI, proovingAddress);
 		try {
-			await dds.submitProofPool(address, id, proof);
+			await proover.submitProofPool(address, id, proof);
 			return true;
 		} catch (e) {
 			return false;
@@ -1745,9 +3175,9 @@ async function proofAndGo(address, id, proof) {
 			
 	} else {
 		await load_wallet()
-		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
+		const proover = getContract(ConnectedWallet[0], proovingABI, proovingAddress);
 		try {
-			await dds.submitProofPool(address, id, proof);
+			await proover.submitProofPool(address, id, proof);
 			return true;
 		} catch (e) {
 			return false;

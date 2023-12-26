@@ -11,8 +11,8 @@ import { AES, enc } from "crypto-js"
 import DDSABI from '../artifacts/contracts/DDS.sol/DDS.json'
 
 const key = pinatakey
-const ImperialRealAddress = "0x42F1c1E4c3b3287d727C15cf7034a26d3E23a7E4"
-const DDSADDr = '0x79915E0af8c4DeC83c5c628b2a050B7062D7bC1d';
+const ImperialRealAddress = "0x6C1c1c23187b0aFF51E941e139A22645fd87f5A0"
+const DDSADDr = '0x0188EFFc74943b4F54833A14f58E632a3f920a56';
 
 const getContract = (signer, abi, address) => {
     // get the end user
@@ -71,9 +71,10 @@ function YnftCard2(props) {
                     setStatus("prooved")
 
                     //new way: 
-                    //setTrackingCode(props.dds.getProof(parseInt(props.realPurchase[i][1])))
+                    const track_contract = await props.dds.getProof(parseInt(props.realPurchase[i][1]));
+                    setTrackingCode(track_contract)
 
-                    var data = {
+                    /*var data = {
                         body: {
                             topic: topic
                         }
@@ -91,7 +92,7 @@ function YnftCard2(props) {
                             } 
                         }
 
-                    })
+                    })*/
 
 
                     /*

@@ -31,6 +31,7 @@ contract RealItem is ERC721, ERC721URIStorage, Ownable {
         }
         
         return _tokenIdCounter.current() - 1;
+        
 
     }
 

@@ -247,6 +247,30 @@ CPL v 2.0:
     --> minting DONE ✔️
     --> prooving ==> multiple type of prooving DONE ✔️
 
+    Instruction set:
+    mint new: Rnft, DDS DONE ✔️
+    mint new sub-contracts and set them in DDS DONE ✔️
+    set _buyContract in minting.sol DONE ✔️
+    set _prooveContract in buying.sol DONE ✔️
+    set _prooveContract in CPL in mintbuy in credit.mint(_prooveContract)
+
+    set ABI in cpl 
+    set all contract in cpl
+
+    set pool in DDS, minting, buying, prooving DONE ✔️
+
+
+
+    oracle: 0x439da8962debe41408712dE41b6161B66349E250
+
+    CREDITS: 0xc183177E3207788ea9342255C8Fcb218763d46e2
+    RNFT: 0x6C1c1c23187b0aFF51E941e139A22645fd87f5A0
+    DDS: 0x0188EFFc74943b4F54833A14f58E632a3f920a56
+
+    buying: 0xc73CBdd54Af25AE6be362B222074027d545963cC
+    minting: 0xF9E4e1C24206178CC632D3Bdfe6c389cc09E5B0A
+    prooving: 0x0179F9C8B674CCd07354Dcc3998d0160216D02a6
+
     CPL:
     - securize api key DONE ✔️
     - create api key security 
@@ -256,7 +280,7 @@ CPL v 2.0:
     - make the transaction process easier:
     --> putting infos while in approval DONE ✔️ ==> test
     --> spin when making a transaction DONE ✔️ ==> test
-    --> adding text
+    --> adding text DONE 
     - using contract (getInfos), build new myItems page DONE ✔️ ==> transfer fetching stuff to server2 so less lag(1 server call)
 
     - remake home page (background image) DONE ✔️
@@ -265,7 +289,11 @@ CPL v 2.0:
     *COMPILER for legder
 
     green flag: 
-    - two items: one paypal (13 letters code), one credit(16 letters code)
+    - minting DONE ✔️
+    - two items: one paypal (13 letters code), one credit(16 letters code) DONE ✔️ ==> no error test
+    - deleting DONE ✔️
+    - prooving DONE ✔️
+    - other pages DONE ✔️ ==> test
 
 
 

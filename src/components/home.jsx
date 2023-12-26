@@ -11,7 +11,7 @@ import DDSABI from '../artifacts/contracts/DDS.sol/DDS.json'
 
 import NftBox from './market/nfts'
 
-const DDSAddress = '0x79915E0af8c4DeC83c5c628b2a050B7062D7bC1d'
+const DDSAddress = '0x0188EFFc74943b4F54833A14f58E632a3f920a56'
 
 
 const getContract = () => { //for Imperial Account
@@ -148,7 +148,7 @@ function InstaView() {
     const [numrealItems, setNumRealItems] = useState(0);
     const [dds, setDds] = useState();
     let timeo = 2000;
-    const based = 5; //minimum item loading
+    const based = 1; //minimum item loading
     const increasingby = 5; //number of more item being load each "load more "
     //let chunk_number = 0;
 
@@ -289,7 +289,7 @@ function Notification() {
 }
 
 function Home() {
-    
+    //
     return(
         <div class="main">
             <Notification />
