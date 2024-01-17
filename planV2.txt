@@ -242,7 +242,7 @@ CPL v 2.0:
     - 16 numbers tracking code problem DONE ✔️
     - DDS: main DB==> never change DONE ✔️
     - DDS: mess around with secuity to check the best option DONE ✔️
-    - DDS: new dds: launch and test transaction 
+    - DDS: new dds: launch and test transaction DONE ✔️
     --> buying (on start connect to db to access items) ==> add a security check (like OnlyBuyingContract) DONE ✔️
     --> minting DONE ✔️
     --> prooving ==> multiple type of prooving DONE ✔️
@@ -252,14 +252,12 @@ CPL v 2.0:
     mint new sub-contracts and set them in DDS DONE ✔️
     set _buyContract in minting.sol DONE ✔️
     set _prooveContract in buying.sol DONE ✔️
-    set _prooveContract in CPL in mintbuy in credit.mint(_prooveContract)
+    set _prooveContract in CPL in mintbuy in credit.mint(_prooveContract) DONE ✔️
 
-    set ABI in cpl 
-    set all contract in cpl
+    set ABI in cpl DONE ✔️
+    set all contract in cpl DONE ✔️
 
     set pool in DDS, minting, buying, prooving DONE ✔️
-
-
 
     oracle: 0x439da8962debe41408712dE41b6161B66349E250
 
@@ -273,14 +271,15 @@ CPL v 2.0:
 
     CPL:
     - securize api key DONE ✔️
-    - create api key security 
-    - work around new DDS + add feature for the ledger
+    - create api key security ==> using account signature DONE ✔️ ==> test and incorporate everywhere 
+    ==> provide a sign message w/ a copy of the signer. then, sign the same code and validate the authenticity of the signer. ==> do it before to save time DONE ✔️
+    
 
     WEBSITE:
     - make the transaction process easier:
-    --> putting infos while in approval DONE ✔️ ==> test
-    --> spin when making a transaction DONE ✔️ ==> test
-    --> adding text DONE 
+    --> putting infos while in approval DONE ✔️ ==> test 
+    --> spin when making a transaction DONE ✔️ ==> test DONE ✔️
+    --> adding text DONE ✔️ 
     - using contract (getInfos), build new myItems page DONE ✔️ ==> transfer fetching stuff to server2 so less lag(1 server call)
 
     - remake home page (background image) DONE ✔️
@@ -295,11 +294,38 @@ CPL v 2.0:
     - prooving DONE ✔️
     - other pages DONE ✔️ ==> test
 
-
-
-
 Tickets === maitre canadien
 
+plan for 2024:
+**see marketing idea
+- finish testing dds v2 
+- all of myitems into serverv2 
+- all storage in cookies DONE ✔️ ==> incorporate ==> transfer account using nft instead of bucket (ipfs):
+    check for all items on blockchain (100% decentralized and all p2p) ==> rentability
+    same system: now: did ==> AWS ==> new device
+                 new: did ==> block/ipfs(temporary p2p) ==> new device
+    find a back-way to store account did
+- run ipfs node on server ==> waiting for p2p // https://pureinfotech.com/connect-two-computers-directly-ethernet-cable-windows-10/
+- incorporate new api key security:  DONE ✔️
+    deploy and test for: --> digest need to change so add random var
+    buying: deploy  DONE ✔️, test
+    prooving  DONE ✔️
+    retrieving
+- check for hybrid lightning network idea + interpretor 
+- work around new DDS + add feature for the ledger + participation system
+- new presentation: middlemanless technology (every thing we rely on now will disapear or replace by lightning network)
+- switch to bitcoin
+- PARTICIPATION system: 
+    math DONE ✔️ ==> improove
+    1: check for payment gateway (visa/mastercard/crypto) ==> lower fees
+    2: check for P2P exchange for stable earn ==> PayTrie 0.6 %/kraken 0.26% fee canada-proof ==> usdc/cadc
+    3: build the F2E 
+    4: check rentability (long term)
+
+-google ads: 125(110-230) - 255(230-270)
+-facebook ads: 100 for a mounth or like 10$ a day/ 5$
+
+estimate: 
 
 Marketing idea: 
 
@@ -315,7 +341,16 @@ Marketing idea:
 
 - build google seo DONE ✔️ + maximize marketing 
 
+- shopify ads campaign
+
+- more "bigger" item (maitre canadien)
+
 - add more sellers 
+
+- add more stores (numstore: 1)
+
+- connect with N
+
 
 goal to december: 
 - 10 accounts

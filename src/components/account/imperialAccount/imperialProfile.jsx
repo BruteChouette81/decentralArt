@@ -481,6 +481,7 @@ function ImperialProfile() {
             //change user privatekey to the json
             let userwallet = new ethers.Wallet(privatekey, provider) //response.privatekey
             console.log(userwallet)
+           
             //let userwallet = new ethers.Wallet.fromEncryptedJson(response.privatekey, password)
 
             let contract = getContract(userwallet, Credit, contractAddress)
@@ -530,6 +531,12 @@ function ImperialProfile() {
             let userwallet = new ethers.Wallet(privatekey, provider) //response.privatekey
             //console.log(userwallet.mnemonic)
             //let userwallet = new ethers.Wallet.fromEncryptedJson(response.privatekey, password)
+           
+            //user side  // 
+            //let testsing = new ethers.utils.SigningKey(privatekey)
+            //let testsig = testsing.signDigest(digest)
+            //
+
 
             let contract = getContract(userwallet, Credit, contractAddress)
             
@@ -582,6 +589,7 @@ function ImperialProfile() {
         else {
             window.localStorage.setItem("usingMetamask", false)
             let did = window.localStorage.getItem("did")
+            document.cookie = 'did=' + did + '; max-age:31536000; Secure'
             let res1 = AES.decrypt(did, passwordInp) //props.signer.privateKey
             try {
                 let res = JSON.parse(res1.toString(enc.Utf8));

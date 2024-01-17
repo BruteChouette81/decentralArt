@@ -1778,6 +1778,15 @@ function DisplayActions(props) {
             //await dds.submitProof(orderID, proof)
             let item = await dds.items(orderID-1);
             //console.log((item.price/100000 * 1.36).toFixed(2).toString())
+            //let key = AES.encrypt(props.pk, props.signer.publicKey)
+
+            //let digest = ethers.utils.hashMessage(proof) //digest the encoded key
+
+            let sig1 = await props.signer.signMessage(proof) //create signature 1 for address
+                        
+                        //let pubkey = new ethers.utils.SigningKey(props.signer.privateKey)
+                       
+                        //let sig2 = pubkey.signDigest(digest) //create signature 2 for public key
             
             let data = {
                 body: {
@@ -1785,7 +1794,8 @@ function DisplayActions(props) {
                     amount: (((item.price/100000) / (1 - 0.029) + 4.6) - (((item.price/100000) / (1 - 0.029) + 4.6)*0.15)).toFixed(2).toString(), //(item.price/100000 * 1.36).toFixed(2).toString()
                     email: window.localStorage.getItem("MoneyAddress"),
                     id: orderID,
-                    proof: proof
+                    proof: proof,
+                    signature1: sig1
                 }
             
             }

@@ -15,6 +15,8 @@ const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 const crypto = require('crypto')
 const { ethers } = require("ethers")
+const AES = require('crypto-js/aes')
+const enc = require('crypto-js/enc-utf8.js')
 const fetch = require("node-fetch");
 const e = require('express');
 
@@ -2728,7 +2730,16 @@ const gasPrice = await provider.getGasPrice();
             console.log((ethers.utils.formatEther(gas8*gasPrice)))
             console.log((ethers.utils.formatEther(gas7*gasPrice)))
 */
-
+// api-key protection system: 
+// user: sign a key using signer.signMessage(message) ==> server: address = ethers.utils.verifyMessage(message, signature)
+// then compare address and proove sender is account owner
+// then recoverPublicKey(message(digest), signature) ==> decrypt key using public key
+// let testsig = await userwallet.signMessage(key)
+// let addrsig = ethers.utils.verifyMessage(key, testsig)
+// let digest = ethers.utils.hashMessage("test")
+//let testsing = new ethers.utils.SigningKey(privatekey)
+//let testsig = testsing.signDigest(digest)
+//let pkey = ethers.utils.recoverPublicKey(digest, testsig)
 // create a new order
 app.post("/create-paypal-order", async (req, res) => {
   const order = await createOrder(req.body.amount);
@@ -2737,23 +2748,39 @@ app.post("/create-paypal-order", async (req, res) => {
 
 // capture payment & store order information or fullfill order
 app.post("/capture-paypal-order", async (req, res) => {
-  const captureData = await capturePayment(req.body.orderID, req.body.address, req.body.amount, req.body.itemId, req.body.key, req.body.buying);
-  // TODO: store payment information such as the transaction ID orderId, address, amount, itemId, key, buying
-  if (captureData) {
-	res.json(captureData);
-} else {
-	res.json({"status": 50})
-}
+	let address = ethers.utils.verifyMessage(req.body.digest, req.body.signature1)
+	let pkey = ethers.utils.recoverPublicKey(req.body.digest, req.body.signature2)
+	let finalmessage = AES.decrypt(req.body.key, pkey)
+	//let address = ethers.utils.verifyMessage(req.body.key, req.body.signature);
+	if (address == req.body.address) {
+		const captureData = await capturePayment(req.body.orderID, req.body.address, req.body.amount, req.body.itemId, enc.stringify(finalmessage), req.body.buying);
+		// TODO: store payment information such as the transaction ID orderId, address, amount, itemId, key, buying
+		if (captureData) {
+			res.json(captureData);
+		} else {
+			res.json({"status": 50})
+		}
+	} else {
+		res.json({"status": 50})
+	}
+ 
 });
 
 app.post("/get-payed", async (req, res) => {
-  const captureData = await getPayed(req.body.amount, req.body.email, req.body.address, req.body.id, req.body.proof);
-  // TODO: store payment information such as the transaction ID
-  if (captureData) {
-	res.json(captureData);
-} else {
+  let address = ethers.utils.verifyMessage(req.body.proof, req.body.signature1)
+
+  if(address === req.body.address) {
+	const captureData = await getPayed(req.body.amount, req.body.email, req.body.address, req.body.id, req.body.proof);
+	// TODO: store payment information such as the transaction ID
+	if (captureData) {
+	  res.json(captureData);
+  } else {
+	  res.json({"status": 40})
+  }
+  } else {
 	res.json({"status": 40})
-}
+  }
+  
 });
 
 app.post("/get-refund", async (req, res) => {
@@ -2960,6 +2987,7 @@ async function capturePayment(orderId, address, amount, itemId, key, buying) {
   });
   const data = await response.json();
 
+  //validate payment
   if (buying) {
 
 	let bool = await mintBuy(address, amount, itemId, key )

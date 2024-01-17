@@ -293,6 +293,7 @@ function NftBox (props) {
                 if (!props.displayItem) {
                     setPk(props.password)
                     setAccount(props.account)
+                    setSigner(props.signer)
                 }
                 
                 const newItem = getItem()

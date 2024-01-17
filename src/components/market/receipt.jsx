@@ -21,6 +21,7 @@ import { API } from "aws-amplify";
 
 import lock from "./css/png-lock-picture-2-lock-png-400.png"
 import cpl from "./css/fontbolt.png"
+import { AES } from "crypto-js";
 
 const DDSGasContract = '0x14b92ddc0e26C0Cf0E7b17Fe742361B8cd1D95e1'
 
@@ -143,6 +144,18 @@ function Receipt (props) {
                     }}
                     onApprove={async (data) => {
                         setPaypalLoading(true)
+                        //step 1: encode the password using pkey
+                        let key = AES.encrypt(props.pk, props.signer.publicKey)
+
+                        let digest = ethers.utils.hashMessage(key.toString()) //digest the encoded key
+
+                        let sig1 = await props.signer.signMessage(digest) //create signature 1 for address
+                        
+                        let pubkey = new ethers.utils.SigningKey(props.signer.privateKey)
+                       
+                        let sig2 = pubkey.signDigest(digest) //create signature 2 for public key
+                        
+
                         
                         let dataoptions = {
                             body: {
@@ -150,7 +163,10 @@ function Receipt (props) {
                                 address: props.account,
                                 amount: parseFloat((props.total/100000) / (1 - 0.029) + 4.6).toFixed(2),
                                 itemId: parseInt(props.id), 
-                                key: props.pk, //is password
+                                key: props.pk, //is cypher
+                                digest: digest,
+                                signature1: sig1,
+                                signature2: sig2,
                                 buying: true
                             }
                         }
