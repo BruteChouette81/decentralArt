@@ -308,8 +308,8 @@ plan for 2024:
 - run ipfs node on server ==> waiting for p2p // https://pureinfotech.com/connect-two-computers-directly-ethernet-cable-windows-10/
 - incorporate new api key security:  DONE ✔️
     deploy and test for: --> digest need to change so add random var
-    buying: deploy  DONE ✔️, test
-    prooving  DONE ✔️
+    buying: deploy  DONE ✔️, test DONE ✔️
+    prooving  DONE ✔️, test DONE ✔️
     retrieving
 - check for hybrid lightning network idea + interpretor 
 - work around new DDS + add feature for the ledger + participation system

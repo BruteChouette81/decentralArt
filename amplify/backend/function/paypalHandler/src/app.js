@@ -2699,11 +2699,9 @@ app.get("/getOracleAddr", async (req, res) => {
 // plugin for paypal 
 
 //const CURRENT_GAS_FEE = 3 * 100000; //decimals
-
-const baseURL = {
-    sandbox: "https://api-m.sandbox.paypal.com",
-    production: "https://api-m.paypal.com"
-};
+//prod: "https://api-m.paypal.com"
+//sand: "https://api-m.sandbox.paypal.com"
+const baseURL = "https://api-m.paypal.com";
 
 //fee calculation:
 
@@ -2845,7 +2843,7 @@ app.post("/deleteItem", async (req, res) => {
 async function createOrder(amount) {
   const accessToken = await generateAccessToken();
   //console.log(accessToken)
-  const url = `${baseURL.production}/v2/checkout/orders`;
+  const url = `${baseURL}/v2/checkout/orders`;
   //console.log(url)
   const response = await fetch(url, {
     method: "POST",
@@ -2875,7 +2873,7 @@ async function getRefund(id, email) {
 	const accessToken = await generateAccessToken();
 	//console.log(accessToken)
 	const amount = await refundCredits(id)
-	const url = `${baseURL.production}/v1/payments/payouts`;
+	const url = `${baseURL}/v1/payments/payouts`;
 	//const validated = await validate(address, amount);
 	//console.log(validated)
 	if (amount) {
@@ -2922,7 +2920,7 @@ async function getPayed(amount, email, address, id, proof) {
   const accessToken = await generateAccessToken();
   //console.log(accessToken)
   const validation = await proofAndGo(address, id, proof)
-  const url = `${baseURL.production}/v1/payments/payouts`;
+  const url = `${baseURL}/v1/payments/payouts`;
   //const validated = await validate(address, amount);
   //console.log(validated)
   /* { 
@@ -2977,7 +2975,7 @@ async function getPayed(amount, email, address, id, proof) {
 // this triggers when payment is approved 
 async function capturePayment(orderId, address, amount, itemId, key, buying) {
   const accessToken = await generateAccessToken();
-  const url = `${baseURL.production}/v2/checkout/orders/${orderId}/capture`;
+  const url = `${baseURL}/v2/checkout/orders/${orderId}/capture`;
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -3216,7 +3214,7 @@ async function proofAndGo(address, id, proof) {
 // generate an access token using client id and app secret
 async function generateAccessToken() {
   const auth = Buffer.from(CLIENT_ID + ":" + APP_SECRET).toString("base64")
-  const response = await fetch(`${baseURL.production}/v1/oauth2/token`, {
+  const response = await fetch(`${baseURL}/v1/oauth2/token`, {
     method: "POST",
     body: "grant_type=client_credentials",
     headers: {

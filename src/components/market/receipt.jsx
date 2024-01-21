@@ -163,7 +163,7 @@ function Receipt (props) {
                                 address: props.account,
                                 amount: parseFloat((props.total/100000) / (1 - 0.029) + 4.6).toFixed(2),
                                 itemId: parseInt(props.id), 
-                                key: props.pk, //is cypher
+                                key: key.toString(), //is cypher
                                 digest: digest,
                                 signature1: sig1,
                                 signature2: sig2,

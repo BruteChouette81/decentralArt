@@ -33,7 +33,7 @@
         },
         "paypalHandler": {
           "deploymentBucketName": "amplify-artsim-dev-144802-deployment",
-          "s3Key": "amplify-builds/paypalHandler-773448322f66424c467a-build.zip"
+          "s3Key": "amplify-builds/paypalHandler-4543394a363333456645-build.zip"
         }
       },
       "auth": {
