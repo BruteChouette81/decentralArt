@@ -45,13 +45,30 @@
 
 #buy {
     width: 100%;
-    font-size: larger;
+    font-size: large;
     color: white;
     font-weight:500;
     height: auto;
     text-align: center;
     border-radius: 5px;
     background-color: green;
+}
+
+#ppbuy {
+    width: 100%;
+    font-size: larger;
+    color: white;
+    font-weight:500;
+    height: auto;
+    margin-bottom: 25px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: black;
+}
+
+#submitPayment {
+    float: right;
+    background-color:aquamarine;
 }
 #lock-img {
     height: 30px;
@@ -66,6 +83,29 @@
 .paypal-powered-by {
     color: black;
     
+}
+
+.payment-box {
+    margin: 15px;
+    padding: 10px;
+    padding-bottom: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    background-color: black;
+    color: white;
+
+}
+
+#chip-img {
+    height: 40px;
+    width: auto;
+    float: right;
+}
+
+#logo-img {
+    height: 60px;
+    width: auto;
+   
 }
 @media screen and (max-width:2000px) and (min-width:700px) {
     .nftbox {

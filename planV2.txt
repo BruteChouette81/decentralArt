@@ -313,11 +313,13 @@ plan for 2024:
     retrieving
 - check for hybrid lightning network idea + interpretor 
 - work around new DDS + add feature for the ledger + participation system
+- one click load item in market DONE ✔️ algo it 
 - new presentation: middlemanless technology (every thing we rely on now will disapear or replace by lightning network)
 - switch to bitcoin
+- own payment gateway in receipt.jsx
 - PARTICIPATION system: 
     math DONE ✔️ ==> improove
-    1: check for payment gateway (visa/mastercard/crypto) ==> lower fees
+    1: check for payment gateway (visa/mastercard/crypto) ==> lower fees DONE ✔️ ==> get licensed by visa
     2: check for P2P exchange for stable earn ==> PayTrie 0.6 %/kraken 0.26% fee canada-proof ==> usdc/cadc
     3: build the F2E 
     4: check rentability (long term)
@@ -351,10 +353,23 @@ Marketing idea:
 
 - connect with N
 
+-card present (shop/square market place) ==> create POS machine
 
-goal to december: 
-- 10 accounts
-- 5 orders
+B2B offering: 
+    - free estimate and consultation
+    - connect your website for free on CPL 
+    - free fonctionnality adding and maintenance of the website
+    - website upgrade: pay to upgrade https://www.fiverr.com/search/gigs?query=react%20website&source=top-bar&ref_ctx_id=9743bdb251a249bbabea13588ee49de3&search_in=everywhere&search-autocomplete-original-term=react%20website
+    - marketing and social maintenance 
+    - marketing and social upgrade: pay to upgrade
+    - no engagement
+    - best level of security ever created
 
+    Cost:
+    - once on CPL it is free every mounth execpt for upgrade service
+    - there is a 5% fee or lower (will be lower) around 3%-0% in a couple of mounths
+    - no responsability for break down (terms and conditions)
+    - no taxes for originator
+    - POS not supported yet but sync with POS using API
 
 

@@ -709,9 +709,14 @@ function Market() {
     }
 
     function UListLoader(props) {
+        //const provider = new ethers.providers.InfuraProvider("goerli")
+        //const ddsc = getContract(MarketAddress, abi.abi, provider)
+        //const numitemreal = ddsc?.functions.itemCount()
+        
+
         let timeo = 2000;
-        const based = 5; //minimum item loading
-        const increasingby = 5; //number of more item being load each "load more "
+        const based = 1; //minimum item loading
+        const increasingby = 4; //number of more item being load each "load more "
         //let chunk_number = 0;
 
         const [chunk_number, setChunk_number] = useState(0);
@@ -757,8 +762,8 @@ function Market() {
             let numtime = 1;
             //let maxtime = 2;
             const timedOutReload = () => {
-                setChunk_number(chunk_number+1)
-                if(numtime > (numreal/increasingby)) {
+                setChunk_number(numtime+1)
+                if(numtime < 5) { //(numreal/increasingby)
                         console.log("reloading")
                         setTimeout(timedOutReload, timeo)
                         numtime+=1;
@@ -771,6 +776,7 @@ function Market() {
         
 
         // Array.from({ length: based + (increasingby * chunk_number) }, (_, k) => k <=  based + (increasingby * (chunk_number-1)) ? "" : <p>{k}</p>)
+        //{chunk_number > 0 ? Array.from({ length: chunk_number}, (_, i) => Array.from({ length: based + (increasingby * (i + 1)) }, (_, k) => k <=  (based-1) + (increasingby * i) || k >= numreal ? "" : (<NftBox id={k} catID={props.id} real={true} isMarket={true} dds={dds} signer={userwallet} account={address} password={password} numreal={numreal}/> ) )) : ""}
         // (chunk_number-(i+1))
         return (
             <div>

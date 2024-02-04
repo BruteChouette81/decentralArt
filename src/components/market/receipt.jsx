@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import {CLIENT_ID} from '../../apikeyStorer.js'
 import "./css/nftbox.css"
 
+import image from "./css/credit-card-chip-clipart-2.png"
+import visa from "./css/visa-2-logo-png-transparent.png"
+import master from "./css/Mastercard-Logo-2016-2020.png"
+
 import {ethers} from 'ethers'
 
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
@@ -51,10 +55,83 @@ const getContract = (address, abi, signer ) => { //for Imperial Account
 }
 
 
+function PaymentBox (props) {
+    const [creditcardnum, setCreditcardnum] = useState("")
+    const [logo, setLogo] = useState("")
+
+    function cc_format(event) {
+        if (event.target.value === "4") {
+            setLogo("visa")
+        }
+        if (event.target.value === "5") {
+            setLogo("master")
+        }
+        var v = event.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
+        var matches = v.match(/\d{4,16}/g);
+        var match = matches && matches[0] || ''
+        var parts = []
+        for (let i=0, len=match.length; i<len; i+=4) {
+          parts.push(match.substring(i, i+4))
+        }
+        if (parts.length) {
+          event.target.value = parts.join(' ')
+        } else {
+            event.target.value = v
+          //return value
+        }
+      }
+    function date_format(event) {
+        var v = event.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
+        var matches = v.match(/\d{2,4}/g);
+        var match = matches && matches[0] || ''
+        var parts = []
+        for (let i=0, len=match.length; i<len; i+=2) {
+          parts.push(match.substring(i, i+2))
+        }
+        if (parts.length) {
+          event.target.value = parts.join('/')
+        } else {
+            event.target.value = v
+          //return value
+        }
+
+    }
+
+    function payUsingCPL(event) {
+        event.preventDefault()
+        console.log("PAN:" + event.target[0].value.replace(" ", "").replace(" ", "").replace(" ", ""))
+    }
+    return(
+        <div class="payment-box">
+            <img src={image} alt="" id="chip-img" />
+            <form onSubmit={payUsingCPL}>
+                                                
+                <div class="mb-3">
+                    <label for="cardnum" class="form-label">Credit/Debit card number</label>
+                    <input class="form-control" type="text" maxlength="19" id="cardnum" placeholder="1234 5678 9012 3456" onChange={cc_format} />    
+                </div>
+                <br />
+                <div class="row g-3">
+                    <div class="col-auto">
+                        <input class="form-control" type="text" placeholder="Expiration" id="exp"maxlength="5" onChange={date_format} required/>    
+                    </div>
+                    <div class="col-auto">
+                        <input class="form-control" type="tel" placeholder="CVV" id="cvv" maxlength="3" required/>  
+                    </div>
+                </div>
+                <br />
+                {logo === "visa" ? (<div><img src={visa} alt="" id="logo-img"/>  <button type="submit" class="btn btn-default" id="submitPayment" >Pay now!</button></div>) : logo=== "master" ? (<div><img src={master} alt="" id="logo-img"/>  <button type="submit" class="btn btn-default" id="submitPayment" >Pay now!</button> </div>) : ""}
+               
+            </form>
+        </div>
+    )
+}
+
 function Receipt (props) {
     //const [fees, setFees] = useState()
     const [paypalLoading, setPaypalLoading] = useState(false)
     const [loadF2C, setLoadF2C] = useState(false)
+    const [ppbuy, setppbuy] = useState(false)
     const type = "spin"
     const color = "#0000FF"
 
@@ -109,7 +186,9 @@ function Receipt (props) {
     }
     
 
-    
+    const revealPPbuy = () => {
+        setppbuy(!ppbuy)
+    }
 
    
     //{props.quebec ? <div> <h6>GST: 1,500 $CREDIT (2,5$ at 5%) </h6> <h6>QST: 3,000 $CREDIT (5$ at 10%)</h6> </div> : <h6 class="tax">Tax: 3,000 $CREDITs ({props.taxprice}$ at {props.tax}%)</h6> } <a href="" class="link link-primary">taxes policies ({props.state})</a>
@@ -131,6 +210,8 @@ function Receipt (props) {
             <h5> Total: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.total/100000) / (1 - 0.029) + 4.6) : USDollar.format((props.total/100000) / (1 - 0.029) + 4.6)} {window.localStorage.getItem("currency")}</h5>
             <p>{window.localStorage.getItem("language") == "en" ? "Transactions may take up to 2 minutes. Please, wait until the confirm message to quit the page!" : "Les transactions peuvent prendre jusqu'à 2 minutes. S'il vous plaît, attendez le message de confirmation pour quitter la page !"}</p>
             <br /><br />
+            <button type="button" class="btn btn-default" id="ppbuy" onClick={revealPPbuy}>Credit or Debit card secure payment</button>
+            {ppbuy ? (<PaymentBox />) : ""}
             <PayPalScriptProvider options={{ clientId: CLIENT_ID, currency: "CAD" }}>
                 <PayPalButtons
                     createOrder={async () => {

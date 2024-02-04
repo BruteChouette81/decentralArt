@@ -27,20 +27,24 @@ import matplotlib.pyplot as plt
 ## variables 
 
 #fees
-avg_payment_fee = 0.0165 # 1.65%
+avg_payment_fee = 0.014 # 1.65%
 
-avg_f2c_fee = 0.0024 # 0.24%
+deposit_fee = 0  #kraken: free for swift/wire min 100- 150
+
+withdraw_fee = 0 #kraken: 1: 0.35% min 50 (2-5 business day) 2: wire (free) min 1000 (10 mins) #others: 0% interac
+
+avg_f2c_fee = 0.006 # kraken: 0.24% paytrie: 0.006 newton: 0.01 (no deposit or withdraw fees)
 
 flat_fee = 0.005 # flat fee without committing 0.5%
 
-avg_tadays_fee = 0.029
+avg_todays_fee = 0.029
 #transactions worth 
 
 avg_volume_year = 1200000 # 1,200,000 $
 
-commitment_rate = 0.3 # 50% of money stay in the account
+commitment_rate = 0.5 # 50% of money stay in the account
 
-earn_per_mounth = (0.1/12) # 10% a year
+earn_per_mounth = (0.0716/12) # 10% a year
 
 
 #other infos
@@ -51,17 +55,20 @@ mode = "mounth"
 def calculateWorthByMounth():
     wby = []
     wbm = []
+    flat_fee_paid = 0
+    avg_paid_fee = 0 #avg fee paid by merchant
     worth1mounth = avg_volume_year / 12 * (1-avg_payment_fee) # remove the fee
     overall_P = 0
     for j in range(num_of_years):
         for i in range(12): #full year
             #remove fees
             #print(i)
+            worth1mounth = worth1mounth - (worth1mounth*deposit_fee) #calculate deposite fee to exchange
            
             net_worth1mounth = (worth1mounth * commitment_rate) * (1-avg_f2c_fee) # net cash commited
             
             worthNearn = (net_worth1mounth + net_worth1mounth * (earn_per_mounth * (12-i))) # + ((overall_P/12) + (overall_P/12) * (earn_per_mounth * (12-i)))
-            wbm.append(worthNearn + (worth1mounth *(1-commitment_rate)))
+            wbm.append(worthNearn* (1-avg_f2c_fee) + (worth1mounth *(1-commitment_rate)) - (worthNearn*withdraw_fee))
             
 
         
@@ -69,8 +76,16 @@ def calculateWorthByMounth():
             if (i > j*12):
                 
                 overall_P += wbm[i]-worth1mounth + (worth1mounth*(1-commitment_rate)*flat_fee)
-        print(overall_P)
+                flat_fee_paid += (worth1mounth*(1-commitment_rate)*flat_fee)
+        avg_paid_fee = flat_fee_paid/avg_volume_year
+        print(f"Average paid fee % per year over the volume for year {j}: {avg_paid_fee*100}%")
+        flat_fee_paid = 0
+        #print(overall_P)
         wby.append(overall_P)
+        if(len(wby)>1):
+            print(f"Average % of transaction made in profit for year {j}: {((wby[j]-wby[j-1])/avg_volume_year)*100}%")
+        else:
+            print(f"Average % of transaction made in profit for year {j}: {((wby[j])/avg_volume_year)*100}%")
         overall_P += (overall_P*(earn_per_mounth*12)*num_of_years-(j+1))
     
         
@@ -98,7 +113,8 @@ if __name__ == '__main__':
     for i in range(len(wbm)):
         Pwbm.append(wbm[i]-(avg_volume_year/12))
         
-    print(f"Profit by mounth: {Pwbm}")
+    #print(f"Profit by mounth: {Pwbm}")
+    graph(wby)
 
     '''overall_P = 0
     for i in range(len(wbm)):
