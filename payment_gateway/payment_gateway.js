@@ -309,7 +309,24 @@ app.post("/getStatusTransaction", (req, res)=> {
   res.send("ok")
 })
 
-app.post("/deposit2Exchange") //deposit money to exchange convert it and start earning
+app.post("/deposit2Exchange", (req, res)=> {
+  axios.get("https://api.paytrie.com/quotes").then((res2) => {
+    params={
+      "quoteId": res2.id,
+      "gasId": res2.gasId,
+      "email": "", //our email
+      "wallet": "", //our wallet
+      "leftSideLabel": "CAD",
+      "leftSideValue": req.amount,
+      "rightSideLabel": "USDC",
+  
+    }
+    axios.post("https://api.paytrie.com/transactions", params, {"headers": {"x-api-key": ""}}).then((res) => {
+      //wallet.earn(req.USDCamount)
+    }) //this need to be validated on the paytrie account
+  })
+  
+}) //deposit money to exchange convert it and start earning
 
 app.post("/withdrawFromExchange") //remove it from earning and convert it back and withdraw using wire or interac
 

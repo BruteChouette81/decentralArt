@@ -294,7 +294,7 @@ CPL v 2.0:
     - prooving DONE ✔️
     - other pages DONE ✔️ ==> test
 
-Tickets === maitre canadien
+Tickets === maitre canadien ==> need to load better
 
 plan for 2024:
 **see marketing idea
