@@ -479,5 +479,65 @@ app.post("/walletPayout", (req, res) => { //may be replace by interact transfer 
 
 })
 
+
+
 //------MASTER------
 //master card will operate using A2A commerce api 
+
+//mastercard checkout (click to pay)
+
+app.post("/masterCardPayment", (req, res)=> { //visa pull funds peer to peer 
+  //pull funds from payers account
+  var d = new Date();
+  let day = d.getDate()
+  let mounth = d.getMonth()
+  let julianDay = 0;
+  for (let i =0; i<days_by_mounth.length; i++) {
+    if(i>(mounth-1)) {
+      break
+    } else {
+      julianDay+= days_by_mounth[i];
+    }
+  }
+  julianDay += day;
+  //julianDay = ("000" + julianDay).slice(-3)
+  julianDay+=4000
+  
+  retrievalReferenceNumber = julianDay + d.getHours().toString() + req.body.traceAuditNumber
+  const params = {"headers": {'content-type': 'application/json',
+  'accept': 'application/json',
+  'X-Openapi-Clienid' : "99a53d9f-823f-4360-bd78-1194ec58b7f6_dpa0"
+},
+  "body":{ //basic params
+    "dpaTransactionOptions": {
+      "transactionAmount": {
+        "transactionAmount": req.body.transactionAmount,
+        "transactionCurrencyCode": "CAD"
+      }
+    },
+    "srcDpaId": "99a53d9f-823f-4360-bd78-1194ec58b7f6_dpa0", //same as x-openapi-clientid
+    //"correlationId": "ba7a2034-3c9e-4d74-b0e9-d77435fd35d7",
+    "checkoutType": "CLICK_TO_PAY",
+    "checkoutReference": {
+      "type": "ENCRYPTED_CARD",
+      "data": {
+        "encryptedCard": {
+          "primaryAccountNumber": req.body.pan,
+          "panExpirationMonth": req.body.mounth,
+          "panExpirationYear": req.body.year,
+          "cardSecurityCode": req.body.cvv
+        }
+      }
+    }
+      }}
+  //let xpayToken = x_pay_token("/visadirect/fundstransfer/v1/pullfundstransactions", "apiKey=4WT8MR0BNQKND61UL0Z621OxSHr3caFHlErBX4PQtOs5t4ymo", params["body"])
+  //params["headers"]["x-pay-token"] = xpayToken;
+  axios.post("https://api.mastercard.com/srci/api/checkout", params).then((res) => {
+    console.log(res.transactionIdentifier) //store this somewhere
+    res.send("OK")
+  }).catch((e)=> {
+    res.send("error")
+  })
+  
+  
+})
