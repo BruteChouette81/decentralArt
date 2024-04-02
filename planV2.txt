@@ -312,11 +312,13 @@ plan for 2024:
     prooving  DONE ✔️, test DONE ✔️
     retrieving
 - check for hybrid lightning network idea + interpretor 
+- software to push mutiple items to CPL DONE ✔️ ==> adapt website
+- put paypalHandler (dds related functions) on EC2 and decentralize them
 - work around new DDS + add feature for the ledger + participation system
 - one click load item in market DONE ✔️ algo it 
-- new presentation: middlemanless technology (every thing we rely on now will disapear or replace by lightning network)
+- new presentation: middlemanless technology (every thing we rely on now will disapear or replace by lightning network) DONE ✔️
 - switch to bitcoin
-- own payment gateway in receipt.jsx
+- own payment gateway in receipt.jsx DONE ✔️ ==> integrate (need to ask paypal in prod)
 - PARTICIPATION system: 
     math DONE ✔️ ==> improove
     1: check for payment gateway (visa/mastercard/crypto) ==> lower fees DONE ✔️ ==> get licensed by visa
