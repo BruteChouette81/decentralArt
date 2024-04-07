@@ -319,7 +319,7 @@ plan for 2024:
 - load all items in home DONE ✔️
 - new presentation: middlemanless technology (every thing we rely on now will disapear or replace by lightning network)
 - switch to bitcoin
-- own payment gateway in receipt.jsx DONE ✔️  ==> integrate (need to ask paypal in prod)
+- own payment gateway in receipt.jsx DONE ✔️  ==> integrate DONE ✔️ (need to ask paypal in prod)
 - PARTICIPATION system: 
     math DONE ✔️ ==> improove
     1: check for payment gateway (visa/mastercard/crypto) ==> lower fees DONE ✔️ ==> get licensed by visa

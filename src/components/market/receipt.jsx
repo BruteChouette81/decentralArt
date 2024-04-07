@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import {Buffer} from 'buffer';
 import {CLIENT_ID, APP_SECRET} from '../../apikeyStorer.js'
 import "./css/nftbox.css"
 
@@ -27,6 +28,7 @@ import { API } from "aws-amplify";
 import lock from "./css/png-lock-picture-2-lock-png-400.png"
 import cpl from "./css/fontbolt.png"
 import { AES } from "crypto-js";
+import { ConnectorController } from "@usedapp/core";
 
 const DDSGasContract = '0x14b92ddc0e26C0Cf0E7b17Fe742361B8cd1D95e1'
 
@@ -58,28 +60,19 @@ const getContract = (address, abi, signer ) => { //for Imperial Account
 /**
  * put in paypal handler api
  */
-const base = "https://api-m.paypal.com"
+// prod: "https://api-m.paypal.com"
+const base = "https://api-m.sandbox.paypal.com"
 const generateAccessToken = async () => {
-    try {
-      if (!CLIENT_ID || !APP_SECRET) {
-        throw new Error("MISSING_API_CREDENTIALS");
-      }
-      const auth = Buffer.from(
-        CLIENT_ID + ":" + APP_SECRET,
-      ).toString("base64");
-      const response = await fetch(`${base}/v1/oauth2/token`, {
+    const auth = Buffer.from(CLIENT_ID + ":" + APP_SECRET).toString("base64")
+    const response = await fetch(`${base}/v1/oauth2/token`, {
         method: "POST",
         body: "grant_type=client_credentials",
         headers: {
-          Authorization: `Basic ${auth}`,
+        Authorization: `Basic ${auth}`,
         },
-      });
-  
-      const data = await response.json();
-      return data.access_token;
-    } catch (error) {
-      console.error("Failed to generate Access Token:", error);
-    }
+    });
+    const data = await response.json();
+    return data.access_token;
   };
   
   /**
@@ -88,6 +81,7 @@ const generateAccessToken = async () => {
    */
   const generateClientToken = async () => {
     const accessToken = await generateAccessToken();
+    console.log(accessToken)
     const url = `${base}/v1/identity/generate-token`;
     const response = await fetch(url, {
       method: "POST",
@@ -104,7 +98,7 @@ const generateAccessToken = async () => {
 function PaymentBox (props) {
     const [creditcardnum, setCreditcardnum] = useState("")
     const [logo, setLogo] = useState("")
-
+    console.log(props.clientaccess)
     const SubmitPayment = () => {
         // Here declare the variable containing the hostedField instance
         const hostedFields = usePayPalHostedFields();
@@ -208,10 +202,30 @@ function PaymentBox (props) {
         event.preventDefault()
         console.log("PAN:" + event.target[0].value.replace(" ", "").replace(" ", "").replace(" ", ""))
     }
+    /**
+     *  <form onSubmit={payUsingCPL}>
+                <div class="mb-3">
+                    <label for="cardnum" class="form-label">Credit/Debit card number</label>
+                    <input class="form-control" type="text" maxlength="19" id="cardnum" placeholder="1234 5678 9012 3456" onChange={cc_format} />
+                </div>
+                <br />
+                <div class="row g-3">
+                    <div class="col-auto">
+                        <input class="form-control" type="text" placeholder="Expiration" id="exp"maxlength="5" onChange={date_format} required/>
+                    </div>
+                    <div class="col-auto">
+                        <input class="form-control" type="tel" placeholder="CVV" id="cvv" maxlength="3" required/>
+                    </div>
+                </div>
+                <br />
+                {logo === "visa" ? (<div><img src={visa} alt="" id="logo-img"/>  <button type="submit" class="btn btn-default" id="submitPayment" >Pay now!</button></div>) : logo=== "master" ? (<div><img src={master} alt="" id="logo-img"/>  <button type="submit" class="btn btn-default" id="submitPayment" >Pay now!</button> </div>) : ""}
+               
+            </form>
+     */
     return(
         <div class="payment-box">
             <PayPalScriptProvider
-            options={{ clientId: CLIENT_ID, currency: "CAD" }}>
+            options={{ clientId: CLIENT_ID, dataClientToken: props.clientaccess.client_token, components: 'hosted-fields'}}>
 
             <PayPalHostedFieldsProvider
                 createOrder={async () => {
@@ -242,24 +256,7 @@ function PaymentBox (props) {
                         placeholder: "MM/YY",
                     }}
                 />
-            <form onSubmit={payUsingCPL}>
-                <div class="mb-3">
-                    <label for="cardnum" class="form-label">Credit/Debit card number</label>
-                    <input class="form-control" type="text" maxlength="19" id="cardnum" placeholder="1234 5678 9012 3456" onChange={cc_format} />
-                </div>
-                <br />
-                <div class="row g-3">
-                    <div class="col-auto">
-                        <input class="form-control" type="text" placeholder="Expiration" id="exp"maxlength="5" onChange={date_format} required/>
-                    </div>
-                    <div class="col-auto">
-                        <input class="form-control" type="tel" placeholder="CVV" id="cvv" maxlength="3" required/>
-                    </div>
-                </div>
-                <br />
-                {logo === "visa" ? (<div><img src={visa} alt="" id="logo-img"/>  <button type="submit" class="btn btn-default" id="submitPayment" >Pay now!</button></div>) : logo=== "master" ? (<div><img src={master} alt="" id="logo-img"/>  <button type="submit" class="btn btn-default" id="submitPayment" >Pay now!</button> </div>) : ""}
-               
-            </form>
+           
             <SubmitPayment />
             </PayPalHostedFieldsProvider>
             </PayPalScriptProvider>
@@ -272,6 +269,7 @@ function Receipt (props) {
     const [paypalLoading, setPaypalLoading] = useState(false)
     const [loadF2C, setLoadF2C] = useState(false)
     const [ppbuy, setppbuy] = useState(false)
+    const [clientToken, setClientToken]  = useState();
     const type = "spin"
     const color = "#0000FF"
 
@@ -329,6 +327,11 @@ function Receipt (props) {
     const revealPPbuy = () => {
         setppbuy(!ppbuy)
     }
+    useEffect( ()=> {
+        generateClientToken().then((res) => {
+            setClientToken(res)
+        })
+    }, [setClientToken])
 
    
     //{props.quebec ? <div> <h6>GST: 1,500 $CREDIT (2,5$ at 5%) </h6> <h6>QST: 3,000 $CREDIT (5$ at 10%)</h6> </div> : <h6 class="tax">Tax: 3,000 $CREDITs ({props.taxprice}$ at {props.tax}%)</h6> } <a href="" class="link link-primary">taxes policies ({props.state})</a>
@@ -351,7 +354,7 @@ function Receipt (props) {
             <p>{window.localStorage.getItem("language") == "en" ? "Transactions may take up to 2 minutes. Please, wait until the confirm message to quit the page!" : "Les transactions peuvent prendre jusqu'à 2 minutes. S'il vous plaît, attendez le message de confirmation pour quitter la page !"}</p>
             <br /><br />
             <button type="button" class="btn btn-default" id="ppbuy" onClick={revealPPbuy}><img src={cardIcon} id="lock-img" /> Credit or Debit card secure payment</button>
-            {ppbuy ? (<PaymentBox />) : ""}
+            {ppbuy ? (<PaymentBox clientaccess={clientToken} />) : ""}
             <PayPalScriptProvider options={{ clientId: CLIENT_ID, currency: "CAD" }}>
                 <PayPalButtons style={{color: "gold"}} fundingSource={FUNDING.PAYPAL}
                     createOrder={async () => {
