@@ -198,6 +198,10 @@ async function getProofData(topic) {
 const apiKey = "9GnfDHnyN7W9ptwQiXbWiOk5qPoJJQUDNMhgio8INcbhTspaTtBIRbWyoUFTTxsk" // migration to moralis v2
 const chain = "0x5"; //change for arbitrum
 const dynamodb = new AWS.DynamoDB.DocumentClient()
+const startM = async () => {
+  await Moralis.start({ apiKey: apiKey, });
+} 
+startM()
 let priceName = "pricedata-dev"
 let tableName = "pricedata2-dev";
 let ItemName = "itemdb-dev"
@@ -277,7 +281,7 @@ async function getInfofordays(numdays) {
 }
 
 async function getNftByWallet(address) {
-  await Moralis.start({ apiKey: apiKey, });
+  
   const option = {
     address,
     chain
@@ -288,7 +292,7 @@ async function getNftByWallet(address) {
 }
 
 async function getMetaData(address, tokenId) {
-  await Moralis.start({ apiKey: apiKey, });
+  //await Moralis.start({ apiKey: apiKey, });
   const option = {
     address,
     chain,

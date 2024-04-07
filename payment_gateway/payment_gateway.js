@@ -12,63 +12,7 @@ var fs = require('fs');
 
 var https = require('https');
 
-const httpsAgent = new https.Agent({
-  rejectUnauthorized: false,
-  "key": fs.readFileSync('./key_1208f273-3f1c-412d-8d7b-82849a02716a.pem'),
-  "cert": fs.readFileSync("./cert.pem"),
-  "ca": fs.readFileSync("./DigiCertGlobalRootCA.cer"),
-  
-});
 
-const params = {
-//"ca": fs.readFileSync('./VDPCA-SBX.pem'),
-httpsAgent: httpsAgent,
-headers: {
-'content-type': 'application/json',
-'accept': 'application/json',
-'Authorization' : 'Basic QjZMSUc5R0UyV05XR0JGRU02MkgyMVk1OGRoSmpaVnZGZ2gxQ3djdXQzaHhUOUI1dzpYU0tqczBWNDRKZUpq'
-},
-body:{
-  "amount": 100,
-  "localTransactionDateTime": "2024-02-04T12:00:00",
-  "cardAcceptor": {
-    "address": {
-      "country": "USA",
-      "zipCode": "94404",
-      "state": "CA",
-      "addressLine": "100 test street"
-    },
-    "idCode": "VMT200911086070",
-    "name": "Acceptor 1",
-    "terminalId": "365529"
-  },
-  "acquirerCountryCode": 840,
-  "retrievalReferenceNumber": "330000550000",
-  "acquiringBin": 408999,
-  "senderCurrencyCode": "USD",
-  "addressVerificationData": {
-    "street": "123 test street",
-    "postalCode": "51111"
-  },
-  "systemsTraceAuditNumber": 451000,
-  "messageReasonCode": 1,
-  "businessApplicationId": "AA",
-  "senderPrimaryAccountNumber": "4957030005123304",
-  "visaMerchantIdentifier": "73625198",
-  "merchantCategoryCode": 6012,
-  "senderCardExpiryDate": "2020-03"
-}}
-//let xpayToken = x_pay_token("pullfundstransactions", "apiKey=4WT8MR0BNQKND61UL0Z621OxSHr3caFHlErBX4PQtOs5t4ymo", params["body"])
-//params["headers"]["x-pay-token"] = xpayToken;
-axios.post("https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pullfundstransactions", params["body"], {"headers": {'content-type': 'application/json',
-'accept': 'application/json',
-'Authorization' : 'Basic QjZMSUc5R0UyV05XR0JGRU02MkgyMVk1OGRoSmpaVnZGZ2gxQ3djdXQzaHhUOUI1dzpYU0tqczBWNDRKZUpq'},"httpsAgent": httpsAgent} ).then((res) => {
-  console.log(res)
-  //res.send("OK")
-}).catch((e)=> {
-  console.log(e)
-  //res.send("error")
-})
 
 //const e = require('express');
 
@@ -160,9 +104,11 @@ function x_pay_token(resourcePath , queryParams , postBody) {
 };
 
 app.get("/testvisaPullpp", (req, res) => {
+  let strDay = ""
+  let strMounth = ""
   var d = new Date();
-    let day = d.getDate()
-    let mounth = d.getMonth()
+  let day = d.getDate()
+  let mounth = d.getMonth()
     let julianDay = 0;
     for (let i =0; i<days_by_mounth.length; i++) {
       if(i>(mounth-1)) {
@@ -178,21 +124,38 @@ app.get("/testvisaPullpp", (req, res) => {
     retrievalReferenceNumber = julianDay + d.getHours().toString() + "451000"
     const httpsAgent = new https.Agent({
       rejectUnauthorized: false,
-      key: fs.readFileSync('./key_1208f273-3f1c-412d-8d7b-82849a02716a.pem'),
-      cert: fs.readFileSync("./cert.pem"),  
-      passphrase: "",
+      "key": fs.readFileSync('./key_1208f273-3f1c-412d-8d7b-82849a02716a.pem'),
+      "cert": fs.readFileSync("./cert.pem"),
+      "ca": fs.readFileSync("./DigiCertGlobalRootCA.cer"),
+      
     });
+
+    //format mounth
+    if(mounth < 10) {
+      strMounth = "0" + (mounth +1).toString()
+    } else {
+      strMounth = (mounth +1).toString()
+    }
+     
+  //format day
+  if (day < 10) {
+    strDay = "0" + day.toString()
+    } else {
+      strDay = day.toString()
+    }
+
     
     const params = {
     //"ca": fs.readFileSync('./VDPCA-SBX.pem'),
-    httpsAgent,
-    "headers": {'content-type': 'application/json',
+    httpsAgent: httpsAgent,
+    headers: {
+    'content-type': 'application/json',
     'accept': 'application/json',
     'Authorization' : 'Basic ' + new Buffer.from('B6LIG9GE2WNWGBFEM62H21Y58dhJjZVvFgh1Cwcut3hxT9B5w:XSKjs0V44JeJj').toString('base64')
     },
-    "body":{
+    body:{
       "amount": 100,
-      "localTransactionDateTime": "2024-02-04T12:00:00",
+      "localTransactionDateTime": "2024-" + strMounth + "-"+ strDay + "T12:00:00",
       "cardAcceptor": {
         "address": {
           "country": "USA",
@@ -222,11 +185,17 @@ app.get("/testvisaPullpp", (req, res) => {
     }}
     //let xpayToken = x_pay_token("pullfundstransactions", "apiKey=4WT8MR0BNQKND61UL0Z621OxSHr3caFHlErBX4PQtOs5t4ymo", params["body"])
     //params["headers"]["x-pay-token"] = xpayToken;
-    axios.post("https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pullfundstransactions", params).then((res) => {
-      console.log(res)
-      res.send("OK")
+    
+    //let xpayToken = x_pay_token("pullfundstransactions", "apiKey=4WT8MR0BNQKND61UL0Z621OxSHr3caFHlErBX4PQtOs5t4ymo", params["body"])
+    //params["headers"]["x-pay-token"] = xpayToken;
+    axios.post("https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pullfundstransactions", params["body"], {"headers": {'content-type': 'application/json',
+    'accept': 'application/json',
+    'Authorization' : 'Basic ' + new Buffer.from('B6LIG9GE2WNWGBFEM62H21Y58dhJjZVvFgh1Cwcut3hxT9B5w:XSKjs0V44JeJj').toString('base64')},"httpsAgent": httpsAgent} ).then((res2) => {
+      console.log(res2.data)
+      res.send("Transaction completed: transaction id: " + res2.data.transactionIdentifier)
+      //res.send("OK")
     }).catch((e)=> {
-      console.log(e.response)
+      console.log(e)
       res.send("error")
     })
 })
@@ -249,13 +218,35 @@ app.post("/visaPullpp", (req, res)=> { //visa pull funds peer to peer
     julianDay+=4000
     
     retrievalReferenceNumber = julianDay + d.getHours().toString() + req.body.traceAuditNumber
+
+    const httpsAgent = new https.Agent({
+      rejectUnauthorized: false,
+      "key": fs.readFileSync('./key_1208f273-3f1c-412d-8d7b-82849a02716a.pem'),
+      "cert": fs.readFileSync("./cert.pem"),
+      "ca": fs.readFileSync("./DigiCertGlobalRootCA.cer"),
+      
+    });
+
+    //format mounth
+    if(mounth < 10) {
+      strMounth = "0" + (mounth +1).toString()
+    } else {
+      strMounth = (mounth +1).toString()
+    }
+     
+  //format day
+  if (day < 10) {
+    strDay = "0" + day.toString()
+    } else {
+      strDay = day.toString()
+    }
+
     const params = {"headers": {'content-type': 'application/json',
     'accept': 'application/json',
-    'x-pay-token' : "",
-    'x-correlation-id' : randomstring.generate({length:12, charset: 'alphanumeric'}) + '_SC'},
+    },
     "body":{ //basic params
         "amount": req.body.amount, //string amount of transaction
-        "localTransactionDateTime": "2024-" + mounth + "-"+ day + "T12:00:00", //time of transaction
+        "localTransactionDateTime": "2024-" + strMounth + "-"+ strDay + "T12:00:00", //time of transaction
         "cardAcceptor": {
             "address": {
                 "country": req.body.country, //"CA",
@@ -285,10 +276,12 @@ app.post("/visaPullpp", (req, res)=> { //visa pull funds peer to peer
           },
         "messageReasonCode": 1
         }}
-    let xpayToken = x_pay_token("/visadirect/fundstransfer/v1/pullfundstransactions", "apiKey=4WT8MR0BNQKND61UL0Z621OxSHr3caFHlErBX4PQtOs5t4ymo", params["body"])
-    params["headers"]["x-pay-token"] = xpayToken;
-    axios.post("https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pullfundstransactions?apiKey=4WT8MR0BNQKND61UL0Z621OxSHr3caFHlErBX4PQtOs5t4ymo", params).then((res) => {
-      console.log(res.transactionIdentifier) //store this somewhere
+    //let xpayToken = x_pay_token("/visadirect/fundstransfer/v1/pullfundstransactions", "apiKey=4WT8MR0BNQKND61UL0Z621OxSHr3caFHlErBX4PQtOs5t4ymo", params["body"])
+    //params["headers"]["x-pay-token"] = xpayToken;
+    axios.post("https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pullfundstransactions", params["body"], {"headers": {'content-type': 'application/json',
+    'accept': 'application/json',
+    'Authorization' : 'Basic ' + new Buffer.from('B6LIG9GE2WNWGBFEM62H21Y58dhJjZVvFgh1Cwcut3hxT9B5w:XSKjs0V44JeJj').toString('base64')},"httpsAgent": httpsAgent}).then((res2) => {
+      console.log(res2.data.transactionIdentifier) //store this somewhere
       res.send("OK")
     }).catch((e)=> {
       res.send("error")
@@ -296,17 +289,27 @@ app.post("/visaPullpp", (req, res)=> { //visa pull funds peer to peer
     
     
 })
-
+/*curl -X POST --header "Content-Type: application/json" --data "{\"transactionId\":\"233735912367491\"}" localhost:8000/getStatusTransaction */
 app.post("/getStatusTransaction", (req, res)=> { 
-  params = {"hearders": {
-
-  }}
+  const httpsAgent = new https.Agent({
+    rejectUnauthorized: false,
+    "key": fs.readFileSync('./key_1208f273-3f1c-412d-8d7b-82849a02716a.pem'),
+    "cert": fs.readFileSync("./cert.pem"),
+    "ca": fs.readFileSync("./DigiCertGlobalRootCA.cer"),
+    
+  });
   //to status to get: the pull status and the push status (and the contract execution on the BChain)
+  console.log("https://sandbox.api.visa.com/visadirect/v1/transactionquery?acquiringBIN=408999&transactionIdentifier=" + req.body.transactionId)
   
-  axios.get("https://sandbox.api.visa.com/visadirect/v1/transactionquery?acquiringBIN=408999&transactionIdentifier=" + req.body.transactionId + "&apiKey=4WT8MR0BNQKND61UL0Z621OxSHr3caFHlErBX4PQtOs5t4ymo", params).then((res)=> {
-    console.log(res)
+  axios.get("https://sandbox.api.visa.com/visadirect/v1/transactionquery?acquiringBIN=408999&transactionIdentifier=" + req.body.transactionId, {"headers": {'content-type': 'application/json',
+  'accept': 'application/json',
+  'Authorization' : 'Basic ' + new Buffer.from('B6LIG9GE2WNWGBFEM62H21Y58dhJjZVvFgh1Cwcut3hxT9B5w:XSKjs0V44JeJj').toString('base64')},"httpsAgent": httpsAgent}).then((res2)=> {
+    console.log(res2.data)
+    res.json(res2.data)
+  }).catch((e)=> {
+    res.send("error")
   })
-  res.send("ok")
+  
 })
 
 app.post("/deposit2Exchange", (req, res)=> {
@@ -478,6 +481,11 @@ app.post("/walletPayout", (req, res) => { //may be replace by interact transfer 
   })
 
 })
+
+//buy now pay later 
+//buy now pay later (short term loan) can be 1: controlled using smart contract (so, more margin) and 2: generate intrest using BNPL pool (stable-back pool)
+// once connected with visa/mastercard, it will automatically take the money from credit or debit account or with crypto (lower intrest)
+// can generate instant interest cause money return to pool
 
 //------MASTER------
 //master card will operate using A2A commerce api 

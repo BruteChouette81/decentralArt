@@ -33,7 +33,7 @@ deposit_fee = 0  #kraken: free for swift/wire min 100- 150
 
 withdraw_fee = 0 #kraken: 1: 0.35% min 50 (2-5 business day) 2: wire (free) min 1000 (10 mins) #others: 0% interac
 
-avg_f2c_fee = 0.006 # kraken: 0.24% paytrie: 0.006 newton: 0.01 (no deposit or withdraw fees)
+avg_f2c_fee = 0.006 # kraken: 0.24% paytrie: 0.006 (min 5% woth (833.3$) newton: 0.01 (no deposit or withdraw fees)
 
 flat_fee = 0.005 # flat fee without committing 0.5%
 

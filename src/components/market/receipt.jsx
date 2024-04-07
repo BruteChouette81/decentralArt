@@ -5,10 +5,11 @@ import "./css/nftbox.css"
 import image from "./css/credit-card-chip-clipart-2.png"
 import visa from "./css/visa-2-logo-png-transparent.png"
 import master from "./css/Mastercard-Logo-2016-2020.png"
+import cardIcon from "./css/1781500.png"
 
 import {ethers} from 'ethers'
 
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { PayPalScriptProvider, PayPalButtons, FUNDING } from "@paypal/react-paypal-js";
 
 import transakSDK from '@transak/transak-sdk';
 
@@ -210,10 +211,10 @@ function Receipt (props) {
             <h5> Total: {window.localStorage.getItem("currency") === "CAD" ? USDollar.format((props.total/100000) / (1 - 0.029) + 4.6) : USDollar.format((props.total/100000) / (1 - 0.029) + 4.6)} {window.localStorage.getItem("currency")}</h5>
             <p>{window.localStorage.getItem("language") == "en" ? "Transactions may take up to 2 minutes. Please, wait until the confirm message to quit the page!" : "Les transactions peuvent prendre jusqu'à 2 minutes. S'il vous plaît, attendez le message de confirmation pour quitter la page !"}</p>
             <br /><br />
-            <button type="button" class="btn btn-default" id="ppbuy" onClick={revealPPbuy}>Credit or Debit card secure payment</button>
+            <button type="button" class="btn btn-default" id="ppbuy" onClick={revealPPbuy}><img src={cardIcon} id="lock-img" /> Credit or Debit card secure payment</button>
             {ppbuy ? (<PaymentBox />) : ""}
             <PayPalScriptProvider options={{ clientId: CLIENT_ID, currency: "CAD" }}>
-                <PayPalButtons
+                <PayPalButtons style={{color: "gold"}} fundingSource={FUNDING.PAYPAL}
                     createOrder={async () => {
                         
                         let dataoptions = {

@@ -298,7 +298,7 @@ function NftBox (props) {
                 
                 const newItem = getItem()
                 newItem.then((res) => {
-                    if (res.tag === tags[props.catID]) {
+                    if (props.catID === 3) {
                         setTokenId(res.tokenId)
                         console.log(id)
                         console.log(res.seller)
@@ -307,8 +307,19 @@ function NftBox (props) {
                         setImage(res.image)
                         setMarketLoadedItem(res)
                     } else {
-                        setNotload(true)
+                        if (res.tag === tags[props.catID]) {
+                            setTokenId(res.tokenId)
+                            console.log(id)
+                            console.log(res.seller)
+                            setSeller(res.seller)
+                            setPrice(res.price)
+                            setImage(res.image)
+                            setMarketLoadedItem(res)
+                        } else {
+                            setNotload(true)
+                        }
                     }
+                   
                     
                 })
             }

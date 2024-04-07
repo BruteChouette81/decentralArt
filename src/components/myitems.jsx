@@ -276,6 +276,34 @@ function DisplayYnft () {
     const [signer, setSigner] = useState()
     const [dds, setDds] = useState()
 
+    const loadNftServer = async () => {
+        let nftlist = []
+        let address = window.localStorage.getItem("walletAddress");
+        const options = {
+            body: {
+                address: address
+            }
+        }
+        API.post('serverv2', "/nftbyaddress", options).then((res) => {
+            console.log(res.result)
+            for (let i=0; i<res?.result.length; i++) {
+                if (res.result[i].token_address == ImperialRealAddress.toLowerCase()){
+                    let metadata = res.result[i].token_uri
+                    
+    
+                    console.log("CID: " + metadata?.replace("https://ipfs.moralis.io:2053/ipfs/", "") )
+    
+                    //'https://api.pinata.cloud/data/pinList?status=pinned&pinSizeMin=100' \--header 'Authorization: Bearer PINATA JWT'
+    
+                    nftlist.push([metadata?.replace("https://ipfs.moralis.io:2053/ipfs/", ""), res.result[i].token_id]) // cid
+                }
+            }
+
+        }).then(() => {
+            setYnft(nftlist)
+        });
+    }
+
     const loadNft2 = async () => {
         const web3ApiKey = web3ApiKeyMoralis
         const options = {
@@ -340,7 +368,8 @@ function DisplayYnft () {
             setDds(DDSContract)
            
         }).then(() => {
-            loadNft2()
+            //loadNft2()
+            loadNftServer()
         })
     }
 

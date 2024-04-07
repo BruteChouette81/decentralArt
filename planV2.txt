@@ -298,8 +298,8 @@ Tickets === maitre canadien ==> need to load better
 
 plan for 2024:
 **see marketing idea
-- finish testing dds v2 
-- all of myitems into serverv2 
+- finish testing dds v2 DONE ✔️
+- all of myitems into serverv2 DONE ✔️
 - all storage in cookies DONE ✔️ ==> incorporate ==> transfer account using nft instead of bucket (ipfs):
     check for all items on blockchain (100% decentralized and all p2p) ==> rentability
     same system: now: did ==> AWS ==> new device
@@ -314,15 +314,17 @@ plan for 2024:
 - check for hybrid lightning network idea + interpretor 
 - work around new DDS + add feature for the ledger + participation system
 - one click load item in market DONE ✔️ algo it 
+- load all items in home DONE ✔️
 - new presentation: middlemanless technology (every thing we rely on now will disapear or replace by lightning network)
 - switch to bitcoin
-- own payment gateway in receipt.jsx
+- own payment gateway in receipt.jsx DONE ✔️
 - PARTICIPATION system: 
     math DONE ✔️ ==> improove
     1: check for payment gateway (visa/mastercard/crypto) ==> lower fees DONE ✔️ ==> get licensed by visa
     2: check for P2P exchange for stable earn ==> PayTrie 0.6 %/kraken 0.26% fee canada-proof ==> usdc/cadc
     3: build the F2E 
     4: check rentability (long term)
+    5: impliment more earning: stable-back lending, exchange fee, buy-now pay-later (BNPL): calculate rentability
 
 -google ads: 125(110-230) - 255(230-270)
 -facebook ads: 100 for a mounth or like 10$ a day/ 5$

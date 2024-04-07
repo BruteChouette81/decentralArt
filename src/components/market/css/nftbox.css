@@ -49,6 +49,7 @@
     color: white;
     font-weight:500;
     height: auto;
+    margin-top: 4px;
     text-align: center;
     border-radius: 5px;
     background-color: green;
@@ -56,11 +57,11 @@
 
 #ppbuy {
     width: 100%;
-    font-size: larger;
+    font-size: large;
     color: white;
     font-weight:500;
-    height: auto;
-    margin-bottom: 25px;
+    height: 45px;
+    margin-bottom: 10px;
     text-align: center;
     border-radius: 5px;
     background-color: black;
