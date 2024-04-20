@@ -17,7 +17,7 @@ let USDollar = new Intl.NumberFormat('en-US', {
     currency: 'USD',
 });
 
-let audioding = new Audio(ding)
+let audioding = new Audio(ding) //ding
 
 function NftBox (props) {
     //see in bigger using modal

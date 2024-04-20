@@ -50,11 +50,11 @@ const getContract = (signer, abi, address) => {
   return contract
 }
 
-const ddsAddress = "0x0188EFFc74943b4F54833A14f58E632a3f920a56";
-const creditAddress = "0xc183177E3207788ea9342255C8Fcb218763d46e2";
-const buyingAddress = "0xc73CBdd54Af25AE6be362B222074027d545963cC";
-const proovingAddress = "0x0179F9C8B674CCd07354Dcc3998d0160216D02a6";
-const mintingAddress = "0xF9E4e1C24206178CC632D3Bdfe6c389cc09E5B0A";
+const ddsAddress = "0x0c50409C167e974e4283F23f10BB21d16BE956A9";
+const creditAddress = "0x6CFADe18df81Cd9C41950FBDAcc53047EdB2e565";
+const buyingAddress = "0x2F810063f44244a2C3B2a874c0aED5C6c28D1D87";
+const proovingAddress = "0xd783766077E4960C7bA3432d12485d6f37F1e8B2";
+const mintingAddress = "0x3002d21bd6ac3c7ebA6eb5D0cabA3e00C5866855";
 
 const ddsABI = [
 	{
@@ -628,7 +628,7 @@ const ddsABI = [
 	},
 	{
 		"inputs": [],
-		"name": "_buyContract",
+		"name": "_buyer",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -641,7 +641,7 @@ const ddsABI = [
 	},
 	{
 		"inputs": [],
-		"name": "_mintConract",
+		"name": "_minter",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -667,7 +667,7 @@ const ddsABI = [
 	},
 	{
 		"inputs": [],
-		"name": "_prooveContract",
+		"name": "_proover",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -1052,37 +1052,6 @@ const buyingABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "_itemId",
-				"type": "uint256"
-			}
-		],
-		"name": "deleteItem",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_itemOwner",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_itemId",
-				"type": "uint256"
-			}
-		],
-		"name": "deleteItemPool",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "address",
 				"name": "buyer",
 				"type": "address"
@@ -1248,6 +1217,19 @@ const buyingABI = [
 		"type": "function"
 	},
 	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "bool",
+				"name": "test",
+				"type": "bool"
+			}
+		],
+		"name": "testEvent",
+		"type": "event"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -1262,7 +1244,7 @@ const buyingABI = [
 	},
 	{
 		"inputs": [],
-		"name": "_buyContract",
+		"name": "_buyer",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -1275,7 +1257,7 @@ const buyingABI = [
 	},
 	{
 		"inputs": [],
-		"name": "_mintConract",
+		"name": "_minter",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -1301,7 +1283,7 @@ const buyingABI = [
 	},
 	{
 		"inputs": [],
-		"name": "_prooveContract",
+		"name": "_proover",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -1443,6 +1425,37 @@ const mintingABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			}
+		],
+		"name": "deleteItem",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_itemOwner",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_itemId",
+				"type": "uint256"
+			}
+		],
+		"name": "deleteItemPool",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "contract IERC721",
 				"name": "_nft",
 				"type": "address"
@@ -1537,6 +1550,26 @@ const mintingABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "minter",
+				"type": "address"
+			}
+		],
+		"name": "setMinter",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "contract DDS",
@@ -1599,13 +1632,6 @@ const mintingABI = [
 		"type": "event"
 	},
 	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -1614,19 +1640,6 @@ const mintingABI = [
 			}
 		],
 		"name": "setBuyer",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "minter",
-				"type": "address"
-			}
-		],
-		"name": "setMinter",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -1672,7 +1685,7 @@ const mintingABI = [
 	},
 	{
 		"inputs": [],
-		"name": "_buyContract",
+		"name": "_buyer",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -1685,7 +1698,7 @@ const mintingABI = [
 	},
 	{
 		"inputs": [],
-		"name": "_mintConract",
+		"name": "_minter",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -1711,7 +1724,7 @@ const mintingABI = [
 	},
 	{
 		"inputs": [],
-		"name": "_prooveContract",
+		"name": "_proover",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -1922,149 +1935,6 @@ const proovingABI = [
 	},
 	{
 		"inputs": [],
-		"name": "_buyContract",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "_mintConract",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "_pool",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "_prooveContract",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "credits",
-		"outputs": [
-			{
-				"internalType": "contract credit",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "ddsdb",
-		"outputs": [
-			{
-				"internalType": "contract DDS",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "isBuyer",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "isMinter",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "isPool",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "isProover",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "renounceOwnership",
 		"outputs": [],
 		"stateMutability": "nonpayable",
@@ -2194,14 +2064,179 @@ const proovingABI = [
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_buyer",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_minter",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_pool",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_proover",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "credits",
+		"outputs": [
+			{
+				"internalType": "contract credit",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "ddsdb",
+		"outputs": [
+			{
+				"internalType": "contract DDS",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isBuyer",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isMinter",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isPool",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isProover",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
 	}
-];
+]
 
 const creditABI = [
 	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "OwnableInvalidOwner",
+		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "OwnableUnauthorizedAccount",
+		"type": "error"
 	},
 	{
 		"anonymous": false,
@@ -2292,6 +2327,19 @@ const creditABI = [
 	},
 	{
 		"inputs": [],
+		"name": "_buyer",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "_decimals",
 		"outputs": [
 			{
@@ -2323,12 +2371,51 @@ const creditABI = [
 	},
 	{
 		"inputs": [],
+		"name": "_minter",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "_name",
 		"outputs": [
 			{
 				"internalType": "string",
 				"name": "",
 				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_pool",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_proover",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -2429,7 +2516,46 @@ const creditABI = [
 	},
 	{
 		"inputs": [],
+		"name": "isBuyer",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isMinter",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "isPool",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "isProover",
 		"outputs": [
 			{
 				"internalType": "bool",
@@ -2477,11 +2603,50 @@ const creditABI = [
 		"inputs": [
 			{
 				"internalType": "address",
+				"name": "buyer",
+				"type": "address"
+			}
+		],
+		"name": "setBuyer",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "minter",
+				"type": "address"
+			}
+		],
+		"name": "setMinter",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
 				"name": "pool",
 				"type": "address"
 			}
 		],
 		"name": "setPool",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "proover",
+				"type": "address"
+			}
+		],
+		"name": "setProover",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -2578,10 +2743,10 @@ const creditABI = [
 		"stateMutability": "nonpayable",
 		"type": "function"
 	}
-];
+]
 
 
-const provider = new ethers.providers.InfuraProvider("goerli")
+const provider = new ethers.providers.InfuraProvider("sepolia")
 //encrypt wallet using: https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SecretsManager.html
 let ConnectedWallet = []
 let params = {

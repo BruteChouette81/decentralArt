@@ -11,8 +11,8 @@ import { AES, enc } from "crypto-js"
 import DDSABI from '../artifacts/contracts/DDS.sol/DDS.json'
 
 const key = pinatakey
-const ImperialRealAddress = "0x6C1c1c23187b0aFF51E941e139A22645fd87f5A0"
-const DDSADDr = '0x0188EFFc74943b4F54833A14f58E632a3f920a56';
+const ImperialRealAddress = "0xbC1Fe9f6B298cCCd108604a0Cf140B2d277f624a"
+const DDSADDr = '0x0c50409C167e974e4283F23f10BB21d16BE956A9';
 
 const getContract = (signer, abi, address) => {
     // get the end user
@@ -318,7 +318,7 @@ function DisplayYnft () {
         let nftlist = []
        
         
-        fetch('https://deep-index.moralis.io/api/v2/'+ address + '/nft?chain=goerli&format=decimal&media_items=false', options) //chain to arbitrum
+        fetch('https://deep-index.moralis.io/api/v2/'+ address + '/nft?chain=sepolia&format=decimal&media_items=false', options) //chain to arbitrum
           .then((res) => res.json())
           .then((data) => {
             console.log(data.result)
@@ -353,7 +353,7 @@ function DisplayYnft () {
 
         var url = "/connection"
 
-        const provider = new ethers.providers.InfuraProvider("goerli")
+        const provider = new ethers.providers.InfuraProvider("sepolia")
         //const binanceProvider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org/")
 
         API.post('serverv2', url, data).then(async (response) => {

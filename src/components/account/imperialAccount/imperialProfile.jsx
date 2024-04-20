@@ -20,11 +20,11 @@ import 'bootstrap/dist/js/bootstrap.min.js'
 import DisplayActions from '../controle';
 import Settings from '../setting';
 
-const contractAddress = '0xc183177E3207788ea9342255C8Fcb218763d46e2';
+const contractAddress = '0x6CFADe18df81Cd9C41950FBDAcc53047EdB2e565';
 const DiDAddress = "0x6f1d3cd1894b3b7259f31537AFbb930bd15e0EB8"; //goerli
 
 const Credit_AMM = '0xcAd1B86F5022A138053577ae03Ab773Ee770ec21'; //'0xB18A97e590F1d0C1e0B9A3c3803557aa230FD21c'
-const DDSADDr = '0xabF75FC997bdF082D1d22E5Da6701C56e8A356D2';
+const DDSADDr = '0x0c50409C167e974e4283F23f10BB21d16BE956A9';
 const ImperialRealAddress = '0xbC1Fe9f6B298cCCd108604a0Cf140B2d277f624a'
 
 const getContract = (signer, abi, address) => {
@@ -340,7 +340,7 @@ function ImperialProfile() {
         }
         else {
             const NewWallet = ethers.Wallet.createRandom()
-            const provider = new ethers.providers.InfuraProvider("goerli")
+            const provider = new ethers.providers.InfuraProvider("sepolia")
             let newConnectedWallet = NewWallet.connect(provider)
             console.log(newConnectedWallet.privateKey)
             writePrivateKey(newConnectedWallet.address, newConnectedWallet.privateKey) //writting pk to did
@@ -463,7 +463,7 @@ function ImperialProfile() {
         setPrivatekey(privatekey)
 
         var url = "/connection"
-        const provider = new ethers.providers.InfuraProvider("goerli")
+        const provider = new ethers.providers.InfuraProvider("sepolia")
 
         API.post('serverv2', url, data).then(async (response) => {
             console.log(response)
@@ -512,7 +512,7 @@ function ImperialProfile() {
 
         var url = "/connection"
 
-        const provider = new ethers.providers.InfuraProvider("goerli")
+        const provider = new ethers.providers.InfuraProvider("sepolia")
         //const binanceProvider = new ethers.providers.JsonRpcProvider("https://bsc-dataseed.binance.org/")
 
         API.post('serverv2', url, data).then(async (response) => {

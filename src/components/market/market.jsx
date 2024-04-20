@@ -24,9 +24,9 @@ import NftBox from './nfts';
 import PayGasList from '../F2C/gas/payGasList';
 
 const MarketAddress = '0x710005797eFf093Fa95Ce9a703Da9f0162A6916C'; // goerli new test contract
-const DDSAddress = '0x0188EFFc74943b4F54833A14f58E632a3f920a56' // 0x2F810063f44244a2C3B2a874c0aED5C6c28D1D87, 0xd860F7aA2ACD3dc213D1b01e2cE0BC827Bd3be46
-const CreditsAddress = "0xc183177E3207788ea9342255C8Fcb218763d46e2" //goerli test contract
-const NftAddress = '0x3d275ed3B0B42a7A3fCAA33458C34C0b5dA8Cc3A'; // goerli new test contract
+const DDSAddress = '0x0c50409C167e974e4283F23f10BB21d16BE956A9' // 0x2F810063f44244a2C3B2a874c0aED5C6c28D1D87, 0xd860F7aA2ACD3dc213D1b01e2cE0BC827Bd3be46
+const CreditsAddress = "0x6CFADe18df81Cd9C41950FBDAcc53047EdB2e565" //goerli test contract
+const NftAddress = '0xbC1Fe9f6B298cCCd108604a0Cf140B2d277f624a'; // goerli new test contract
 const DiDAddress = "0x6f1d3cd1894b3b7259f31537AFbb930bd15e0EB8" //goerli test contract 
 
 const Credit_AMM = '0xB7657A02cc1c5FA9Bdf39701cc6B97547e4F283C' //working with: 0x856b5ddDf0eCFf5368895e085d65179AA2Fcc4d9 credits contract
@@ -37,7 +37,7 @@ const Credit_AMM = '0xB7657A02cc1c5FA9Bdf39701cc6B97547e4F283C' //working with: 
 // ui is different from purchase => bid and price => current price 
 // include bid increment in info about the token 
 
-//do NOT execute this code down in Ohio!
+//this code dont fw opps
 
 
 /*
@@ -317,7 +317,7 @@ function Market() {
 
         var url = "/connection"
 
-        const provider = new ethers.providers.InfuraProvider("goerli")
+        const provider = new ethers.providers.InfuraProvider("sepolia")
         API.post('serverv2', url, data).then(async (response) => {
             let userwallet = new ethers.Wallet(pk, provider)
             setAddress(userwallet.address)

@@ -248,26 +248,30 @@ CPL v 2.0:
     --> prooving ==> multiple type of prooving DONE ✔️
 
     Instruction set:
-    mint new: Rnft, DDS DONE ✔️
-    mint new sub-contracts and set them in DDS DONE ✔️
-    set _buyContract in minting.sol DONE ✔️
-    set _prooveContract in buying.sol DONE ✔️
-    set _prooveContract in CPL in mintbuy in credit.mint(_prooveContract) DONE ✔️
+    mint new: Rnft, Credits, DDS  DONE ✔️
+    mint new sub-contracts DONE ✔️
+    set _buyer, _proover and _minter, pool in DDS DONE ✔️
+    set _buyer, _pool in minting.sol  DONE ✔️
+    set _pool in buying.sol DONE ✔️
+    set _pool to prooving.sol DONE ✔️
+    set _pool in credit.sol DONE ✔️
+
+    set _proover in CPL in mintbuy in credit.mint(_prooveContract) 
 
     set ABI in cpl DONE ✔️
-    set all contract in cpl DONE ✔️
+    set all contract in cpl
 
     set pool in DDS, minting, buying, prooving DONE ✔️
 
-    oracle: 0x439da8962debe41408712dE41b6161B66349E250
+    oracle: 0x4e121a3dd0d76378DF6EdEF7079f91d026f7Ae17
 
-    CREDITS: 0xc183177E3207788ea9342255C8Fcb218763d46e2
-    RNFT: 0x6C1c1c23187b0aFF51E941e139A22645fd87f5A0
-    DDS: 0x0188EFFc74943b4F54833A14f58E632a3f920a56
+    CREDITS: 0x6CFADe18df81Cd9C41950FBDAcc53047EdB2e565
+    RNFT: 0xbC1Fe9f6B298cCCd108604a0Cf140B2d277f624a
+    DDS: 0x0c50409C167e974e4283F23f10BB21d16BE956A9
 
-    buying: 0xc73CBdd54Af25AE6be362B222074027d545963cC
-    minting: 0xF9E4e1C24206178CC632D3Bdfe6c389cc09E5B0A
-    prooving: 0x0179F9C8B674CCd07354Dcc3998d0160216D02a6
+    buying: 0x2F810063f44244a2C3B2a874c0aED5C6c28D1D87
+    minting: 0x3002d21bd6ac3c7ebA6eb5D0cabA3e00C5866855
+    prooving: 0xd783766077E4960C7bA3432d12485d6f37F1e8B2
 
     CPL:
     - securize api key DONE ✔️

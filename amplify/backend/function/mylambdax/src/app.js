@@ -196,7 +196,7 @@ async function getProofData(topic) {
   }
 }
 const apiKey = "9GnfDHnyN7W9ptwQiXbWiOk5qPoJJQUDNMhgio8INcbhTspaTtBIRbWyoUFTTxsk" // migration to moralis v2
-const chain = "0x5"; //change for arbitrum
+const chain = "0xaa36a7"; //change for arbitrum
 const dynamodb = new AWS.DynamoDB.DocumentClient()
 const startM = async () => {
   await Moralis.start({ apiKey: apiKey, });

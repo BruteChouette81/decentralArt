@@ -11,14 +11,14 @@ import DDSABI from '../artifacts/contracts/DDS.sol/DDS.json'
 
 import NftBox from './market/nfts'
 
-const DDSAddress = '0x79915E0af8c4DeC83c5c628b2a050B7062D7bC1d'
+const DDSAddress = '0x0c50409C167e974e4283F23f10BB21d16BE956A9'
 
 
 const getContract = () => { //for Imperial Account
     // get the end user
     //console.log(signer)
     // get the smart contract
-    const provider = new ethers.providers.InfuraProvider("goerli")
+    const provider = new ethers.providers.InfuraProvider("sepolia")
     const contract = new ethers.Contract(DDSAddress, DDSABI, provider);
     return contract
 }
