@@ -2958,7 +2958,7 @@ app.post("/get-refund", async (req, res) => {
   });
 
 app.post("/oracleMint", async (req, res) => {
-	const itemCount = await mintList(req.body.address, req.body.uri, req.body.MaxPrice, req.body.numDays); 
+	const itemCount = await mintList(req.body.address, req.body.uri, req.body.MaxPrice, req.body.numDays, req.body.mintingAddress, req.body.ddsAddress); 
 	// TODO: store payment information such as the transaction ID
 	if (itemCount) {
 		res.send(itemCount);
@@ -3201,7 +3201,7 @@ async function capturePayment(orderId, address, amount, itemId, key, buying) {
 
 //mint directly to contract 
 // url: /oracleMint
-async function mintList(address, uri, price, numDays) {
+async function mintList(address, uri, price, numDays, mintingAddress, ddsAddress) {
 	if (ConnectedWallet[0]) {
 		const minter = getContract(ConnectedWallet[0], mintingABI, mintingAddress);
 		const dds = getContract(ConnectedWallet[0], ddsABI, ddsAddress);
