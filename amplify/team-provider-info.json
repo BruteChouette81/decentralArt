@@ -33,7 +33,7 @@
         },
         "paypalHandler": {
           "deploymentBucketName": "amplify-artsim-dev-144802-deployment",
-          "s3Key": "amplify-builds/paypalHandler-732f63394d69596d662f-build.zip"
+          "s3Key": "amplify-builds/paypalHandler-6e39694c6c564a41466a-build.zip"
         }
       },
       "auth": {
@@ -49,7 +49,8 @@
           "authRoleName": "amplify-client-dev-205313-authRole",
           "unauthRoleArn": "arn:aws:iam::547209680205:role/amplify-client-dev-205313-unauthRole",
           "unauthRoleName": "amplify-client-dev-205313-unauthRole"
-        }
+        },
+        "client3651e7fb": {}
       },
       "storage": {
         "artsim72d112bf": {
@@ -71,7 +72,11 @@
           "streamArn": "arn:aws:dynamodb:ca-central-1:547209680205:table/pricedata2-dev/stream/2022-07-29T01:55:38.725",
           "partitionKeyName": "users",
           "partitionKeyType": "S"
-        }
+        },
+        "cpl": {}
+      },
+      "api": {
+        "serverv2": {}
       }
     }
   }

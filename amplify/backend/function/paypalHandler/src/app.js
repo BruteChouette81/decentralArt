@@ -21,7 +21,10 @@ const fetch = require("node-fetch");
 const e = require('express');
 
 const {CLIENT_ID} = require("./apikeyStorer.js")
+const {SAND_CLIENT_ID} = require('./apikeyStorer.js')
 const {APP_SECRET} = require("./apikeyStorer.js")
+const {SAND_APP_SECRET} = require('./apikeyStorer.js')
+
 
 
 const AWS = require('aws-sdk');
@@ -2867,6 +2870,7 @@ app.get("/getOracleAddr", async (req, res) => {
 //prod: "https://api-m.paypal.com"
 //sand: "https://api-m.sandbox.paypal.com"
 const baseURL = "https://api-m.paypal.com";
+const sandURL = "https://api-m.sandbox.paypal.com"
 
 //fee calculation:
 
@@ -2905,7 +2909,7 @@ const gasPrice = await provider.getGasPrice();
 //let pkey = ethers.utils.recoverPublicKey(digest, testsig)
 // create a new order
 app.post("/create-paypal-order", async (req, res) => {
-  const order = await createOrder(req.body.amount);
+  const order = await createOrder(req.body.amount, req.body.sandbox);
   res.json(order);
 });
 
@@ -2916,7 +2920,7 @@ app.post("/capture-paypal-order", async (req, res) => {
 	let finalmessage = AES.decrypt(req.body.key, pkey)
 	//let address = ethers.utils.verifyMessage(req.body.key, req.body.signature);
 	if (address == req.body.address) {
-		const captureData = await capturePayment(req.body.orderID, req.body.address, req.body.amount, req.body.itemId, enc.stringify(finalmessage), req.body.buying);
+		const captureData = await capturePayment(req.body.orderID, req.body.address, req.body.amount, req.body.itemId, enc.stringify(finalmessage), req.body.buying, req.body.sandbox);
 		// TODO: store payment information such as the transaction ID orderId, address, amount, itemId, key, buying
 		if (captureData) {
 			res.json(captureData);
@@ -2933,7 +2937,7 @@ app.post("/get-payed", async (req, res) => {
   let address = ethers.utils.verifyMessage(req.body.proof, req.body.signature1)
 
   if(address === req.body.address) {
-	const captureData = await getPayed(req.body.amount, req.body.email, req.body.address, req.body.id, req.body.proof);
+	const captureData = await getPayed(req.body.amount, req.body.email, req.body.address, req.body.id, req.body.proof, req.body.sandbox, req.body.transferMoney);
 	// TODO: store payment information such as the transaction ID
 	if (captureData) {
 	  res.json(captureData);
@@ -2947,7 +2951,7 @@ app.post("/get-payed", async (req, res) => {
 });
 
 app.post("/get-refund", async (req, res) => {
-	const captureData = await getRefund(req.body.id, req.body.email);
+	const captureData = await getRefund(req.body.id, req.body.email, req.body.sandbox);
 	// TODO: store payment information such as the transaction ID
 	if (captureData) {
 		res.json(captureData);
@@ -3005,40 +3009,68 @@ app.post("/deleteItem", async (req, res) => {
 
 // use the orders api to create an order
 //ad more params: https://developer.paypal.com/docs/api/orders/v2/#orders_create
-async function createOrder(amount) {
-  const accessToken = await generateAccessToken();
+async function createOrder(amount, sandbox) {
+  const accessToken = await generateAccessToken(sandbox);
   //console.log(accessToken)
-  const url = `${baseURL}/v2/checkout/orders`;
-  //console.log(url)
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    },
-    body: JSON.stringify({
-      intent: "CAPTURE",
-      purchase_units: [
-        {
-          amount: {
-            currency_code: "CAD",
-            value: amount,
-          },
-        },
-      ],
-    }),
-  });
-  const data = await response.json();
+  if (sandbox) {
+	const url = `${sandURL}/v2/checkout/orders`;
+	//console.log(url)
+	const response = await fetch(url, {
+		method: "POST",
+		headers: {
+		"Content-Type": "application/json",
+		Authorization: `Bearer ${accessToken}`,
+		},
+		body: JSON.stringify({
+		intent: "CAPTURE",
+		purchase_units: [
+			{
+			amount: {
+				currency_code: "CAD",
+				value: amount,
+			},
+			},
+		],
+		}),
+	});
+	const data = await response.json();
 
-  return data;
+	return data;
+  } else {
+	const url = `${baseURL}/v2/checkout/orders`;
+	//console.log(url)
+	const response = await fetch(url, {
+		method: "POST",
+		headers: {
+		"Content-Type": "application/json",
+		Authorization: `Bearer ${accessToken}`,
+		},
+		body: JSON.stringify({
+		intent: "CAPTURE",
+		purchase_units: [
+			{
+			amount: {
+				currency_code: "CAD",
+				value: amount,
+			},
+			},
+		],
+		}),
+	});
+	const data = await response.json();
+
+	return data;
+  }
+  
 }
 
 
-async function getRefund(id, email) {
-	const accessToken = await generateAccessToken();
+async function getRefund(id, email, sandbox) {
+	const accessToken = await generateAccessToken(sandbox);
 	//console.log(accessToken)
 	const amount = await refundCredits(id)
-	const url = `${baseURL}/v1/payments/payouts`;
+	if(sandbox) {
+		const url = `${sandURL}/v1/payments/payouts`;
 	//const validated = await validate(address, amount);
 	//console.log(validated)
 	if (amount) {
@@ -3076,92 +3108,281 @@ async function getRefund(id, email) {
 	  } else {
 		  return false;
 	  }
+	} else {
+		const url = `${baseURL}/v1/payments/payouts`;
+	//const validated = await validate(address, amount);
+	//console.log(validated)
+	if (amount) {
+			let transactionID = crypto.randomUUID();
+
+		  const response = await fetch(url, {
+		  method: 'POST',
+		  headers: {
+			  'Content-Type': 'application/json',
+			  Authorization: `Bearer ${accessToken}`,
+		  },
+		  body: JSON.stringify({
+			  "sender_batch_header": { 
+			  "sender_batch_id": transactionID, 
+			  "recipient_type": "EMAIL",
+			  "email_subject": "You have a payout!", 
+			  "email_message": "You have received a payout! Thanks for using our service!" 
+			  }, "items": [ 
+			  { 
+				  "recipient_type": "EMAIL", 
+				  "amount": {
+				  "value": (amount/100000).toFixed(2).toString(), //amount
+				  "currency": "CAD", 
+				  }, "note": "Powered by Atelier de Simon", 
+				  "recipient_wallet": "PAYPAL",
+				  "receiver": email //email
+				  
+			  } 
+			  ] 
+		  })
+	  });
+		  const data = await response.json();
+		  
+		  return data;
+	  } else {
+		  return false;
+	  }
+	}
+	
 
 }
 
 
 
-async function getPayed(amount, email, address, id, proof) {
-  const accessToken = await generateAccessToken();
+async function getPayed(amount, email, address, id, proof, prooving, sandbox, transferMoney) {
+  const accessToken = await generateAccessToken(sandbox);
   //console.log(accessToken)
-  const validation = await proofAndGo(address, id, proof)
-  const url = `${baseURL}/v1/payments/payouts`;
-  //const validated = await validate(address, amount);
-  //console.log(validated)
-  /* { 
-				"recipient_type": "EMAIL", 
-				"amount": {
-				"value": feeamount, //amount *0.15
-				"currency": "CAD", 
-				}, "note": "Powered by Imperial Technologies", 
-				"recipient_wallet": "PAYPAL",
-				"receiver": "hbaril1@icloud.com" //email
-				
-			}*/
-  if (validation) {
-	    let transactionID = crypto.randomUUID();
-		const response = await fetch(url, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			Authorization: `Bearer ${accessToken}`,
-		},
-		body: JSON.stringify({
-			"sender_batch_header": { 
-			"sender_batch_id": transactionID,
-			"recipient_type": "EMAIL",
-			"email_subject": "You have a payout!", 
-			"email_message": "You have received a payout! Thanks for using our service!" 
-			}, "items": [ 
-			{ 
-				"recipient_type": "EMAIL", 
-				"amount": {
-				"value": amount, //amount
-				"currency": "CAD", 
-				}, "note": "Powered by Atelier de Simon", 
-				"recipient_wallet": "PAYPAL",
-				"receiver": email //email
-				
-			}
-			] 
-		})
-	});
-		const data = await response.json();
-		
-		return data;
+  if(transferMoney && !proof) { //if just getting money out without prooving
+	const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
+	const max_amount = credits.balanceOf(address)
+	if (max_amount/100000 >= amount) { //verify the amount
+		if (sandbox) {
+
+			const url = `${sandURL}/v1/payments/payouts`;
+			let transactionID = crypto.randomUUID();
+			const response = await fetch(url, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${accessToken}`,
+				},
+				body: JSON.stringify({
+					"sender_batch_header": { 
+					"sender_batch_id": transactionID,
+					"recipient_type": "EMAIL",
+					"email_subject": "You have a payout!", 
+					"email_message": "You have received a payout! Thanks for using our service!" 
+					}, "items": [ 
+					{ 
+						"recipient_type": "EMAIL", 
+						"amount": {
+						"value": amount, //amount
+						"currency": "CAD", 
+						}, "note": "Powered by Atelier de Simon", 
+						"recipient_wallet": "PAYPAL",
+						"receiver": email //email
+						
+					}
+					] 
+				})
+			});
+			const data = await response.json();
+			
+			return data;
+		  } else {
+			const url = `${baseURL}/v1/payments/payouts`;
+	
+			let transactionID = crypto.randomUUID();
+			const response = await fetch(url, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${accessToken}`,
+				},
+				body: JSON.stringify({
+					"sender_batch_header": { 
+					"sender_batch_id": transactionID,
+					"recipient_type": "EMAIL",
+					"email_subject": "You have a payout!", 
+					"email_message": "You have received a payout! Thanks for using our service!" 
+					}, "items": [ 
+					{ 
+						"recipient_type": "EMAIL", 
+						"amount": {
+						"value": amount, //amount
+						"currency": "CAD", 
+						}, "note": "Powered by Atelier de Simon", 
+						"recipient_wallet": "PAYPAL",
+						"receiver": email //email
+						
+					}
+					] 
+				})
+			});
+			const data = await response.json();
+			
+			return data;
+			
+		  }
 	} else {
-		return false;
+		return false
 	}
+	
+  } else if (proof && !transferMoney) {
+	const validation = await proofAndGo(address, id, proof, prooving)
+	return validation
+  } else if (proof && !transferMoney) {
+	const validation = await proofAndGo(address, id, proof, prooving)
+	if (sandbox) {
+		const url = `${sandURL}/v1/payments/payouts`;
+		if (validation) {
+			  let transactionID = crypto.randomUUID();
+			  const response = await fetch(url, {
+			  method: 'POST',
+			  headers: {
+				  'Content-Type': 'application/json',
+				  Authorization: `Bearer ${accessToken}`,
+			  },
+			  body: JSON.stringify({
+				  "sender_batch_header": { 
+				  "sender_batch_id": transactionID,
+				  "recipient_type": "EMAIL",
+				  "email_subject": "You have a payout!", 
+				  "email_message": "You have received a payout! Thanks for using our service!" 
+				  }, "items": [ 
+				  { 
+					  "recipient_type": "EMAIL", 
+					  "amount": {
+					  "value": amount, //amount
+					  "currency": "CAD", 
+					  }, "note": "Powered by Atelier de Simon", 
+					  "recipient_wallet": "PAYPAL",
+					  "receiver": email //email
+					  
+				  }
+				  ] 
+			  })
+		  });
+			  const data = await response.json();
+			  
+			  return data;
+		  } else {
+			  return false;
+		  }
+	  } else {
+		const url = `${baseURL}/v1/payments/payouts`;
+		//const validated = await validate(address, amount);
+		//console.log(validated)
+		/* { 
+					  "recipient_type": "EMAIL", 
+					  "amount": {
+					  "value": feeamount, //amount *0.15
+					  "currency": "CAD", 
+					  }, "note": "Powered by Imperial Technologies", 
+					  "recipient_wallet": "PAYPAL",
+					  "receiver": "hbaril1@icloud.com" //email
+					  
+				  }*/
+		if (validation) {
+			  let transactionID = crypto.randomUUID();
+			  const response = await fetch(url, {
+			  method: 'POST',
+			  headers: {
+				  'Content-Type': 'application/json',
+				  Authorization: `Bearer ${accessToken}`,
+			  },
+			  body: JSON.stringify({
+				  "sender_batch_header": { 
+				  "sender_batch_id": transactionID,
+				  "recipient_type": "EMAIL",
+				  "email_subject": "You have a payout!", 
+				  "email_message": "You have received a payout! Thanks for using our service!" 
+				  }, "items": [ 
+				  { 
+					  "recipient_type": "EMAIL", 
+					  "amount": {
+					  "value": amount, //amount
+					  "currency": "CAD", 
+					  }, "note": "Powered by Atelier de Simon", 
+					  "recipient_wallet": "PAYPAL",
+					  "receiver": email //email
+					  
+				  }
+				  ] 
+			  })
+		  });
+			  const data = await response.json();
+			  
+			  return data;
+		  } else {
+			  return false;
+		  }
+	  }
+
+  }
+  
+  
+ 
   
 
 }
 
 // use the orders api to capture payment for an order
 // this triggers when payment is approved 
-async function capturePayment(orderId, address, amount, itemId, key, buying) {
-  const accessToken = await generateAccessToken();
-  const url = `${baseURL}/v2/checkout/orders/${orderId}/capture`;
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  const data = await response.json();
+async function capturePayment(orderId, address, amount, itemId, key, buying, sandbox) {
+  const accessToken = await generateAccessToken(sandbox);
+  if (sandbox) {
+	const url = `${sandURL}/v2/checkout/orders/${orderId}/capture`;
+	const response = await fetch(url, {
+		method: "POST",
+		headers: {
+		"Content-Type": "application/json",
+		Authorization: `Bearer ${accessToken}`,
+		},
+	});
+	const data = await response.json();
 
-  //validate payment
-  if (buying) {
+	//validate payment
+	if (buying) {
 
-	let bool = await mintBuy(address, amount, itemId, key )
-	if (bool) {
-		return data
+		let bool = await mintBuy(address, amount, itemId, key, buying )
+		if (bool) {
+			return data
+		} else {
+			return false 
+		}
 	} else {
-		return false 
+		return data;
 	}
   } else {
-	return data;
-  }
+	const url = `${baseURL}/v2/checkout/orders/${orderId}/capture`;
+	const response = await fetch(url, {
+		method: "POST",
+		headers: {
+		"Content-Type": "application/json",
+		Authorization: `Bearer ${accessToken}`,
+		},
+	});
+	const data = await response.json();
+
+	//validate payment
+	if (buying) {
+
+		let bool = await mintBuy(address, amount, itemId, key, buying )
+		if (bool) {
+			return data
+		} else {
+			return false 
+		}
+	} else {
+		return data;
+	}
+	}
 
  
 }
@@ -3296,9 +3517,9 @@ async function deleteItem(address, itemId) {
 }
 
 //mint -> maxprice
-async function mintBuy(address, amount, itemId, key) {
+async function mintBuy(address, amount, itemId, key, buying) {
 	if (ConnectedWallet[0]) {
-		const buyer = getContract(ConnectedWallet[0], buyingABI, buyingAddress);
+		const buyer = getContract(ConnectedWallet[0], buyingABI, buying);
 		const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
 		//console.log(amount)
 		try {
@@ -3313,7 +3534,7 @@ async function mintBuy(address, amount, itemId, key) {
 		
 	} else {
 		await load_wallet()
-		const buyer = getContract(ConnectedWallet[0], buyingABI, buyingAddress);
+		const buyer = getContract(ConnectedWallet[0], buyingABI, buying);
 		const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
 
 		try {
@@ -3354,9 +3575,9 @@ async function refundCredits(id) {
 
 }
 
-async function proofAndGo(address, id, proof) {
+async function proofAndGo(address, id, proof, prooving) {
 	if (ConnectedWallet[0]) {
-		const proover = getContract(ConnectedWallet[0], proovingABI, proovingAddress);
+		const proover = getContract(ConnectedWallet[0], proovingABI, prooving);
 		try {
 			await proover.submitProofPool(address, id, proof);
 			return true;
@@ -3366,7 +3587,7 @@ async function proofAndGo(address, id, proof) {
 			
 	} else {
 		await load_wallet()
-		const proover = getContract(ConnectedWallet[0], proovingABI, proovingAddress);
+		const proover = getContract(ConnectedWallet[0], proovingABI, prooving);
 		try {
 			await proover.submitProofPool(address, id, proof);
 			return true;
@@ -3377,17 +3598,31 @@ async function proofAndGo(address, id, proof) {
 }
 
 // generate an access token using client id and app secret
-async function generateAccessToken() {
-  const auth = Buffer.from(CLIENT_ID + ":" + APP_SECRET).toString("base64")
-  const response = await fetch(`${baseURL}/v1/oauth2/token`, {
-    method: "POST",
-    body: "grant_type=client_credentials",
-    headers: {
-      Authorization: `Basic ${auth}`,
-    },
-  });
-  const data = await response.json();
-  return data.access_token;
+async function generateAccessToken(sandbox) {
+	if(sandbox) {
+		const auth = Buffer.from(SAND_CLIENT_ID + ":" + SAND_APP_SECRET).toString("base64")
+		const response = await fetch(`${sandURL}/v1/oauth2/token`, {
+		  method: "POST",
+		  body: "grant_type=client_credentials",
+		  headers: {
+			Authorization: `Basic ${auth}`,
+		  },
+		});
+		const data = await response.json();
+		return data.access_token;
+	} else {
+		const auth = Buffer.from(CLIENT_ID + ":" + APP_SECRET).toString("base64")
+		const response = await fetch(`${baseURL}/v1/oauth2/token`, {
+		  method: "POST",
+		  body: "grant_type=client_credentials",
+		  headers: {
+			Authorization: `Basic ${auth}`,
+		  },
+		});
+		const data = await response.json();
+		return data.access_token;
+	}
+ 
 }
 
 

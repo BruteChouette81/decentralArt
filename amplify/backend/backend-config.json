@@ -1,50 +1,62 @@
 {
-  "function": {
-    "mylambda": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
+  "api": {
+    "serverv2": {
       "dependsOn": [
         {
-          "category": "auth",
-          "resourceName": "artsim77ebd74b",
-          "attributes": [
-            "UserPoolId"
-          ]
-        },
-        {
-          "category": "storage",
-          "resourceName": "artsim72d112bf",
-          "attributes": [
-            "BucketName"
-          ]
-        },
-        {
-          "category": "storage",
-          "resourceName": "itemdbdev",
           "attributes": [
             "Name",
-            "Arn",
-            "StreamArn"
-          ]
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "mylambdax"
         },
         {
-          "category": "storage",
-          "resourceName": "pricedata2dev",
           "attributes": [
             "Name",
-            "Arn",
-            "StreamArn"
-          ]
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "paypalHandler"
         }
-      ]
-    },
-    "cronjob": {
-      "build": true,
+      ],
       "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": []
+      "service": "API Gateway"
+    }
+  },
+  "auth": {
+    "artsim77ebd74b": {
+      "customAuth": false,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito",
+      "serviceType": "imported"
     },
+    "client3651e7fb": {
+      "customAuth": false,
+      "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
+    }
+  },
+  "function": {
     "mylambdax": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -56,113 +68,338 @@
       "service": "Lambda"
     }
   },
-  "api": {
-    "serverv2": {
-      "service": "API Gateway",
+  "hosting": {
+    "amplifyhosting": {
       "providerPlugin": "awscloudformation",
-      "dependsOn": [
+      "service": "amplifyhosting",
+      "type": "manual"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_auth_artsim77ebd74b_allowUnauthenticatedIdentities": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "artsim77ebd74b"
+        }
+      ]
+    },
+    "AMPLIFY_auth_artsim77ebd74b_authRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "artsim77ebd74b"
+        }
+      ]
+    },
+    "AMPLIFY_auth_artsim77ebd74b_authRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "artsim77ebd74b"
+        }
+      ]
+    },
+    "AMPLIFY_auth_artsim77ebd74b_identityPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "artsim77ebd74b"
+        }
+      ]
+    },
+    "AMPLIFY_auth_artsim77ebd74b_identityPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "artsim77ebd74b"
+        }
+      ]
+    },
+    "AMPLIFY_auth_artsim77ebd74b_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "artsim77ebd74b"
+        }
+      ]
+    },
+    "AMPLIFY_auth_artsim77ebd74b_unauthRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "artsim77ebd74b"
+        }
+      ]
+    },
+    "AMPLIFY_auth_artsim77ebd74b_unauthRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "artsim77ebd74b"
+        }
+      ]
+    },
+    "AMPLIFY_auth_artsim77ebd74b_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "artsim77ebd74b"
+        }
+      ]
+    },
+    "AMPLIFY_auth_artsim77ebd74b_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "artsim77ebd74b"
+        }
+      ]
+    },
+    "AMPLIFY_auth_artsim77ebd74b_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "artsim77ebd74b"
+        }
+      ]
+    },
+    "AMPLIFY_function_cronjob_deploymentBucketName": {
+      "usedBy": [
         {
           "category": "function",
-          "resourceName": "mylambdax",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        },
+          "resourceName": "cronjob"
+        }
+      ]
+    },
+    "AMPLIFY_function_cronjob_s3Key": {
+      "usedBy": [
         {
           "category": "function",
-          "resourceName": "paypalHandler",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
+          "resourceName": "cronjob"
+        }
+      ]
+    },
+    "AMPLIFY_function_mylambda_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mylambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_mylambda_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mylambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_mylambdax_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mylambdax"
+        }
+      ]
+    },
+    "AMPLIFY_function_mylambdax_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "mylambdax"
+        }
+      ]
+    },
+    "AMPLIFY_function_paypalHandler_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "paypalHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_paypalHandler_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "paypalHandler"
+        }
+      ]
+    },
+    "AMPLIFY_hosting_amplifyhosting_appId": {
+      "usedBy": [
+        {
+          "category": "hosting",
+          "resourceName": "amplifyhosting"
+        }
+      ]
+    },
+    "AMPLIFY_hosting_amplifyhosting_type": {
+      "usedBy": [
+        {
+          "category": "hosting",
+          "resourceName": "amplifyhosting"
+        }
+      ]
+    },
+    "AMPLIFY_storage_artsim72d112bf_bucketName": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "artsim72d112bf"
+        }
+      ]
+    },
+    "AMPLIFY_storage_artsim72d112bf_region": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "artsim72d112bf"
+        }
+      ]
+    },
+    "AMPLIFY_storage_itemdbdev_arn": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "itemdbdev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_itemdbdev_partitionKeyName": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "itemdbdev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_itemdbdev_partitionKeyType": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "itemdbdev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_itemdbdev_region": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "itemdbdev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_itemdbdev_streamArn": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "itemdbdev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_itemdbdev_tableName": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "itemdbdev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_pricedata2dev_arn": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "pricedata2dev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_pricedata2dev_partitionKeyName": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "pricedata2dev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_pricedata2dev_partitionKeyType": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "pricedata2dev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_pricedata2dev_region": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "pricedata2dev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_pricedata2dev_streamArn": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "pricedata2dev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_pricedata2dev_tableName": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "pricedata2dev"
         }
       ]
     }
   },
-  "hosting": {
-    "amplifyhosting": {
-      "service": "amplifyhosting",
-      "providerPlugin": "awscloudformation",
-      "type": "manual"
-    }
-  },
   "storage": {
-    "mydatabase": {
-      "service": "DynamoDB",
-      "providerPlugin": "awscloudformation"
-    },
-    "pricedata": {
-      "service": "DynamoDB",
-      "providerPlugin": "awscloudformation"
-    },
-    "uploaddata": {
-      "service": "S3",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": []
-    },
-    "pricedata2": {
-      "service": "DynamoDB",
-      "providerPlugin": "awscloudformation"
-    },
-    "itemdb": {
-      "service": "DynamoDB",
-      "providerPlugin": "awscloudformation"
-    },
     "artsim72d112bf": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
       "service": "S3",
-      "serviceType": "imported",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": []
-    },
-    "itemdbdev": {
-      "service": "DynamoDB",
-      "serviceType": "imported",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": []
-    },
-    "pricedata2dev": {
-      "service": "DynamoDB",
-      "serviceType": "imported",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": []
+      "serviceType": "imported"
     },
     "cpl": {
-      "service": "DynamoDB",
-      "providerPlugin": "awscloudformation"
-    }
-  },
-  "auth": {
-    "client3651e7fb": {
-      "service": "Cognito",
       "providerPlugin": "awscloudformation",
-      "dependsOn": [],
-      "customAuth": false,
-      "frontendAuthConfig": {
-        "socialProviders": [],
-        "usernameAttributes": [],
-        "signupAttributes": [
-          "EMAIL"
-        ],
-        "passwordProtectionSettings": {
-          "passwordPolicyMinLength": 8,
-          "passwordPolicyCharacters": []
-        },
-        "mfaConfiguration": "OFF",
-        "mfaTypes": [
-          "SMS"
-        ],
-        "verificationMechanisms": [
-          "EMAIL"
-        ]
-      }
+      "service": "DynamoDB"
     },
-    "artsim77ebd74b": {
-      "service": "Cognito",
-      "serviceType": "imported",
+    "itemdb": {
       "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    },
+    "itemdbdev": {
       "dependsOn": [],
-      "customAuth": false
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB",
+      "serviceType": "imported"
+    },
+    "mydatabase": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    },
+    "pricedata": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    },
+    "pricedata2": {
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB"
+    },
+    "pricedata2dev": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB",
+      "serviceType": "imported"
+    },
+    "uploaddata": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
     }
   }
 }
