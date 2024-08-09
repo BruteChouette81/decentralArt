@@ -904,6 +904,9 @@ app.post("/listItem", (req, res) => {
         let newImage = []
         newImage = result.Item.images //new image for item
         newImage.push(req.body.image)
+        let newPrice = []
+        newPrice = result.Item.prices // new id
+        newPrice.push(req.body.price)
         
         const newItems_params = {
           TableName: ItemName,
@@ -926,7 +929,9 @@ app.post("/listItem", (req, res) => {
         newItems_params.ExpressionAttributeValues[':description'] = newDescription;
         newItems_params.UpdateExpression += 'description = :description, '
         newItems_params.ExpressionAttributeValues[':images'] = newImage;
-        newItems_params.UpdateExpression += 'images = :images'
+        newItems_params.UpdateExpression += 'images = :images, '
+        newItems_params.ExpressionAttributeValues[':prices'] = newPrice;
+        newItems_params.UpdateExpression += 'prices = :prices'
 
         dynamodb.update(newItems_params, (error, result) => {
             if (error) {
@@ -949,7 +954,8 @@ app.post("/listItem", (req, res) => {
             score: [req.body.score],  //list of score for different item id 
             tag: [req.body.tag],
             description: [req.body.description],
-            images: [req.body.image]
+            images: [req.body.image], 
+            prices: [req.body.price]
           }
         }
       
@@ -977,7 +983,7 @@ app.post("/getItems", (req, res) => {
       res.json({ statusCode: 500, error: error.message });
     } else {
       if(result.Item) {
-        res.json({ ids: result.Item.itemid, names: result.Item.name, scores: result.Item.score, tags: result.Item.tag, descriptions: result.Item.description, image: result.Item.images}) //multiple itemids
+        res.json({ ids: result.Item.itemid, names: result.Item.name, scores: result.Item.score, tags: result.Item.tag, descriptions: result.Item.description, image: result.Item.images, prices: result.Item.prices}) //multiple itemids
       }
       else{
         res.send("bruh")
@@ -986,7 +992,7 @@ app.post("/getItems", (req, res) => {
   });
 })
 
-app.post("/updateScore", (req, res) => {
+app.post("/updateScore", (req, res) => { // now also update itemid
   let params = {
     TableName: ItemName,
     Key: {
@@ -998,39 +1004,104 @@ app.post("/updateScore", (req, res) => {
     if (error) {
       res.json({ statusCode: 500, error: error.message });
     } else {
+      if (req.body.name) { //performing an edit request 
+        const itemId = result.Item.itemid
+        const oldScore = result.Item.score//list of all scores
+        const oldNames = result.Item.name //list of all scores
+        const oldDes = result.Item.description //list of all scores
+        const oldPrices = result.Item.prices //list of all scores
+
+
+        var newScore = oldScore //copy that list
+        var newNames = oldNames //copy that list
+        var newDes = oldDes //copy that list
+        var newPrices = oldPrices//copy that list
+       
+
+        for (var i = 0; i < itemId.length; i++) { //loop over itemId
+          if(req.body.id === itemId[i]) {
+            newScore[i] = req.body.score
+            newNames[i] = req.body.name
+            newDes[i] = req.body.des
+            newPrices[i] = req.body.price
+            
+            const newItems_params = {
+              TableName: ItemName,
+              Key: {
+                address: req.body.address,
+              },
+              ExpressionAttributeNames: { '#nm': 'name' },
+              ExpressionAttributeValues: {},
+              ReturnValues: 'UPDATED_NEW',
+            };
+            newItems_params.UpdateExpression = 'SET '
+            newItems_params.ExpressionAttributeValues[':name'] = newNames;
+            newItems_params.UpdateExpression += '#nm = :name, '
+            newItems_params.ExpressionAttributeValues[':score'] = newScore;
+            newItems_params.UpdateExpression += 'score = :score, '
+            newItems_params.ExpressionAttributeValues[':description'] = newDes;
+            newItems_params.UpdateExpression += 'description = :description, '
+            newItems_params.ExpressionAttributeValues[':prices'] = newPrices;
+            newItems_params.UpdateExpression += 'prices = :prices'
+      
+    
+            dynamodb.update(newItems_params, (error, result) => {
+                if (error) {
+                  console.log(error.message);
+                  res.json({error: error.message, params: newItems_params})
+                }
+                else {
+                  console.log(result)
+                  res.send("success")
+                }
+            });
+          }
+        }
+
+      } else {
         const itemId = result.Item.itemid
         const oldScore = result.Item.score //list of all scores
         var newScore = oldScore //copy that list
+        var newIds = itemId
 
         for (var i = 0; i < itemId.length; i++) { //loop over itemId
-          if(req.body.itemid === itemId[i]) {
-            newScore[i] = (oldScore[i] + 1) //add one to the partiular score
+          if(req.body.oldid === itemId[i]) {
+            newScore[i] = req.body.score
+            newIds[i] = req.body.newid
+            const newItems_params = {
+              TableName: ItemName,
+              Key: {
+                address: req.body.address,
+              },
+              ExpressionAttributeNames: { '#sc': 'score' },
+              ExpressionAttributeValues: {},
+              ReturnValues: 'UPDATED_NEW',
+            };
+            newItems_params.UpdateExpression = 'SET '
+            newItems_params.ExpressionAttributeValues[':score'] = newScore;
+            newItems_params.UpdateExpression += '#sc = :score, '
+            newItems_params.ExpressionAttributeValues[':itemid'] = newIds;
+            newItems_params.UpdateExpression += 'itemid = :itemid'
+    
+    
+            dynamodb.update(newItems_params, (error, result) => {
+                if (error) {
+                  console.log(error.message);
+                  res.json({error: error.message, params: newItems_params})
+                }
+                else {
+                  console.log(result)
+                  res.send("success")
+                }
+            });
           }
         }
+
+      }
+       
         
 
-        const newItems_params = {
-          TableName: ItemName,
-          Key: {
-            address: req.body.address,
-          },
-          ExpressionAttributeNames: { '#sc': 'score' },
-          ExpressionAttributeValues: {},
-          ReturnValues: 'UPDATED_NEW',
-        };
-        newItems_params.UpdateExpression = 'SET '
-        newItems_params.ExpressionAttributeValues[':score'] = newScore;
-        newItems_params.UpdateExpression += '#sc = :score'
-
-        dynamodb.update(newItems_params, (error, result) => {
-            if (error) {
-              console.log(error.message);
-              res.json({error: error.message, params: newItems_params})
-            }
-            else {
-              res.send("success")
-            }
-        });
+       
       }
   })
 })

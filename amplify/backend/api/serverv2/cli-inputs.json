@@ -161,6 +161,13 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/pay-gift-card": {
+      "name": "/pay-gift-card",
+      "lambdaFunction": "paypalHandler",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }

@@ -35,40 +35,49 @@ withdraw_fee = 0 #kraken: 1: 0.35% min 50 (2-5 business day) 2: wire (free) min 
 
 avg_f2c_fee = 0.006 # kraken: 0.24% paytrie: 0.006 (min 5% woth (833.3$) newton: 0.01 (no deposit or withdraw fees)
 
-flat_fee = 0.005 # flat fee without committing 0.5%
+flat_fee = 0.05 # flat fee without committing 0.5%
 
 avg_todays_fee = 0.029
 #transactions worth 
 
-avg_volume_year = 1200000 # 1,200,000 $
+
+avg_client_volume = 5000*12
+number_of_clients = 2
+avg_volume_year = avg_client_volume*number_of_clients # 1,200,000 $
+
 
 commitment_rate = 0.5 # 50% of money stay in the account
 
-earn_per_mounth = (0.0716/12) # 10% a year
+earn_per_mounth = (0.1038/12) # 10% a year
 
 
 #other infos
-num_of_years = 3
+num_of_years = 1
 mode = "mounth" 
 
 
-def calculateWorthByMounth():
+def calculateWorthByMounth(number_of_clients, avg_volume_year):
     wby = []
     wbm = []
     flat_fee_paid = 0
     avg_paid_fee = 0 #avg fee paid by merchant
-    worth1mounth = avg_volume_year / 12 * (1-avg_payment_fee) # remove the fee
+    
+
     overall_P = 0
     for j in range(num_of_years):
         for i in range(12): #full year
             #remove fees
             #print(i)
+            worth1mounth = avg_volume_year / 12 * (1-avg_payment_fee) # remove the fee
+            
             worth1mounth = worth1mounth - (worth1mounth*deposit_fee) #calculate deposite fee to exchange
            
             net_worth1mounth = (worth1mounth * commitment_rate) * (1-avg_f2c_fee) # net cash commited
             
             worthNearn = (net_worth1mounth + net_worth1mounth * (earn_per_mounth * (12-i))) # + ((overall_P/12) + (overall_P/12) * (earn_per_mounth * (12-i)))
             wbm.append(worthNearn* (1-avg_f2c_fee) + (worth1mounth *(1-commitment_rate)) - (worthNearn*withdraw_fee))
+            number_of_clients += (2*(i))
+            avg_volume_year = avg_client_volume*number_of_clients
             
 
         
@@ -78,6 +87,7 @@ def calculateWorthByMounth():
                 overall_P += wbm[i]-worth1mounth + (worth1mounth*(1-commitment_rate)*flat_fee)
                 flat_fee_paid += (worth1mounth*(1-commitment_rate)*flat_fee)
         avg_paid_fee = flat_fee_paid/avg_volume_year
+        print(f"Worth by mounth {wbm}")
         print(f"Average paid fee % per year over the volume for year {j}: {avg_paid_fee*100}%")
         flat_fee_paid = 0
         #print(overall_P)
@@ -90,7 +100,7 @@ def calculateWorthByMounth():
     
         
     
-    return wbm, wby
+    return wbm, wby, avg_volume_year
 
 def Reverse(lst):
    new_lst = lst[::-1]
@@ -104,7 +114,7 @@ def graph(wbm):
     plt.show()
 
 if __name__ == '__main__':
-    wbm, wby = calculateWorthByMounth()
+    wbm, wby, avg_volume_year = calculateWorthByMounth(number_of_clients, avg_volume_year)
     #print(f"Worth by mounth: {wbm}")
     print(f"Profit by year: {wby}")
     profit_competitor = [avg_volume_year*0.01] * num_of_years

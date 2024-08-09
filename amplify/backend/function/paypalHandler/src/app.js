@@ -24,7 +24,7 @@ const {CLIENT_ID} = require("./apikeyStorer.js")
 const {SAND_CLIENT_ID} = require('./apikeyStorer.js')
 const {APP_SECRET} = require("./apikeyStorer.js")
 const {SAND_APP_SECRET} = require('./apikeyStorer.js')
-
+const {square_secret} = require('./apikeyStorer.js')
 
 
 const AWS = require('aws-sdk');
@@ -2933,11 +2933,30 @@ app.post("/capture-paypal-order", async (req, res) => {
  
 });
 
+app.post("/pay-gift-card", async(req,res) => {
+	let address = ethers.utils.verifyMessage(req.body.digest, req.body.signature1)
+	let pkey = ethers.utils.recoverPublicKey(req.body.digest, req.body.signature2)
+	let finalmessage = AES.decrypt(req.body.key, pkey)
+	//let address = ethers.utils.verifyMessage(req.body.key, req.body.signature);
+	if (address == req.body.address) {
+		const captureData = await capturePaymentGiftCard(req.body.gan, req.body.address, req.body.amount, req.body.itemId, enc.stringify(finalmessage), req.body.buying, req.body.sandbox);
+		// TODO: store payment information such as the transaction ID orderId, address, amount, itemId, key, buying
+		if (captureData) {
+			res.json(captureData);
+		} else {
+			res.json({"status": 50})
+		}
+	} else {
+		res.json({"status": 50})
+	}
+
+})
+
 app.post("/get-payed", async (req, res) => {
   let address = ethers.utils.verifyMessage(req.body.proof, req.body.signature1)
 
   if(address === req.body.address) {
-	const captureData = await getPayed(req.body.amount, req.body.email, req.body.address, req.body.id, req.body.proof, req.body.sandbox, req.body.transferMoney);
+	const captureData = await getPayed(req.body.amount, req.body.email, req.body.address, req.body.id, req.body.proof, req.body.prooving, req.body.sandbox, req.body.transferMoney);
 	// TODO: store payment information such as the transaction ID
 	if (captureData) {
 	  res.json(captureData);
@@ -3236,7 +3255,7 @@ async function getPayed(amount, email, address, id, proof, prooving, sandbox, tr
   } else if (proof && !transferMoney) {
 	const validation = await proofAndGo(address, id, proof, prooving)
 	return validation
-  } else if (proof && !transferMoney) {
+  } else if (proof && transferMoney) {
 	const validation = await proofAndGo(address, id, proof, prooving)
 	if (sandbox) {
 		const url = `${sandURL}/v1/payments/payouts`;
@@ -3386,6 +3405,186 @@ async function capturePayment(orderId, address, amount, itemId, key, buying, san
 
  
 }
+
+async function capturePaymentGiftCard(gan, address, amount, itemId, key, buying, sandbox) {
+	//const accessToken = await generateAccessToken(sandbox);
+	if (sandbox) {
+		//1: get the gift card id test sourceid: cnon:gift-card-nonce-ok
+	  const url = `https://connect.squareupsandbox.com/v2/gift-cards/from-gan`;
+	  const response = await fetch(url, {
+		method:"post",
+		headers: {
+			'Authorization': 'Bearer EAAAlwEUS-f0w6Gclw4A2IYcslFl5teIZyYbTW3JWhyGmfau4av6UpU_koIkCRzX',
+			'Content-Type': 'application/json',
+			'Square-Version': '2024-06-04',
+			
+			},
+		body: JSON.stringify({ 
+			"gan": `${gan}`
+			})
+		});
+	  const data = await response.json();
+	  //data.gift_card.id
+
+	  //2: create order
+	  let transactionID = crypto.randomUUID();
+
+	  const url2 = "https://connect.squareupsandbox.com/v2/orders"
+	  const response2 = await fetch(url2, {
+		method:"post",
+		headers: {
+			'Authorization': 'Bearer EAAAlwEUS-f0w6Gclw4A2IYcslFl5teIZyYbTW3JWhyGmfau4av6UpU_koIkCRzX',
+			'Content-Type': 'application/json',
+			'Square-Version': '2024-06-04',
+			
+			},
+		body: JSON.stringify({ 
+			"idempotency_key": transactionID.toString(),
+			"order": {
+			"location_id": "LCE9JT6P77K6W",
+			"line_items": [
+				{
+				"quantity": "1",
+				"name": itemId.toString(),
+				"base_price_money": {
+					"amount": parseInt(amount),
+					"currency": "CAD"
+				}
+				}
+			]
+			}
+			})
+		});
+	  const data2 = await response2.json();
+	  console.log(data2)
+
+	  //3: create payment
+
+	  const url3 = "https://connect.squareupsandbox.com/v2/payments"
+	  const response3 = await fetch(url3, {
+		method:"post",
+		headers: {
+			'Authorization': 'Bearer EAAAlwEUS-f0w6Gclw4A2IYcslFl5teIZyYbTW3JWhyGmfau4av6UpU_koIkCRzX',
+			'Content-Type': 'application/json',
+			'Square-Version': '2024-06-04',
+			
+			},
+		body: JSON.stringify({ 
+			"idempotency_key": transactionID.toString(),
+			"source_id": `cnon:gift-card-nonce-ok`, //${data.gift_card.id}
+			"amount_money": {
+			"amount": parseInt(amount),
+			"currency": "CAD"
+			},
+			"order_id": `${data2.order.id}`,
+			"location_id": "LCE9JT6P77K6W"
+			})
+		});
+	  const data3 = await response3.json();
+
+
+	  //4: validate using pool
+  
+	  //validate payment
+	  if (buying) {
+  
+		  let bool = await mintBuy(address, amount, itemId, key, buying )
+		  if (bool) {
+			  return data3
+		  } else {
+			  return false 
+		  }
+	  } else {
+		  return data3;
+	  }
+	} else {
+		const url = `https://connect.squareup.com/v2/gift-cards/from-gan`;
+		const response = await fetch(url, {
+			method:"post",
+			headers: {
+				'Authorization': `Bearer ${square_secret}`,
+				'Content-Type': 'application/json',
+				'Square-Version': '2024-06-04',
+				
+				},
+			body: JSON.stringify({ 
+				"gan": `${gan}`
+				})
+			});
+		  const data = await response.json();
+		  //data.gift_card.id
+	
+		  //2: create order
+		  let transactionID = crypto.randomUUID();
+	
+		  const url2 = "https://connect.squareup.com/v2/orders"
+		  const response2 = await fetch(url2, {
+			method:"post",
+			headers: {
+				'Authorization': `Bearer ${square_secret}`,
+				'Content-Type': 'application/json',
+				'Square-Version': '2024-06-04',
+				
+				},
+			body: JSON.stringify({ 
+				"idempotency_key": transactionID.toString(),
+				"order": {
+				"location_id": "LY9PJBHERNETY",
+				"line_items": [
+					{
+					"quantity": "1",
+					"name": itemId.toString(),
+					"base_price_money": {
+						"amount": parseInt(amount),
+						"currency": "CAD"
+					}
+					}
+				]
+				}
+				})
+			});
+		  const data2 = await response2.json();
+	
+		  //3: create payment
+	
+		  const url3 = "https://connect.squareup.com/v2/payments"
+		  const response3 = await fetch(url3, {
+			method:"post",
+			headers: {
+				'Authorization': `Bearer ${square_secret}`,
+				'Content-Type': 'application/json',
+				'Square-Version': '2024-06-04',
+				
+				},
+			body: JSON.stringify({ 
+				"idempotency_key": transactionID.toString(),
+				"source_id": `${data.gift_card.id}`,
+				"amount_money": {
+				"amount": parseInt(amount),
+				"currency": "CAD"
+				},
+				"order_id": `${data2.order.id}`,
+				"location_id": "LY9PJBHERNETY"
+				})
+			});
+		  const data3 = await response3.json();
+  
+	  //validate payment
+	  if (buying) {
+  
+		  let bool = await mintBuy(address, amount, itemId, key, buying )
+		  if (bool) {
+			  return data3
+		  } else {
+			  return false 
+		  }
+	  } else {
+		  return data3;
+	  }
+	  }
+  
+   
+  }
 /* if (ConnectedWallet[0]) {
 		const credits = getContract(ConnectedWallet[0], creditABI, creditAddress);
 		//calculate fees here 
